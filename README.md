@@ -391,23 +391,3 @@ Linting is done using [golangci-lint](https://golangci-lint.run)
 See 👉 [How to install golangci-lint](https://golangci-lint.run/welcome/install)
 
 To modify the golangci-lint configuration, update the `.golangci.yml` file.
-
-## Contributing
-
-Contributions are more than welcome! Please check out the [contributing guide](CONTRIBUTING.md).
-
-If you find this boilerplate useful, consider giving it a star! ⭐
-
-## Inspirations
-
-- [hagopj13/node-express-boilerplate](https://github.com/hagopj13/node-express-boilerplate)
-- [khannedy/golang-clean-architecture](https://github.com/khannedy/golang-clean-architecture)
-- [zexoverz/express-prisma-template](https://github.com/zexoverz/express-prisma-template)
-
-## License
-
-[MIT](LICENSE)
-
-## Contributors
-
-[![Contributors](https://contrib.rocks/image?c=6&repo=indrayyana/go-fiber-boilerplate)](https://github.com/indrayyana/go-fiber-boilerplate/graphs/contributors)
