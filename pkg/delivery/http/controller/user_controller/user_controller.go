@@ -3,10 +3,10 @@ package controller
 import (
 	"math"
 
+	dto "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/dto/user"
 	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/entity/response"
 	user_model "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/model/user"
 	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/service"
-	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/shared/validation"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -37,7 +37,7 @@ func NewUserController(userService service.UserService, tokenService service.Tok
 // @Failure      401  {object}  example.Unauthorized  "Unauthorized"
 // @Failure      403  {object}  example.Forbidden  "Forbidden"
 func (u *UserController) GetUsers(c *fiber.Ctx) error {
-	query := &validation.QueryUser{
+	query := &dto.QueryUser{
 		Page:   c.QueryInt("page", 1),
 		Limit:  c.QueryInt("limit", 10),
 		Search: c.Query("search", ""),
@@ -105,7 +105,7 @@ func (u *UserController) GetUserByID(c *fiber.Ctx) error {
 // @Failure      403  {object}  example.Forbidden  "Forbidden"
 // @Failure      409  {object}  example.DuplicateEmail  "Email already taken"
 func (u *UserController) CreateUser(c *fiber.Ctx) error {
-	req := new(validation.CreateUser)
+	req := new(dto.CreateUser)
 
 	if err := c.BodyParser(req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid request body")
@@ -139,7 +139,7 @@ func (u *UserController) CreateUser(c *fiber.Ctx) error {
 // @Failure      404  {object}  example.NotFound  "Not found"
 // @Failure      409  {object}  example.DuplicateEmail  "Email already taken"
 func (u *UserController) UpdateUser(c *fiber.Ctx) error {
-	req := new(validation.UpdateUser)
+	req := new(dto.UpdateUser)
 	userID := c.Params("userId")
 
 	if _, err := uuid.Parse(userID); err != nil {

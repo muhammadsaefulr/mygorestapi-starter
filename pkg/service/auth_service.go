@@ -5,6 +5,7 @@ import (
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 
+	dto "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/dto/user"
 	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/entity/response"
 	user_model "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/model/user"
 	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/shared/utils"
@@ -21,7 +22,7 @@ type AuthService interface {
 	Login(c *fiber.Ctx, req *validation.Login) (*user_model.User, error)
 	Logout(c *fiber.Ctx, req *validation.Logout) error
 	RefreshAuth(c *fiber.Ctx, req *validation.RefreshToken) (*response.Tokens, error)
-	ResetPassword(c *fiber.Ctx, query *validation.Token, req *validation.UpdatePassOrVerify) error
+	ResetPassword(c *fiber.Ctx, query *validation.Token, req *dto.UpdatePassOrVerify) error
 	VerifyEmail(c *fiber.Ctx, query *validation.Token) error
 }
 
@@ -129,7 +130,7 @@ func (s *authService) RefreshAuth(c *fiber.Ctx, req *validation.RefreshToken) (*
 	return newTokens, err
 }
 
-func (s *authService) ResetPassword(c *fiber.Ctx, query *validation.Token, req *validation.UpdatePassOrVerify) error {
+func (s *authService) ResetPassword(c *fiber.Ctx, query *validation.Token, req *dto.UpdatePassOrVerify) error {
 	if err := s.Validate.Struct(query); err != nil {
 		return err
 	}
@@ -174,7 +175,7 @@ func (s *authService) VerifyEmail(c *fiber.Ctx, query *validation.Token) error {
 		return errToken
 	}
 
-	updateBody := &validation.UpdatePassOrVerify{
+	updateBody := &dto.UpdatePassOrVerify{
 		VerifiedEmail: true,
 	}
 

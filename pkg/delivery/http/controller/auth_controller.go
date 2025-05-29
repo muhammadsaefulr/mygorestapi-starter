@@ -3,10 +3,12 @@ package controller
 import (
 	"context"
 	"encoding/json"
-	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 	"io"
 	"net/http"
 
+	"github.com/muhammadsaefulr/NimeStreamAPI/config"
+
+	dto "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/dto/user"
 	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/entity/response"
 	user_model "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/model/user"
 	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/service"
@@ -203,7 +205,7 @@ func (a *AuthController) ForgotPassword(c *fiber.Ctx) error {
 // @Success      200  {object}  example.ResetPasswordResponse
 // @Failure      401  {object}  example.FailedResetPassword  "Password reset failed"
 func (a *AuthController) ResetPassword(c *fiber.Ctx) error {
-	req := new(validation.UpdatePassOrVerify)
+	req := new(dto.UpdatePassOrVerify)
 	query := &validation.Token{
 		Token: c.Query("token"),
 	}

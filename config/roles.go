@@ -3,6 +3,7 @@ package config
 var allRoles = map[string][]string{
 	"user":  {},
 	"admin": {"getUsers", "manageUsers"},
+	"vip":   {},
 }
 
 var Roles = getKeys(allRoles)

@@ -1,4 +1,4 @@
-package validation
+package dto
 
 type CreateUser struct {
 	Name     string `json:"name" validate:"required,max=50" example:"fake name"`

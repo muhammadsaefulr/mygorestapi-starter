@@ -3,7 +3,6 @@ package integration
 import (
 	_ "embed"
 	"encoding/json"
-	"github.com/muhammadsaefulr/NimeStreamAPI/test"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -11,8 +10,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/muhammadsaefulr/NimeStreamAPI/test"
+
 	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 
+	dto "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/dto/user"
 	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/entity/response"
 	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/shared/utils"
 	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/shared/validation"
@@ -492,7 +494,7 @@ func TestAuthRoutes(t *testing.T) {
 			err = helper.SaveToken(test.DB, resetPasswordToken, fixture.UserOne.ID.String(), config.TokenTypeResetPassword, fixture.ExpiresResetPasswordToken)
 			assert.Nil(t, err)
 
-			requestBody := validation.UpdatePassOrVerify{
+			requestBody := dto.UpdatePassOrVerify{
 				Password: "password2",
 			}
 
@@ -522,7 +524,7 @@ func TestAuthRoutes(t *testing.T) {
 			helper.ClearAll(test.DB)
 			helper.InsertUser(test.DB, fixture.UserOne)
 
-			requestBody := validation.UpdatePassOrVerify{
+			requestBody := dto.UpdatePassOrVerify{
 				Password: "password2",
 			}
 
@@ -552,7 +554,7 @@ func TestAuthRoutes(t *testing.T) {
 
 			time.Sleep(2 * time.Second)
 
-			requestBody := validation.UpdatePassOrVerify{
+			requestBody := dto.UpdatePassOrVerify{
 				Password: "password2",
 			}
 
@@ -588,7 +590,7 @@ func TestAuthRoutes(t *testing.T) {
 
 			assert.Equal(t, http.StatusBadRequest, apiResponse.StatusCode)
 
-			bodyJSON, err := json.Marshal(validation.UpdatePassOrVerify{Password: "short1"})
+			bodyJSON, err := json.Marshal(dto.UpdatePassOrVerify{Password: "short1"})
 			assert.Nil(t, err)
 
 			request = httptest.NewRequest(http.MethodPost, "/v1/auth/reset-password?token="+resetPasswordToken, strings.NewReader(string(bodyJSON)))
@@ -599,7 +601,7 @@ func TestAuthRoutes(t *testing.T) {
 			assert.Nil(t, err)
 			assert.Equal(t, http.StatusBadRequest, apiResponse.StatusCode)
 
-			bodyJSON, err = json.Marshal(validation.UpdatePassOrVerify{Password: "password"})
+			bodyJSON, err = json.Marshal(dto.UpdatePassOrVerify{Password: "password"})
 			assert.Nil(t, err)
 
 			request = httptest.NewRequest(http.MethodPost, "/v1/auth/reset-password?token="+resetPasswordToken, strings.NewReader(string(bodyJSON)))
@@ -610,7 +612,7 @@ func TestAuthRoutes(t *testing.T) {
 			assert.Nil(t, err)
 			assert.Equal(t, http.StatusBadRequest, apiResponse.StatusCode)
 
-			bodyJSON, err = json.Marshal(validation.UpdatePassOrVerify{Password: "11111111"})
+			bodyJSON, err = json.Marshal(dto.UpdatePassOrVerify{Password: "11111111"})
 			assert.Nil(t, err)
 
 			request = httptest.NewRequest(http.MethodPost, "/v1/auth/reset-password?token="+resetPasswordToken, strings.NewReader(string(bodyJSON)))
