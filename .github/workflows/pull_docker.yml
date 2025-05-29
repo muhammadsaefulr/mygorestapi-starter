@@ -27,6 +27,6 @@ jobs:
 
             docker run -d \
               --name nimestreamapi-backend \
-              --env-file /root/nimestreamapi/.env \
+              --env-file /root/NimeStreamAPIDev/.env \
               -p 3000:3000 \
               saepulid07/nimestreamapi-backend:latest
