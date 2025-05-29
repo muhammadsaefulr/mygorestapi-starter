@@ -80,5 +80,7 @@ func loadConfig() {
 		}
 	}
 
+	viper.AutomaticEnv()
+
 	utils.Log.Error("Failed to load any config file")
 }
