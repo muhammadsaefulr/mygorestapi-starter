@@ -254,7 +254,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/validation.UpdatePassOrVerify"
+                            "$ref": "#/definitions/dto.UpdatePassOrVerify"
                         }
                     }
                 ],
@@ -595,7 +595,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/validation.CreateUser"
+                            "$ref": "#/definitions/dto.CreateUser"
                         }
                     }
                 ],
@@ -756,7 +756,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/validation.UpdateUser"
+                            "$ref": "#/definitions/dto.UpdateUser"
                         }
                     }
                 ],
@@ -796,6 +796,74 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "dto.CreateUser": {
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "password",
+                "role"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "example": "fake@example.com"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "example": "fake name"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "minLength": 8,
+                    "example": "password1"
+                },
+                "role": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "enum": [
+                        "user",
+                        "admin"
+                    ],
+                    "example": "user"
+                }
+            }
+        },
+        "dto.UpdatePassOrVerify": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "minLength": 8,
+                    "example": "password1"
+                }
+            }
+        },
+        "dto.UpdateUser": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "example": "fake@example.com"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "example": "fake name"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "minLength": 8,
+                    "example": "password1"
+                }
+            }
+        },
         "example.CreateUserResponse": {
             "type": "object",
             "properties": {
@@ -1619,42 +1687,6 @@ const docTemplate = `{
                 }
             }
         },
-        "validation.CreateUser": {
-            "type": "object",
-            "required": [
-                "email",
-                "name",
-                "password",
-                "role"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "example": "fake@example.com"
-                },
-                "name": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "example": "fake name"
-                },
-                "password": {
-                    "type": "string",
-                    "maxLength": 20,
-                    "minLength": 8,
-                    "example": "password1"
-                },
-                "role": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "enum": [
-                        "user",
-                        "admin"
-                    ],
-                    "example": "user"
-                }
-            }
-        },
         "validation.ForgotPassword": {
             "type": "object",
             "required": [
@@ -1713,38 +1745,6 @@ const docTemplate = `{
                     "example": "password1"
                 }
             }
-        },
-        "validation.UpdatePassOrVerify": {
-            "type": "object",
-            "properties": {
-                "password": {
-                    "type": "string",
-                    "maxLength": 20,
-                    "minLength": 8,
-                    "example": "password1"
-                }
-            }
-        },
-        "validation.UpdateUser": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "example": "fake@example.com"
-                },
-                "name": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "example": "fake name"
-                },
-                "password": {
-                    "type": "string",
-                    "maxLength": 20,
-                    "minLength": 8,
-                    "example": "password1"
-                }
-            }
         }
     },
     "securityDefinitions": {
@@ -1760,7 +1760,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0.0",
-	Host:             "localhost:3000",
+	Host:             "dev.msaepul.my.id",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
 	Title:            "NimeStream API documentation",

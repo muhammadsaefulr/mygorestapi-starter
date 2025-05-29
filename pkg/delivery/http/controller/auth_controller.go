@@ -200,7 +200,7 @@ func (a *AuthController) ForgotPassword(c *fiber.Ctx) error {
 // @Accept       json
 // @Produce      json
 // @Param        token   query  string  true  "The reset password token"
-// @Param        request  body  validation.UpdatePassOrVerify  true  "Request body"
+// @Param        request  body  dto.UpdatePassOrVerify  true  "Request body"
 // @Router       /auth/reset-password [post]
 // @Success      200  {object}  example.ResetPasswordResponse
 // @Failure      401  {object}  example.FailedResetPassword  "Password reset failed"

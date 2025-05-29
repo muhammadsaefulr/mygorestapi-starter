@@ -98,7 +98,7 @@ func (u *UserController) GetUserByID(c *fiber.Ctx) error {
 // @Description  Only admins can create other users.
 // @Security BearerAuth
 // @Produce      json
-// @Param        request  body  validation.CreateUser  true  "Request body"
+// @Param        request  body  dto.CreateUser  true  "Request body"
 // @Router       /users [post]
 // @Success      201  {object}  example.CreateUserResponse
 // @Failure      401  {object}  example.Unauthorized  "Unauthorized"
@@ -131,7 +131,7 @@ func (u *UserController) CreateUser(c *fiber.Ctx) error {
 // @Security BearerAuth
 // @Produce      json
 // @Param        id  path  string  true  "User id"
-// @Param        request  body  validation.UpdateUser  true  "Request body"
+// @Param        request  body  dto.UpdateUser  true  "Request body"
 // @Router       /users/{id} [patch]
 // @Success      200  {object}  example.UpdateUserResponse
 // @Failure      401  {object}  example.Unauthorized  "Unauthorized"

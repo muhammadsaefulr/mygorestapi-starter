@@ -3,10 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/delivery/middleware"
 	database "github.com/muhammadsaefulr/NimeStreamAPI/pkg/infrastructure/persistence"
@@ -21,13 +22,13 @@ import (
 )
 
 // @title						NimeStream API documentation
-// @version					1.0.0
-// @host						localhost:3000
+// @version						1.0.0
+// @host						dev.msaepul.my.id
 // @BasePath					/api/v1
 // @securityDefinitions.apikey	BearerAuth
 // @in							header
 // @name						Authorization
-// @description				Example Value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+// @description					Example Value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()

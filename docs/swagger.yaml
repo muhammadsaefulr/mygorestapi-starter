@@ -1,5 +1,57 @@
 basePath: /api/v1
 definitions:
+  dto.CreateUser:
+    properties:
+      email:
+        example: fake@example.com
+        maxLength: 50
+        type: string
+      name:
+        example: fake name
+        maxLength: 50
+        type: string
+      password:
+        example: password1
+        maxLength: 20
+        minLength: 8
+        type: string
+      role:
+        enum:
+        - user
+        - admin
+        example: user
+        maxLength: 50
+        type: string
+    required:
+    - email
+    - name
+    - password
+    - role
+    type: object
+  dto.UpdatePassOrVerify:
+    properties:
+      password:
+        example: password1
+        maxLength: 20
+        minLength: 8
+        type: string
+    type: object
+  dto.UpdateUser:
+    properties:
+      email:
+        example: fake@example.com
+        maxLength: 50
+        type: string
+      name:
+        example: fake name
+        maxLength: 50
+        type: string
+      password:
+        example: password1
+        maxLength: 20
+        minLength: 8
+        type: string
+    type: object
   example.CreateUserResponse:
     properties:
       code:
@@ -569,34 +621,6 @@ definitions:
       res:
         type: string
     type: object
-  validation.CreateUser:
-    properties:
-      email:
-        example: fake@example.com
-        maxLength: 50
-        type: string
-      name:
-        example: fake name
-        maxLength: 50
-        type: string
-      password:
-        example: password1
-        maxLength: 20
-        minLength: 8
-        type: string
-      role:
-        enum:
-        - user
-        - admin
-        example: user
-        maxLength: 50
-        type: string
-    required:
-    - email
-    - name
-    - password
-    - role
-    type: object
   validation.ForgotPassword:
     properties:
       email:
@@ -641,31 +665,7 @@ definitions:
     - name
     - password
     type: object
-  validation.UpdatePassOrVerify:
-    properties:
-      password:
-        example: password1
-        maxLength: 20
-        minLength: 8
-        type: string
-    type: object
-  validation.UpdateUser:
-    properties:
-      email:
-        example: fake@example.com
-        maxLength: 50
-        type: string
-      name:
-        example: fake name
-        maxLength: 50
-        type: string
-      password:
-        example: password1
-        maxLength: 20
-        minLength: 8
-        type: string
-    type: object
-host: localhost:3000
+host: dev.msaepul.my.id
 info:
   contact: {}
   title: NimeStream API documentation
@@ -824,7 +824,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/validation.UpdatePassOrVerify'
+          $ref: '#/definitions/dto.UpdatePassOrVerify'
       produces:
       - application/json
       responses:
@@ -1044,7 +1044,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/validation.CreateUser'
+          $ref: '#/definitions/dto.CreateUser'
       produces:
       - application/json
       responses:
@@ -1150,7 +1150,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/validation.UpdateUser'
+          $ref: '#/definitions/dto.UpdateUser'
       produces:
       - application/json
       responses:
