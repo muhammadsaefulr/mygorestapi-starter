@@ -20,13 +20,13 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 34002
           script: |
-            docker pull saepulid07/nimestreamapi-backend:latest
+            cd /root/NimeStreamAPIDev
 
-            docker stop nimestreamapi-backend || true
-            docker rm nimestreamapi-backend || true
+            # Pull latest image from Docker Hub
+            docker compose pull
 
-            docker run -d \
-              --name nimestreamapi-backend \
-              --env-file /root/NimeStreamAPIDev/.env \
-              -p 3000:3000 \
-              saepulid07/nimestreamapi-backend:latest
+            # Stop and remove running containers
+            docker compose down
+
+            # Rebuild and start services with latest image
+            docker compose up -d --remove-orphans

@@ -1,23 +1,32 @@
 version: '3.8'
 
 services:
-  adminer:
-    image: adminer
+  vpn-client:
+    image: dperson/openvpn-client
+    container_name: vpn-client
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    volumes:
+      - /root/private_files/vpngate_118.136.140.187_udp_1206.ovpn:/vpn/vpn.conf
+    environment:
+      - TZ=Asia/Jakarta
+    command: '-f "" -r'
     restart: always
-    ports:
-      - 8080:8080
     networks:
-      - go-network
+      - vpn-net
 
   postgresdb:
     image: postgres:alpine
+    container_name: postgresdb
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
       timeout: 20s
       retries: 10
     ports:
-      - ${DB_PORT}:5432
+      - "${DB_PORT}:5432"
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
@@ -26,33 +35,41 @@ services:
       - dbdata:/var/lib/postgresql/data
       - ./database/init:/docker-entrypoint-initdb.d
     networks:
-      - go-network
+      - vpn-net
 
-  go-app:
-    build: .
-    image: go-app
-    ports:
-      - ${APP_PORT}:3000
+  nimestreamapi-backend:
+    image: saepulid07/nimestreamapi-backend:latest
+    container_name: nimestreamapi-backend
+    env_file:
+      - .env
+    network_mode: "container:vpn-client"
     depends_on:
       postgresdb:
         condition: service_healthy
-    volumes:
-      - .:/usr/go-app
     restart: on-failure
-    env_file:
-      - .env
-    networks:
-      - go-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "${APP_URL}/v1/health-check"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000/v1/health-check"]
       interval: 40s
       timeout: 30s
       retries: 3
       start_period: 30s
 
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-proxy
+    restart: always
+    ports:
+      - "3000:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - vpn-client
+    networks:
+      - vpn-net
+
 volumes:
   dbdata:
 
 networks:
-  go-network:
+  vpn-net:
     driver: bridge
