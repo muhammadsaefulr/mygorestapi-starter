@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	dto "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/dto/user"
+	request "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/dto/user/request"
 	user_model "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/model/user"
 	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/shared/validation"
 
@@ -15,7 +15,7 @@ var validate = validation.Validator()
 
 func TestUserModel(t *testing.T) {
 	t.Run("Create user validation", func(t *testing.T) {
-		var newUser = dto.CreateUser{
+		var newUser = request.CreateUser{
 			Name:     "John Doe",
 			Email:    "johndoe@gmail.com",
 			Password: "password1",
@@ -59,7 +59,7 @@ func TestUserModel(t *testing.T) {
 	})
 
 	t.Run("Update user validation", func(t *testing.T) {
-		var updateUser = dto.UpdateUser{
+		var updateUser = request.UpdateUser{
 			Name:     "John Doe",
 			Email:    "johndoe@gmail.com",
 			Password: "password1",
@@ -96,7 +96,7 @@ func TestUserModel(t *testing.T) {
 	})
 
 	t.Run("Update user password validation", func(t *testing.T) {
-		var newPassword = dto.UpdatePassOrVerify{
+		var newPassword = request.UpdatePassOrVerify{
 			Password: "password1",
 		}
 

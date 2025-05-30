@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 
+	auth_request_dto "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/dto/auth/request"
 	token_model "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/model/token"
 	user_model "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/model/user"
 
@@ -10,7 +11,6 @@ import (
 
 	res "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/entity/response"
 	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/shared/utils"
-	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/shared/validation"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -27,7 +27,7 @@ type TokenService interface {
 	DeleteAllToken(c *fiber.Ctx, userID string) error
 	GetTokenByUserID(c *fiber.Ctx, tokenStr string) (*token_model.Token, error)
 	GenerateAuthTokens(c *fiber.Ctx, user *user_model.User) (*res.Tokens, error)
-	GenerateResetPasswordToken(c *fiber.Ctx, req *validation.ForgotPassword) (string, error)
+	GenerateResetPasswordToken(c *fiber.Ctx, req *auth_request_dto.ForgotPassword) (string, error)
 	GenerateVerifyEmailToken(c *fiber.Ctx, user *user_model.User) (*string, error)
 }
 
@@ -157,7 +157,7 @@ func (s *tokenService) GenerateAuthTokens(c *fiber.Ctx, user *user_model.User) (
 	}, nil
 }
 
-func (s *tokenService) GenerateResetPasswordToken(c *fiber.Ctx, req *validation.ForgotPassword) (string, error) {
+func (s *tokenService) GenerateResetPasswordToken(c *fiber.Ctx, req *auth_request_dto.ForgotPassword) (string, error) {
 	if err := s.Validate.Struct(req); err != nil {
 		return "", err
 	}

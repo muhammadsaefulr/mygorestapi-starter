@@ -5,11 +5,11 @@ import (
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 
-	dto "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/dto/user"
+	auth_request_dto "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/dto/auth/request"
+	request "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/dto/user/request"
 	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/entity/response"
 	user_model "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/model/user"
 	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/shared/utils"
-	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/shared/validation"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -18,12 +18,12 @@ import (
 )
 
 type AuthService interface {
-	Register(c *fiber.Ctx, req *validation.Register) (*user_model.User, error)
-	Login(c *fiber.Ctx, req *validation.Login) (*user_model.User, error)
-	Logout(c *fiber.Ctx, req *validation.Logout) error
-	RefreshAuth(c *fiber.Ctx, req *validation.RefreshToken) (*response.Tokens, error)
-	ResetPassword(c *fiber.Ctx, query *validation.Token, req *dto.UpdatePassOrVerify) error
-	VerifyEmail(c *fiber.Ctx, query *validation.Token) error
+	Register(c *fiber.Ctx, req *auth_request_dto.Register) (*user_model.User, error)
+	Login(c *fiber.Ctx, req *auth_request_dto.Login) (*user_model.User, error)
+	Logout(c *fiber.Ctx, req *auth_request_dto.Logout) error
+	RefreshAuth(c *fiber.Ctx, req *auth_request_dto.RefreshToken) (*response.Tokens, error)
+	ResetPassword(c *fiber.Ctx, query *auth_request_dto.Token, req *request.UpdatePassOrVerify) error
+	VerifyEmail(c *fiber.Ctx, query *auth_request_dto.Token) error
 }
 
 type authService struct {
@@ -46,7 +46,7 @@ func NewAuthService(
 	}
 }
 
-func (s *authService) Register(c *fiber.Ctx, req *validation.Register) (*user_model.User, error) {
+func (s *authService) Register(c *fiber.Ctx, req *auth_request_dto.Register) (*user_model.User, error) {
 	if err := s.Validate.Struct(req); err != nil {
 		return nil, err
 	}
@@ -75,7 +75,7 @@ func (s *authService) Register(c *fiber.Ctx, req *validation.Register) (*user_mo
 	return user, result.Error
 }
 
-func (s *authService) Login(c *fiber.Ctx, req *validation.Login) (*user_model.User, error) {
+func (s *authService) Login(c *fiber.Ctx, req *auth_request_dto.Login) (*user_model.User, error) {
 	if err := s.Validate.Struct(req); err != nil {
 		return nil, err
 	}
@@ -92,7 +92,7 @@ func (s *authService) Login(c *fiber.Ctx, req *validation.Login) (*user_model.Us
 	return user, nil
 }
 
-func (s *authService) Logout(c *fiber.Ctx, req *validation.Logout) error {
+func (s *authService) Logout(c *fiber.Ctx, req *auth_request_dto.Logout) error {
 	if err := s.Validate.Struct(req); err != nil {
 		return err
 	}
@@ -107,7 +107,7 @@ func (s *authService) Logout(c *fiber.Ctx, req *validation.Logout) error {
 	return err
 }
 
-func (s *authService) RefreshAuth(c *fiber.Ctx, req *validation.RefreshToken) (*response.Tokens, error) {
+func (s *authService) RefreshAuth(c *fiber.Ctx, req *auth_request_dto.RefreshToken) (*response.Tokens, error) {
 	if err := s.Validate.Struct(req); err != nil {
 		return nil, err
 	}
@@ -130,7 +130,7 @@ func (s *authService) RefreshAuth(c *fiber.Ctx, req *validation.RefreshToken) (*
 	return newTokens, err
 }
 
-func (s *authService) ResetPassword(c *fiber.Ctx, query *validation.Token, req *dto.UpdatePassOrVerify) error {
+func (s *authService) ResetPassword(c *fiber.Ctx, query *auth_request_dto.Token, req *request.UpdatePassOrVerify) error {
 	if err := s.Validate.Struct(query); err != nil {
 		return err
 	}
@@ -156,7 +156,7 @@ func (s *authService) ResetPassword(c *fiber.Ctx, query *validation.Token, req *
 	return nil
 }
 
-func (s *authService) VerifyEmail(c *fiber.Ctx, query *validation.Token) error {
+func (s *authService) VerifyEmail(c *fiber.Ctx, query *auth_request_dto.Token) error {
 	if err := s.Validate.Struct(query); err != nil {
 		return err
 	}
@@ -175,7 +175,7 @@ func (s *authService) VerifyEmail(c *fiber.Ctx, query *validation.Token) error {
 		return errToken
 	}
 
-	updateBody := &dto.UpdatePassOrVerify{
+	updateBody := &request.UpdatePassOrVerify{
 		VerifiedEmail: true,
 	}
 

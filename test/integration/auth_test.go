@@ -14,10 +14,10 @@ import (
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 
-	dto "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/dto/user"
+	auth_request_dto "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/dto/auth/request"
+
 	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/entity/response"
 	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/shared/utils"
-	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/shared/validation"
 	"github.com/muhammadsaefulr/NimeStreamAPI/test/fixture"
 	"github.com/muhammadsaefulr/NimeStreamAPI/test/helper"
 
@@ -26,7 +26,7 @@ import (
 
 func TestAuthRoutes(t *testing.T) {
 	t.Run("POST /v1/auth/register", func(t *testing.T) {
-		var requestBody = validation.Register{
+		var requestBody = auth_request_dto.Register{
 			Name:     "Test",
 			Email:    "test@gmail.com",
 			Password: "password1",
@@ -157,7 +157,7 @@ func TestAuthRoutes(t *testing.T) {
 	t.Run("POST /v1/auth/login", func(t *testing.T) {
 		t.Run("should return 200 and login user if email and password match", func(t *testing.T) {
 			helper.CreateUser(test.DB, "test@gmail.com", "test1234", "Test User")
-			loginCredentials := &validation.Login{
+			loginCredentials := &auth_request_dto.Login{
 				Email:    "test@gmail.com",
 				Password: "test1234",
 			}
@@ -189,7 +189,7 @@ func TestAuthRoutes(t *testing.T) {
 
 		t.Run("should return 401 error if there are no users with that email", func(t *testing.T) {
 			helper.ClearAll(test.DB)
-			loginCredentials := &validation.Login{
+			loginCredentials := &auth_request_dto.Login{
 				Email:    "nonexistent@gmail.com",
 				Password: "test1234",
 			}
@@ -219,7 +219,7 @@ func TestAuthRoutes(t *testing.T) {
 
 		t.Run("should return 401 error if password is wrong", func(t *testing.T) {
 			helper.CreateUser(test.DB, "test@gmail.com", "test1234", "Test User")
-			loginCredentials := &validation.Login{
+			loginCredentials := &auth_request_dto.Login{
 				Email:    "test@gmail.com",
 				Password: "wrongPassword1",
 			}
@@ -258,7 +258,7 @@ func TestAuthRoutes(t *testing.T) {
 			err = helper.SaveToken(test.DB, refreshToken, fixture.UserOne.ID.String(), config.TokenTypeRefresh, fixture.ExpiresRefreshToken)
 			assert.Nil(t, err)
 
-			bodyJSON, err := json.Marshal(validation.RefreshToken{RefreshToken: refreshToken})
+			bodyJSON, err := json.Marshal(auth_request_dto.RefreshToken{RefreshToken: refreshToken})
 			assert.Nil(t, err)
 
 			request := httptest.NewRequest(http.MethodPost, "/v1/auth/logout", strings.NewReader(string(bodyJSON)))
@@ -292,7 +292,7 @@ func TestAuthRoutes(t *testing.T) {
 			refreshToken, err := fixture.RefreshToken(fixture.UserOne)
 			assert.Nil(t, err)
 
-			bodyJSON, err := json.Marshal(validation.RefreshToken{RefreshToken: refreshToken})
+			bodyJSON, err := json.Marshal(auth_request_dto.RefreshToken{RefreshToken: refreshToken})
 			assert.Nil(t, err)
 			request := httptest.NewRequest(http.MethodPost, "/v1/auth/logout", strings.NewReader(string(bodyJSON)))
 			request.Header.Set("Content-Type", "application/json")
@@ -314,7 +314,7 @@ func TestAuthRoutes(t *testing.T) {
 			err = helper.SaveToken(test.DB, refreshToken, fixture.UserOne.ID.String(), config.TokenTypeRefresh, fixture.ExpiresRefreshToken)
 			assert.Nil(t, err)
 
-			bodyJSON, err := json.Marshal(validation.RefreshToken{RefreshToken: refreshToken})
+			bodyJSON, err := json.Marshal(auth_request_dto.RefreshToken{RefreshToken: refreshToken})
 			assert.Nil(t, err)
 
 			request := httptest.NewRequest(http.MethodPost, "/v1/auth/refresh-tokens", strings.NewReader(string(bodyJSON)))
@@ -364,7 +364,7 @@ func TestAuthRoutes(t *testing.T) {
 			err = helper.SaveToken(test.DB, refreshToken, fixture.UserOne.ID.String(), config.TokenTypeRefresh, fixture.ExpiresRefreshToken)
 			assert.Nil(t, err)
 
-			bodyJSON, err := json.Marshal(validation.RefreshToken{RefreshToken: refreshToken})
+			bodyJSON, err := json.Marshal(auth_request_dto.RefreshToken{RefreshToken: refreshToken})
 			assert.Nil(t, err)
 
 			request := httptest.NewRequest(http.MethodPost, "/v1/auth/refresh-tokens", strings.NewReader(string(bodyJSON)))
@@ -384,7 +384,7 @@ func TestAuthRoutes(t *testing.T) {
 			refreshToken, err := fixture.RefreshToken(fixture.UserOne)
 			assert.Nil(t, err)
 
-			bodyJSON, err := json.Marshal(validation.RefreshToken{RefreshToken: refreshToken})
+			bodyJSON, err := json.Marshal(auth_request_dto.RefreshToken{RefreshToken: refreshToken})
 			assert.Nil(t, err)
 
 			request := httptest.NewRequest(http.MethodPost, "/v1/auth/refresh-tokens", strings.NewReader(string(bodyJSON)))
@@ -410,7 +410,7 @@ func TestAuthRoutes(t *testing.T) {
 
 			time.Sleep(2 * time.Second)
 
-			bodyJSON, err := json.Marshal(validation.RefreshToken{RefreshToken: refreshToken})
+			bodyJSON, err := json.Marshal(auth_request_dto.RefreshToken{RefreshToken: refreshToken})
 			assert.Nil(t, err)
 
 			request := httptest.NewRequest(http.MethodPost, "/v1/auth/refresh-tokens", strings.NewReader(string(bodyJSON)))
@@ -428,7 +428,7 @@ func TestAuthRoutes(t *testing.T) {
 			helper.ClearAll(test.DB)
 			helper.InsertUser(test.DB, fixture.UserOne)
 
-			requestBody := validation.ForgotPassword{
+			requestBody := auth_request_dto.ForgotPassword{
 				Email: fixture.UserOne.Email,
 			}
 
@@ -466,7 +466,7 @@ func TestAuthRoutes(t *testing.T) {
 		t.Run("should return 404 if email does not belong to any user", func(t *testing.T) {
 			helper.ClearAll(test.DB)
 
-			requestBody := validation.ForgotPassword{
+			requestBody := auth_request_dto.ForgotPassword{
 				Email: fixture.UserOne.Email,
 			}
 
@@ -494,7 +494,7 @@ func TestAuthRoutes(t *testing.T) {
 			err = helper.SaveToken(test.DB, resetPasswordToken, fixture.UserOne.ID.String(), config.TokenTypeResetPassword, fixture.ExpiresResetPasswordToken)
 			assert.Nil(t, err)
 
-			requestBody := dto.UpdatePassOrVerify{
+			requestBody := auth_request_dto.UpdatePassOrVerify{
 				Password: "password2",
 			}
 
@@ -524,7 +524,7 @@ func TestAuthRoutes(t *testing.T) {
 			helper.ClearAll(test.DB)
 			helper.InsertUser(test.DB, fixture.UserOne)
 
-			requestBody := dto.UpdatePassOrVerify{
+			requestBody := auth_request_dto.UpdatePassOrVerify{
 				Password: "password2",
 			}
 
@@ -554,7 +554,7 @@ func TestAuthRoutes(t *testing.T) {
 
 			time.Sleep(2 * time.Second)
 
-			requestBody := dto.UpdatePassOrVerify{
+			requestBody := auth_request_dto.UpdatePassOrVerify{
 				Password: "password2",
 			}
 
@@ -590,7 +590,7 @@ func TestAuthRoutes(t *testing.T) {
 
 			assert.Equal(t, http.StatusBadRequest, apiResponse.StatusCode)
 
-			bodyJSON, err := json.Marshal(dto.UpdatePassOrVerify{Password: "short1"})
+			bodyJSON, err := json.Marshal(auth_request_dto.UpdatePassOrVerify{Password: "short1"})
 			assert.Nil(t, err)
 
 			request = httptest.NewRequest(http.MethodPost, "/v1/auth/reset-password?token="+resetPasswordToken, strings.NewReader(string(bodyJSON)))
@@ -601,7 +601,7 @@ func TestAuthRoutes(t *testing.T) {
 			assert.Nil(t, err)
 			assert.Equal(t, http.StatusBadRequest, apiResponse.StatusCode)
 
-			bodyJSON, err = json.Marshal(dto.UpdatePassOrVerify{Password: "password"})
+			bodyJSON, err = json.Marshal(auth_request_dto.UpdatePassOrVerify{Password: "password"})
 			assert.Nil(t, err)
 
 			request = httptest.NewRequest(http.MethodPost, "/v1/auth/reset-password?token="+resetPasswordToken, strings.NewReader(string(bodyJSON)))
@@ -612,7 +612,7 @@ func TestAuthRoutes(t *testing.T) {
 			assert.Nil(t, err)
 			assert.Equal(t, http.StatusBadRequest, apiResponse.StatusCode)
 
-			bodyJSON, err = json.Marshal(dto.UpdatePassOrVerify{Password: "11111111"})
+			bodyJSON, err = json.Marshal(auth_request_dto.UpdatePassOrVerify{Password: "11111111"})
 			assert.Nil(t, err)
 
 			request = httptest.NewRequest(http.MethodPost, "/v1/auth/reset-password?token="+resetPasswordToken, strings.NewReader(string(bodyJSON)))

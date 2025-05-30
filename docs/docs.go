@@ -35,7 +35,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/validation.ForgotPassword"
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_auth_request.ForgotPassword"
                         }
                     }
                 ],
@@ -91,7 +91,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/validation.Login"
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_auth_request.Login"
                         }
                     }
                 ],
@@ -208,7 +208,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/validation.Register"
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_auth_request.Register"
                         }
                     }
                 ],
@@ -254,7 +254,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.UpdatePassOrVerify"
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_user_request.UpdatePassOrVerify"
                         }
                     }
                 ],
@@ -595,7 +595,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.CreateUser"
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_user_request.CreateUser"
                         }
                     }
                 ],
@@ -756,7 +756,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.UpdateUser"
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_user_request.UpdateUser"
                         }
                     }
                 ],
@@ -796,74 +796,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "dto.CreateUser": {
-            "type": "object",
-            "required": [
-                "email",
-                "name",
-                "password",
-                "role"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "example": "fake@example.com"
-                },
-                "name": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "example": "fake name"
-                },
-                "password": {
-                    "type": "string",
-                    "maxLength": 20,
-                    "minLength": 8,
-                    "example": "password1"
-                },
-                "role": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "enum": [
-                        "user",
-                        "admin"
-                    ],
-                    "example": "user"
-                }
-            }
-        },
-        "dto.UpdatePassOrVerify": {
-            "type": "object",
-            "properties": {
-                "password": {
-                    "type": "string",
-                    "maxLength": 20,
-                    "minLength": 8,
-                    "example": "password1"
-                }
-            }
-        },
-        "dto.UpdateUser": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "example": "fake@example.com"
-                },
-                "name": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "example": "fake name"
-                },
-                "password": {
-                    "type": "string",
-                    "maxLength": 20,
-                    "minLength": 8,
-                    "example": "password1"
-                }
-            }
-        },
         "example.CreateUserResponse": {
             "type": "object",
             "properties": {
@@ -1049,7 +981,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "data": {
-                    "$ref": "#/definitions/od_anime_entity.GenreAnime"
+                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.GenreAnime"
                 },
                 "message": {
                     "type": "string"
@@ -1067,7 +999,7 @@ const docTemplate = `{
                     "example": 200
                 },
                 "data": {
-                    "$ref": "#/definitions/od_anime_entity.EpisodePageResult"
+                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.EpisodePageResult"
                 },
                 "message": {
                     "type": "string",
@@ -1086,7 +1018,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "data": {
-                    "$ref": "#/definitions/od_anime_entity.AnimeSourceData"
+                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeSourceData"
                 },
                 "message": {
                     "type": "string"
@@ -1106,7 +1038,7 @@ const docTemplate = `{
                 "data": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/od_anime_entity.AnimeData"
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeData"
                     }
                 },
                 "message": {
@@ -1521,7 +1453,134 @@ const docTemplate = `{
                 }
             }
         },
-        "od_anime_entity.AnimeData": {
+        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_auth_request.ForgotPassword": {
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "example": "fake@example.com"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_auth_request.Login": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "example": "fake@example.com"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "minLength": 8,
+                    "example": "password1"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_auth_request.Register": {
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "example": "fake@example.com"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "example": "fake name"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "minLength": 8,
+                    "example": "password1"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_user_request.CreateUser": {
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "password",
+                "role"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "example": "fake@example.com"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "example": "fake name"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "minLength": 8,
+                    "example": "password1"
+                },
+                "role": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "enum": [
+                        "user",
+                        "admin"
+                    ],
+                    "example": "user"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_user_request.UpdatePassOrVerify": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "minLength": 8,
+                    "example": "password1"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_user_request.UpdateUser": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "example": "fake@example.com"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 50,
+                    "example": "fake name"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "minLength": 8,
+                    "example": "password1"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeData": {
             "type": "object",
             "properties": {
                 "judul_path": {
@@ -1544,7 +1603,7 @@ const docTemplate = `{
                 }
             }
         },
-        "od_anime_entity.AnimeDetail": {
+        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeDetail": {
             "type": "object",
             "properties": {
                 "duration": {
@@ -1553,7 +1612,7 @@ const docTemplate = `{
                 "genres": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/od_anime_entity.GenreInfo"
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.GenreInfo"
                     }
                 },
                 "producer": {
@@ -1585,7 +1644,7 @@ const docTemplate = `{
                 }
             }
         },
-        "od_anime_entity.AnimeEpisode": {
+        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeEpisode": {
             "type": "object",
             "properties": {
                 "title": {
@@ -1596,7 +1655,7 @@ const docTemplate = `{
                 }
             }
         },
-        "od_anime_entity.AnimeSourceData": {
+        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeSourceData": {
             "type": "object",
             "properties": {
                 "current_ep": {
@@ -1608,7 +1667,7 @@ const docTemplate = `{
                 "episodes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/od_anime_entity.AnimeEpisode"
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeEpisode"
                     }
                 },
                 "next_ep_url": {
@@ -1620,7 +1679,7 @@ const docTemplate = `{
                 "sources": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/od_anime_entity.VideoSource"
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.VideoSource"
                     }
                 },
                 "title": {
@@ -1628,21 +1687,21 @@ const docTemplate = `{
                 }
             }
         },
-        "od_anime_entity.EpisodePageResult": {
+        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.EpisodePageResult": {
             "type": "object",
             "properties": {
                 "anime_detail": {
-                    "$ref": "#/definitions/od_anime_entity.AnimeDetail"
+                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeDetail"
                 },
                 "episode": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/od_anime_entity.AnimeEpisode"
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeEpisode"
                     }
                 }
             }
         },
-        "od_anime_entity.GenreAnime": {
+        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.GenreAnime": {
             "type": "object",
             "properties": {
                 "episodes": {
@@ -1662,7 +1721,7 @@ const docTemplate = `{
                 }
             }
         },
-        "od_anime_entity.GenreInfo": {
+        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.GenreInfo": {
             "type": "object",
             "properties": {
                 "title": {
@@ -1673,76 +1732,17 @@ const docTemplate = `{
                 }
             }
         },
-        "od_anime_entity.VideoSource": {
+        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.VideoSource": {
             "type": "object",
             "properties": {
                 "data_list": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/od_anime_entity.AnimeEpisode"
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeEpisode"
                     }
                 },
                 "res": {
                     "type": "string"
-                }
-            }
-        },
-        "validation.ForgotPassword": {
-            "type": "object",
-            "required": [
-                "email"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "example": "fake@example.com"
-                }
-            }
-        },
-        "validation.Login": {
-            "type": "object",
-            "required": [
-                "email",
-                "password"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "example": "fake@example.com"
-                },
-                "password": {
-                    "type": "string",
-                    "maxLength": 20,
-                    "minLength": 8,
-                    "example": "password1"
-                }
-            }
-        },
-        "validation.Register": {
-            "type": "object",
-            "required": [
-                "email",
-                "name",
-                "password"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "example": "fake@example.com"
-                },
-                "name": {
-                    "type": "string",
-                    "maxLength": 50,
-                    "example": "fake name"
-                },
-                "password": {
-                    "type": "string",
-                    "maxLength": 20,
-                    "minLength": 8,
-                    "example": "password1"
                 }
             }
         }

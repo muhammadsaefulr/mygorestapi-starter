@@ -10,7 +10,7 @@ import (
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/test"
 
-	dto "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/dto/user"
+	request_dto_user "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/dto/user/request"
 	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/entity/response"
 	user_model "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/model/user"
 	"github.com/muhammadsaefulr/NimeStreamAPI/test/fixture"
@@ -21,7 +21,7 @@ import (
 
 func TestUserRoutes(t *testing.T) {
 	t.Run("POST /v1/users", func(t *testing.T) {
-		var newUser = dto.CreateUser{
+		var newUser = request_dto_user.CreateUser{
 			Name:     "Test",
 			Email:    "test@gmail.com",
 			Password: "password1",
@@ -627,7 +627,7 @@ func TestUserRoutes(t *testing.T) {
 		t.Run("should return 200 and successfully update user if data is ok", func(t *testing.T) {
 			helper.ClearAll(test.DB)
 			helper.InsertUser(test.DB, fixture.UserOne)
-			updateBody := dto.UpdateUser{
+			updateBody := request_dto_user.UpdateUser{
 				Name:     "Golang",
 				Email:    "golang@gmail.com",
 				Password: "newPassword1",
@@ -677,7 +677,7 @@ func TestUserRoutes(t *testing.T) {
 		t.Run("should return 401 error if access token is missing", func(t *testing.T) {
 			helper.ClearAll(test.DB)
 			helper.InsertUser(test.DB, fixture.UserOne)
-			updateBody := dto.UpdateUser{
+			updateBody := request_dto_user.UpdateUser{
 				Name: "Golang",
 			}
 
@@ -697,7 +697,7 @@ func TestUserRoutes(t *testing.T) {
 		t.Run("should return 403 if user is updating another user", func(t *testing.T) {
 			helper.ClearAll(test.DB)
 			helper.InsertUser(test.DB, fixture.UserOne, fixture.UserTwo)
-			updateBody := dto.UpdateUser{
+			updateBody := request_dto_user.UpdateUser{
 				Name: "Golang",
 			}
 
@@ -721,7 +721,7 @@ func TestUserRoutes(t *testing.T) {
 		t.Run("should return 200 and successfully update user if admin is updating another user", func(t *testing.T) {
 			helper.ClearAll(test.DB)
 			helper.InsertUser(test.DB, fixture.UserOne, fixture.Admin)
-			updateBody := dto.UpdateUser{
+			updateBody := request_dto_user.UpdateUser{
 				Name: "Golang",
 			}
 
@@ -745,7 +745,7 @@ func TestUserRoutes(t *testing.T) {
 		t.Run("should return 404 if admin is updating another user that is not found", func(t *testing.T) {
 			helper.ClearAll(test.DB)
 			helper.InsertUser(test.DB, fixture.Admin)
-			updateBody := dto.UpdateUser{
+			updateBody := request_dto_user.UpdateUser{
 				Name: "Golang",
 			}
 
@@ -769,7 +769,7 @@ func TestUserRoutes(t *testing.T) {
 		t.Run("should return 400 error if userId is not a valid postgres id", func(t *testing.T) {
 			helper.ClearAll(test.DB)
 			helper.InsertUser(test.DB, fixture.Admin)
-			updateBody := dto.UpdateUser{
+			updateBody := request_dto_user.UpdateUser{
 				Name: "Golang",
 			}
 
@@ -793,7 +793,7 @@ func TestUserRoutes(t *testing.T) {
 		t.Run("should return 400 if email is invalid", func(t *testing.T) {
 			helper.ClearAll(test.DB)
 			helper.InsertUser(test.DB, fixture.UserOne)
-			updateBody := dto.UpdateUser{
+			updateBody := request_dto_user.UpdateUser{
 				Email: "invalidEmail",
 			}
 
@@ -817,7 +817,7 @@ func TestUserRoutes(t *testing.T) {
 		t.Run("should return 409 if email is already taken", func(t *testing.T) {
 			helper.ClearAll(test.DB)
 			helper.InsertUser(test.DB, fixture.UserOne, fixture.UserTwo)
-			updateBody := dto.UpdateUser{
+			updateBody := request_dto_user.UpdateUser{
 				Email: fixture.UserTwo.Email,
 			}
 
@@ -841,7 +841,7 @@ func TestUserRoutes(t *testing.T) {
 		t.Run("should not return 400 if email is my email", func(t *testing.T) {
 			helper.ClearAll(test.DB)
 			helper.InsertUser(test.DB, fixture.UserOne)
-			updateBody := dto.UpdateUser{
+			updateBody := request_dto_user.UpdateUser{
 				Email: fixture.UserOne.Email,
 			}
 
@@ -865,7 +865,7 @@ func TestUserRoutes(t *testing.T) {
 		t.Run("should return 400 if password length is less than 8 characters", func(t *testing.T) {
 			helper.ClearAll(test.DB)
 			helper.InsertUser(test.DB, fixture.UserOne)
-			updateBody := dto.UpdateUser{
+			updateBody := request_dto_user.UpdateUser{
 				Password: "passwo1",
 			}
 
@@ -889,7 +889,7 @@ func TestUserRoutes(t *testing.T) {
 		t.Run("should return 400 if password does not contain both letters and numbers", func(t *testing.T) {
 			helper.ClearAll(test.DB)
 			helper.InsertUser(test.DB, fixture.UserOne)
-			updateBody := dto.UpdateUser{
+			updateBody := request_dto_user.UpdateUser{
 				Password: "password",
 			}
 

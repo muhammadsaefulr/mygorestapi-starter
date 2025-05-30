@@ -3,7 +3,7 @@ package controller
 import (
 	"math"
 
-	dto "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/dto/user"
+	request "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/dto/user/request"
 	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/entity/response"
 	user_model "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/model/user"
 	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/service"
@@ -37,7 +37,7 @@ func NewUserController(userService service.UserService, tokenService service.Tok
 // @Failure      401  {object}  example.Unauthorized  "Unauthorized"
 // @Failure      403  {object}  example.Forbidden  "Forbidden"
 func (u *UserController) GetUsers(c *fiber.Ctx) error {
-	query := &dto.QueryUser{
+	query := &request.QueryUser{
 		Page:   c.QueryInt("page", 1),
 		Limit:  c.QueryInt("limit", 10),
 		Search: c.Query("search", ""),
@@ -98,14 +98,14 @@ func (u *UserController) GetUserByID(c *fiber.Ctx) error {
 // @Description  Only admins can create other users.
 // @Security BearerAuth
 // @Produce      json
-// @Param        request  body  dto.CreateUser  true  "Request body"
+// @Param        request  body  request.CreateUser  true  "Request body"
 // @Router       /users [post]
 // @Success      201  {object}  example.CreateUserResponse
 // @Failure      401  {object}  example.Unauthorized  "Unauthorized"
 // @Failure      403  {object}  example.Forbidden  "Forbidden"
 // @Failure      409  {object}  example.DuplicateEmail  "Email already taken"
 func (u *UserController) CreateUser(c *fiber.Ctx) error {
-	req := new(dto.CreateUser)
+	req := new(request.CreateUser)
 
 	if err := c.BodyParser(req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid request body")
@@ -131,7 +131,7 @@ func (u *UserController) CreateUser(c *fiber.Ctx) error {
 // @Security BearerAuth
 // @Produce      json
 // @Param        id  path  string  true  "User id"
-// @Param        request  body  dto.UpdateUser  true  "Request body"
+// @Param        request  body  request.UpdateUser  true  "Request body"
 // @Router       /users/{id} [patch]
 // @Success      200  {object}  example.UpdateUserResponse
 // @Failure      401  {object}  example.Unauthorized  "Unauthorized"
@@ -139,7 +139,7 @@ func (u *UserController) CreateUser(c *fiber.Ctx) error {
 // @Failure      404  {object}  example.NotFound  "Not found"
 // @Failure      409  {object}  example.DuplicateEmail  "Email already taken"
 func (u *UserController) UpdateUser(c *fiber.Ctx) error {
-	req := new(dto.UpdateUser)
+	req := new(request.UpdateUser)
 	userID := c.Params("userId")
 
 	if _, err := uuid.Parse(userID); err != nil {

@@ -4,9 +4,10 @@ import (
 	"errors"
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/shared/utils"
-	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/shared/validation"
 
-	dto "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/dto/user"
+	auth_request_dto "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/dto/auth/request"
+	request "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/dto/user/request"
+
 	user_model "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/model/user"
 
 	"github.com/go-playground/validator/v10"
@@ -16,14 +17,14 @@ import (
 )
 
 type UserService interface {
-	GetUsers(c *fiber.Ctx, params *dto.QueryUser) ([]user_model.User, int64, error)
+	GetUsers(c *fiber.Ctx, params *request.QueryUser) ([]user_model.User, int64, error)
 	GetUserByID(c *fiber.Ctx, id string) (*user_model.User, error)
 	GetUserByEmail(c *fiber.Ctx, email string) (*user_model.User, error)
-	CreateUser(c *fiber.Ctx, req *dto.CreateUser) (*user_model.User, error)
-	UpdatePassOrVerify(c *fiber.Ctx, req *dto.UpdatePassOrVerify, id string) error
-	UpdateUser(c *fiber.Ctx, req *dto.UpdateUser, id string) (*user_model.User, error)
+	CreateUser(c *fiber.Ctx, req *request.CreateUser) (*user_model.User, error)
+	UpdatePassOrVerify(c *fiber.Ctx, req *request.UpdatePassOrVerify, id string) error
+	UpdateUser(c *fiber.Ctx, req *request.UpdateUser, id string) (*user_model.User, error)
 	DeleteUser(c *fiber.Ctx, id string) error
-	CreateGoogleUser(c *fiber.Ctx, req *validation.GoogleLogin) (*user_model.User, error)
+	CreateGoogleUser(c *fiber.Ctx, req *auth_request_dto.GoogleLogin) (*user_model.User, error)
 }
 
 type userService struct {
@@ -40,7 +41,7 @@ func NewUserService(db *gorm.DB, validate *validator.Validate) UserService {
 	}
 }
 
-func (s *userService) GetUsers(c *fiber.Ctx, params *dto.QueryUser) ([]user_model.User, int64, error) {
+func (s *userService) GetUsers(c *fiber.Ctx, params *request.QueryUser) ([]user_model.User, int64, error) {
 	var users []user_model.User
 	var totalResults int64
 
@@ -103,7 +104,7 @@ func (s *userService) GetUserByEmail(c *fiber.Ctx, email string) (*user_model.Us
 	return user, result.Error
 }
 
-func (s *userService) CreateUser(c *fiber.Ctx, req *dto.CreateUser) (*user_model.User, error) {
+func (s *userService) CreateUser(c *fiber.Ctx, req *request.CreateUser) (*user_model.User, error) {
 	if err := s.Validate.Struct(req); err != nil {
 		return nil, err
 	}
@@ -134,7 +135,7 @@ func (s *userService) CreateUser(c *fiber.Ctx, req *dto.CreateUser) (*user_model
 	return user, result.Error
 }
 
-func (s *userService) UpdateUser(c *fiber.Ctx, req *dto.UpdateUser, id string) (*user_model.User, error) {
+func (s *userService) UpdateUser(c *fiber.Ctx, req *request.UpdateUser, id string) (*user_model.User, error) {
 	if err := s.Validate.Struct(req); err != nil {
 		return nil, err
 	}
@@ -179,7 +180,7 @@ func (s *userService) UpdateUser(c *fiber.Ctx, req *dto.UpdateUser, id string) (
 	return user, result.Error
 }
 
-func (s *userService) UpdatePassOrVerify(c *fiber.Ctx, req *dto.UpdatePassOrVerify, id string) error {
+func (s *userService) UpdatePassOrVerify(c *fiber.Ctx, req *request.UpdatePassOrVerify, id string) error {
 	if err := s.Validate.Struct(req); err != nil {
 		return err
 	}
@@ -230,7 +231,7 @@ func (s *userService) DeleteUser(c *fiber.Ctx, id string) error {
 	return result.Error
 }
 
-func (s *userService) CreateGoogleUser(c *fiber.Ctx, req *validation.GoogleLogin) (*user_model.User, error) {
+func (s *userService) CreateGoogleUser(c *fiber.Ctx, req *auth_request_dto.GoogleLogin) (*user_model.User, error) {
 	if err := s.Validate.Struct(req); err != nil {
 		return nil, err
 	}

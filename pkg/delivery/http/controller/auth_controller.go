@@ -7,12 +7,13 @@ import (
 	"net/http"
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/config"
+	auth_request_dto "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/dto/auth/request"
+	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/dto/user/request"
 
-	dto "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/dto/user"
 	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/entity/response"
+
 	user_model "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/model/user"
 	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/service"
-	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/shared/validation"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -41,12 +42,12 @@ func NewAuthController(
 // @Summary      Register as user
 // @Accept       json
 // @Produce      json
-// @Param        request  body  validation.Register  true  "Request body"
+// @Param        request  body  auth_request_dto.Register  true  "Request body"
 // @Router       /auth/register [post]
 // @Success      201  {object}  example.RegisterResponse
 // @Failure      409  {object}  example.DuplicateEmail  "Email already taken"
 func (a *AuthController) Register(c *fiber.Ctx) error {
-	req := new(validation.Register)
+	req := new(auth_request_dto.Register)
 
 	if err := c.BodyParser(req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid request body")
@@ -76,12 +77,12 @@ func (a *AuthController) Register(c *fiber.Ctx) error {
 // @Summary      Login
 // @Accept       json
 // @Produce      json
-// @Param        request  body  validation.Login  true  "Request body"
+// @Param        request  body  auth_request_dto.Login  true  "Request body"
 // @Router       /auth/login [post]
 // @Success      200  {object}  example.LoginResponse
 // @Failure      401  {object}  example.FailedLogin  "Invalid email or password"
 func (a *AuthController) Login(c *fiber.Ctx) error {
-	req := new(validation.Login)
+	req := new(auth_request_dto.Login)
 
 	if err := c.BodyParser(req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid request body")
@@ -116,7 +117,7 @@ func (a *AuthController) Login(c *fiber.Ctx) error {
 // @Success      200  {object}  example.LogoutResponse
 // @Failure      404  {object}  example.NotFound  "Not found"
 func (a *AuthController) Logout(c *fiber.Ctx) error {
-	req := new(validation.Logout)
+	req := new(auth_request_dto.Logout)
 
 	if err := c.BodyParser(req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid request body")
@@ -143,7 +144,7 @@ func (a *AuthController) Logout(c *fiber.Ctx) error {
 // @Success      200  {object}  example.RefreshTokenResponse
 // @Failure      401  {object}  example.Unauthorized  "Unauthorized"
 func (a *AuthController) RefreshTokens(c *fiber.Ctx) error {
-	req := new(validation.RefreshToken)
+	req := new(auth_request_dto.RefreshToken)
 
 	if err := c.BodyParser(req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid request body")
@@ -167,12 +168,12 @@ func (a *AuthController) RefreshTokens(c *fiber.Ctx) error {
 // @Description  An email will be sent to reset password.
 // @Accept       json
 // @Produce      json
-// @Param        request  body  validation.ForgotPassword  true  "Request body"
+// @Param        request  body  auth_request_dto.ForgotPassword  true  "Request body"
 // @Router       /auth/forgot-password [post]
 // @Success      200  {object}  example.ForgotPasswordResponse
 // @Failure      404  {object}  example.NotFound  "Not found"
 func (a *AuthController) ForgotPassword(c *fiber.Ctx) error {
-	req := new(validation.ForgotPassword)
+	req := new(auth_request_dto.ForgotPassword)
 
 	if err := c.BodyParser(req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid request body")
@@ -200,13 +201,13 @@ func (a *AuthController) ForgotPassword(c *fiber.Ctx) error {
 // @Accept       json
 // @Produce      json
 // @Param        token   query  string  true  "The reset password token"
-// @Param        request  body  dto.UpdatePassOrVerify  true  "Request body"
+// @Param        request  body  request.UpdatePassOrVerify  true  "Request body"
 // @Router       /auth/reset-password [post]
 // @Success      200  {object}  example.ResetPasswordResponse
 // @Failure      401  {object}  example.FailedResetPassword  "Password reset failed"
 func (a *AuthController) ResetPassword(c *fiber.Ctx) error {
-	req := new(dto.UpdatePassOrVerify)
-	query := &validation.Token{
+	req := new(request.UpdatePassOrVerify)
+	query := &auth_request_dto.Token{
 		Token: c.Query("token"),
 	}
 
@@ -262,7 +263,7 @@ func (a *AuthController) SendVerificationEmail(c *fiber.Ctx) error {
 // @Success      200  {object}  example.VerifyEmailResponse
 // @Failure      401  {object}  example.FailedVerifyEmail  "Verify email failed"
 func (a *AuthController) VerifyEmail(c *fiber.Ctx) error {
-	query := &validation.Token{
+	query := &auth_request_dto.Token{
 		Token: c.Query("token"),
 	}
 
@@ -334,7 +335,7 @@ func (a *AuthController) GoogleCallback(c *fiber.Ctx) error {
 		return err
 	}
 
-	googleUser := new(validation.GoogleLogin)
+	googleUser := new(auth_request_dto.GoogleLogin)
 	if errJSON := json.Unmarshal(userData, googleUser); errJSON != nil {
 		return errJSON
 	}
