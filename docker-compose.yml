@@ -12,7 +12,7 @@ services:
       - /root/private_files/vpngate_118.136.140.187_udp_1206.ovpn:/vpn/vpn.conf
     environment:
       - TZ=Asia/Jakarta
-    command: '-f "" -r'
+    command: ''
     restart: always
     networks:
       - vpn-net
@@ -42,7 +42,7 @@ services:
     container_name: nimestreamapi-backend
     env_file:
       - .env
-    network_mode: "container:vpn-client"
+    network_mode: "service:vpn-client"
     depends_on:
       postgresdb:
         condition: service_healthy
