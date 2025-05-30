@@ -22,6 +22,9 @@ jobs:
           script: |
             cd /root/NimeStreamAPIDev
 
+            # Pull Latest Code From Github
+            git pull origin main
+
             # Pull latest image from Docker Hub
             docker compose pull
 
