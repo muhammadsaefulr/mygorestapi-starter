@@ -2,13 +2,13 @@ package integration
 
 import (
 	"encoding/json"
-	"github.com/muhammadsaefulr/NimeStreamAPI/test"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/entity/response"
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
+	"github.com/muhammadsaefulr/NimeStreamAPI/test"
 
 	"github.com/stretchr/testify/assert"
 )

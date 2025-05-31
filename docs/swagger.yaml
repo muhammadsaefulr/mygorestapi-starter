@@ -131,7 +131,7 @@ definitions:
       code:
         type: integer
       data:
-        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.GenreAnime'
+        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.GenreAnime'
       message:
         type: string
       status:
@@ -143,7 +143,7 @@ definitions:
         example: 200
         type: integer
       data:
-        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.EpisodePageResult'
+        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.EpisodePageResult'
       message:
         example: Berhasil mengambil data!
         type: string
@@ -156,7 +156,7 @@ definitions:
       code:
         type: integer
       data:
-        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeSourceData'
+        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeSourceData'
       message:
         type: string
       status:
@@ -169,7 +169,7 @@ definitions:
         type: integer
       data:
         items:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeData'
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeData'
         type: array
       message:
         example: Berhasil mengambil data!
@@ -461,7 +461,7 @@ definitions:
         example: success
         type: string
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_auth_request.ForgotPassword:
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_auth_request.ForgotPassword:
     properties:
       email:
         example: fake@example.com
@@ -470,7 +470,7 @@ definitions:
     required:
     - email
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_auth_request.Login:
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_auth_request.Login:
     properties:
       email:
         example: fake@example.com
@@ -485,7 +485,7 @@ definitions:
     - email
     - password
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_auth_request.Register:
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_auth_request.Register:
     properties:
       email:
         example: fake@example.com
@@ -505,7 +505,7 @@ definitions:
     - name
     - password
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_user_request.CreateUser:
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_request.CreateUser:
     properties:
       email:
         example: fake@example.com
@@ -533,7 +533,7 @@ definitions:
     - password
     - role
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_user_request.UpdatePassOrVerify:
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_request.UpdatePassOrVerify:
     properties:
       password:
         example: password1
@@ -541,7 +541,7 @@ definitions:
         minLength: 8
         type: string
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_user_request.UpdateUser:
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_request.UpdateUser:
     properties:
       email:
         example: fake@example.com
@@ -557,7 +557,7 @@ definitions:
         minLength: 8
         type: string
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeData:
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeData:
     properties:
       judul_path:
         type: string
@@ -572,13 +572,13 @@ definitions:
       url:
         type: string
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeDetail:
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeDetail:
     properties:
       duration:
         type: string
       genres:
         items:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.GenreInfo'
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.GenreInfo'
         type: array
       producer:
         type: string
@@ -599,14 +599,14 @@ definitions:
       total_eps:
         type: string
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeEpisode:
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeEpisode:
     properties:
       title:
         type: string
       video_url:
         type: string
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeSourceData:
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeSourceData:
     properties:
       current_ep:
         type: string
@@ -614,7 +614,7 @@ definitions:
         type: string
       episodes:
         items:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeEpisode'
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeEpisode'
         type: array
       next_ep_url:
         type: string
@@ -622,21 +622,21 @@ definitions:
         type: string
       sources:
         items:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.VideoSource'
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.VideoSource'
         type: array
       title:
         type: string
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.EpisodePageResult:
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.EpisodePageResult:
     properties:
       anime_detail:
-        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeDetail'
+        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeDetail'
       episode:
         items:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeEpisode'
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeEpisode'
         type: array
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.GenreAnime:
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.GenreAnime:
     properties:
       episodes:
         type: string
@@ -649,23 +649,23 @@ definitions:
       url:
         type: string
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.GenreInfo:
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.GenreInfo:
     properties:
       title:
         type: string
       url:
         type: string
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.VideoSource:
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.VideoSource:
     properties:
       data_list:
         items:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeEpisode'
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeEpisode'
         type: array
       res:
         type: string
     type: object
-host: dev.msaepul.my.id
+host: localhost:3000
 info:
   contact: {}
   title: NimeStream API documentation
@@ -682,7 +682,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_auth_request.ForgotPassword'
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_auth_request.ForgotPassword'
       produces:
       - application/json
       responses:
@@ -719,7 +719,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_auth_request.Login'
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_auth_request.Login'
       produces:
       - application/json
       responses:
@@ -794,7 +794,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_auth_request.Register'
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_auth_request.Register'
       produces:
       - application/json
       responses:
@@ -824,7 +824,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_user_request.UpdatePassOrVerify'
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_request.UpdatePassOrVerify'
       produces:
       - application/json
       responses:
@@ -1044,7 +1044,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_user_request.CreateUser'
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_request.CreateUser'
       produces:
       - application/json
       responses:
@@ -1150,7 +1150,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_user_request.UpdateUser'
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_request.UpdateUser'
       produces:
       - application/json
       responses:

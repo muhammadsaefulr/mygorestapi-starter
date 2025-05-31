@@ -29,10 +29,10 @@ migrate-down:
 	@migrate -database "postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=disable" -path pkg/infrastructure/persistence/migrations down
 
 migrate-docker-up:
-	@docker run -v ./pkg/infrastructure/persistence/migrations:/migrations --network NimeStreamAPI_go-network migrate/migrate -path=/migrations/ -database "postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=disable" up
+	@docker run -v ./internal/infrastructure/persistence/migrations:/migrations --network NimeStreamAPI_go-network migrate/migrate -path=/migrations/ -database "postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=disable" up
 
 migrate-docker-down:
-	@docker run -v ./pkg/infrastructure/persistence/migrations:/migrations --network NimeStreamAPI_go-network migrate/migrate -path=/migrations/ -database "postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=disable" down
+	@docker run -v ./internal/infrastructure/persistence/migrations:/migrations --network NimeStreamAPI_go-network migrate/migrate -path=/migrations/ -database "postgres://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=disable" down
 
 docker:
 	@chmod -R 755 ./database/init

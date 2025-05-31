@@ -14,10 +14,11 @@ import (
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 
-	auth_request_dto "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/dto/auth/request"
+	auth_request_dto "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/auth/request"
+	response_auth_dto "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/auth/response"
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/entity/response"
-	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/shared/utils"
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 	"github.com/muhammadsaefulr/NimeStreamAPI/test/fixture"
 	"github.com/muhammadsaefulr/NimeStreamAPI/test/helper"
 
@@ -327,7 +328,7 @@ func TestAuthRoutes(t *testing.T) {
 			bytes, err := io.ReadAll(apiResponse.Body)
 			assert.Nil(t, err)
 
-			responseBody := new(response.RefreshToken)
+			responseBody := new(response_auth_dto.RefreshToken)
 
 			err = json.Unmarshal(bytes, responseBody)
 			assert.Nil(t, err)

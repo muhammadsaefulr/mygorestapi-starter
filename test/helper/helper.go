@@ -6,9 +6,9 @@ import (
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 
-	token_model "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/model/token"
-	user_model "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/model/user"
-	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/shared/utils"
+	token_model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model/token"
+	user_model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model/user"
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"

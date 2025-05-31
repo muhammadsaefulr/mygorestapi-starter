@@ -266,7 +266,7 @@ func (s *userService) GetUserByID(c *fiber.Ctx, id string) {
 
 ## Validation
 
-Request data is validated using [Package validator](https://github.com/go-playground/validator). Check the [documentation](https://pkg.go.dev/github.com/go-playground/validator/v10) for more details on how to write validations.
+Request data is validated using [Package validator](https://github.com/go-playground/validator). Check the [documentation](https://internal.go.dev/github.com/go-playground/validator/v10) for more details on how to write validations.
 
 The validation schemas are defined in the `validation` directory and are used within the services by passing them to the validation logic. In this example, the CreateUser method in the userService uses the `validation.CreateUser` schema to validate incoming request data before processing it. The validation is handled by the `Validate.Struct` method, which checks the request data against the schema.
 

@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/shared/utils"
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 
 	"github.com/spf13/viper"
 )

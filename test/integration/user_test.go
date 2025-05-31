@@ -10,9 +10,9 @@ import (
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/test"
 
-	request_dto_user "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/dto/user/request"
-	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/entity/response"
-	user_model "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/model/user"
+	request_dto_user "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/request"
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
+	user_model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model/user"
 	"github.com/muhammadsaefulr/NimeStreamAPI/test/fixture"
 	"github.com/muhammadsaefulr/NimeStreamAPI/test/helper"
 

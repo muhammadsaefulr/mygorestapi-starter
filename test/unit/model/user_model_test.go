@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"testing"
 
-	request "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/dto/user/request"
-	user_model "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/model/user"
-	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/shared/validation"
+	request "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/request"
+	user_model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model/user"
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/validation"
 
 	"github.com/stretchr/testify/assert"
 )

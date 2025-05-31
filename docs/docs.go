@@ -35,7 +35,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_auth_request.ForgotPassword"
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_auth_request.ForgotPassword"
                         }
                     }
                 ],
@@ -91,7 +91,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_auth_request.Login"
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_auth_request.Login"
                         }
                     }
                 ],
@@ -208,7 +208,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_auth_request.Register"
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_auth_request.Register"
                         }
                     }
                 ],
@@ -254,7 +254,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_user_request.UpdatePassOrVerify"
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_request.UpdatePassOrVerify"
                         }
                     }
                 ],
@@ -595,7 +595,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_user_request.CreateUser"
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_request.CreateUser"
                         }
                     }
                 ],
@@ -756,7 +756,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_user_request.UpdateUser"
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_request.UpdateUser"
                         }
                     }
                 ],
@@ -981,7 +981,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "data": {
-                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.GenreAnime"
+                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.GenreAnime"
                 },
                 "message": {
                     "type": "string"
@@ -999,7 +999,7 @@ const docTemplate = `{
                     "example": 200
                 },
                 "data": {
-                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.EpisodePageResult"
+                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.EpisodePageResult"
                 },
                 "message": {
                     "type": "string",
@@ -1018,7 +1018,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "data": {
-                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeSourceData"
+                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeSourceData"
                 },
                 "message": {
                     "type": "string"
@@ -1038,7 +1038,7 @@ const docTemplate = `{
                 "data": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeData"
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeData"
                     }
                 },
                 "message": {
@@ -1453,7 +1453,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_auth_request.ForgotPassword": {
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_auth_request.ForgotPassword": {
             "type": "object",
             "required": [
                 "email"
@@ -1466,7 +1466,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_auth_request.Login": {
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_auth_request.Login": {
             "type": "object",
             "required": [
                 "email",
@@ -1486,7 +1486,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_auth_request.Register": {
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_auth_request.Register": {
             "type": "object",
             "required": [
                 "email",
@@ -1512,7 +1512,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_user_request.CreateUser": {
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_request.CreateUser": {
             "type": "object",
             "required": [
                 "email",
@@ -1548,7 +1548,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_user_request.UpdatePassOrVerify": {
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_request.UpdatePassOrVerify": {
             "type": "object",
             "properties": {
                 "password": {
@@ -1559,7 +1559,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_dto_user_request.UpdateUser": {
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_request.UpdateUser": {
             "type": "object",
             "properties": {
                 "email": {
@@ -1580,7 +1580,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeData": {
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeData": {
             "type": "object",
             "properties": {
                 "judul_path": {
@@ -1603,7 +1603,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeDetail": {
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeDetail": {
             "type": "object",
             "properties": {
                 "duration": {
@@ -1612,7 +1612,7 @@ const docTemplate = `{
                 "genres": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.GenreInfo"
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.GenreInfo"
                     }
                 },
                 "producer": {
@@ -1644,7 +1644,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeEpisode": {
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeEpisode": {
             "type": "object",
             "properties": {
                 "title": {
@@ -1655,7 +1655,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeSourceData": {
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeSourceData": {
             "type": "object",
             "properties": {
                 "current_ep": {
@@ -1667,7 +1667,7 @@ const docTemplate = `{
                 "episodes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeEpisode"
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeEpisode"
                     }
                 },
                 "next_ep_url": {
@@ -1679,7 +1679,7 @@ const docTemplate = `{
                 "sources": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.VideoSource"
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.VideoSource"
                     }
                 },
                 "title": {
@@ -1687,21 +1687,21 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.EpisodePageResult": {
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.EpisodePageResult": {
             "type": "object",
             "properties": {
                 "anime_detail": {
-                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeDetail"
+                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeDetail"
                 },
                 "episode": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeEpisode"
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeEpisode"
                     }
                 }
             }
         },
-        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.GenreAnime": {
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.GenreAnime": {
             "type": "object",
             "properties": {
                 "episodes": {
@@ -1721,7 +1721,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.GenreInfo": {
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.GenreInfo": {
             "type": "object",
             "properties": {
                 "title": {
@@ -1732,13 +1732,13 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.VideoSource": {
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.VideoSource": {
             "type": "object",
             "properties": {
                 "data_list": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_pkg_domain_entity_otakudesu_scrape.AnimeEpisode"
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeEpisode"
                     }
                 },
                 "res": {
@@ -1760,7 +1760,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0.0",
-	Host:             "dev.msaepul.my.id",
+	Host:             "localhost:3000",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
 	Title:            "NimeStream API documentation",

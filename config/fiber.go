@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/shared/utils"
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 
 	"github.com/bytedance/sonic"
 	"github.com/gofiber/fiber/v2"

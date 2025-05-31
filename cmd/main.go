@@ -8,11 +8,11 @@ import (
 	"syscall"
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/config"
+	module "github.com/muhammadsaefulr/NimeStreamAPI/internal"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/delivery/middleware"
-	database "github.com/muhammadsaefulr/NimeStreamAPI/pkg/infrastructure/persistence"
-	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/router"
-	"github.com/muhammadsaefulr/NimeStreamAPI/pkg/shared/utils"
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/delivery/middleware"
+	database "github.com/muhammadsaefulr/NimeStreamAPI/internal/infrastructure/persistence"
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
@@ -23,7 +23,7 @@ import (
 
 // @title						NimeStream API documentation
 // @version						1.0.0
-// @host						dev.msaepul.my.id
+// @host						localhost:3000
 // @BasePath					/api/v1
 // @securityDefinitions.apikey	BearerAuth
 // @in							header
@@ -36,7 +36,7 @@ func main() {
 	app := setupFiberApp()
 	db := setupDatabase()
 	defer closeDatabase(db)
-	setupRoutes(app, db)
+	setupModule(app, db)
 
 	address := fmt.Sprintf("%s:%d", config.AppHost, config.AppPort)
 
@@ -66,8 +66,8 @@ func setupDatabase() *gorm.DB {
 	return db
 }
 
-func setupRoutes(app *fiber.App, db *gorm.DB) {
-	router.Routes(app, db)
+func setupModule(app *fiber.App, db *gorm.DB) {
+	module.InitModule(app, db)
 	app.Use(utils.NotFoundHandler)
 }
 

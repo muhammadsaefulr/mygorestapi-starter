@@ -5,7 +5,7 @@ import (
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 
-	user_model "github.com/muhammadsaefulr/NimeStreamAPI/pkg/domain/model/user"
+	user_model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model/user"
 	"github.com/muhammadsaefulr/NimeStreamAPI/test/helper"
 )
 
