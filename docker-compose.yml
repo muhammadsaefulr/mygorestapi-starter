@@ -21,6 +21,20 @@ services:
     networks:
       - app-net
 
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    depends_on:
+      - postgresdb
+    networks:
+      - app-net
+
   nimestreamapi-backend:
     image: saepulid07/nimestreamapi-backend:latest
     container_name: nimestreamapi-backend
