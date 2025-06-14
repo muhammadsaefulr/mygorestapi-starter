@@ -6,8 +6,7 @@ import (
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 
-	token_model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model/token"
-	user_model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model/user"
+	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -22,14 +21,14 @@ func ClearAll(db *gorm.DB) {
 }
 
 func ClearUsers(db *gorm.DB) {
-	err := db.Where("id is not null").Delete(&user_model.User{}).Error
+	err := db.Where("id is not null").Delete(&model.User{}).Error
 	if err != nil {
 		logrus.Fatalf("Failed clear user data : %+v", err)
 	}
 }
 
 func ClearToken(db *gorm.DB) {
-	err := db.Where("id is not null").Delete(&token_model.Token{}).Error
+	err := db.Where("id is not null").Delete(&model.Token{}).Error
 	if err != nil {
 		logrus.Fatalf("Failed clear user token : %+v", err)
 	}
@@ -41,7 +40,7 @@ func CreateUser(db *gorm.DB, email, password, name string) {
 		logrus.Errorf("Failed hashed password : %+v", err)
 	}
 
-	user := &user_model.User{
+	user := &model.User{
 		Email:    email,
 		Password: hashedPassword,
 		Name:     name,
@@ -53,7 +52,7 @@ func CreateUser(db *gorm.DB, email, password, name string) {
 	}
 }
 
-func InsertUser(db *gorm.DB, users ...*user_model.User) {
+func InsertUser(db *gorm.DB, users ...*model.User) {
 	now := time.Now()
 
 	for i, user := range users {
@@ -76,7 +75,7 @@ func SaveToken(db *gorm.DB, token, userID, tokenType string, expires time.Time) 
 		return err
 	}
 
-	tokenDoc := &token_model.Token{
+	tokenDoc := &model.Token{
 		Token:   token,
 		UserID:  uuid.MustParse(userID),
 		Type:    tokenType,
@@ -89,7 +88,7 @@ func SaveToken(db *gorm.DB, token, userID, tokenType string, expires time.Time) 
 }
 
 func DeleteToken(db *gorm.DB, tokenType, userID string) error {
-	tokenDoc := new(token_model.Token)
+	tokenDoc := new(model.Token)
 
 	result := db.Where("type = ? AND user_id = ?", tokenType, userID).Delete(tokenDoc)
 
@@ -124,13 +123,13 @@ func GenerateInvalidToken(
 	return token.SignedString([]byte("invalidSecret"))
 }
 
-func GetTokenByUserID(db *gorm.DB, tokenStr string) (*token_model.Token, error) {
+func GetTokenByUserID(db *gorm.DB, tokenStr string) (*model.Token, error) {
 	userID, err := utils.VerifyToken(tokenStr, config.JWTSecret, config.TokenTypeRefresh)
 	if err != nil {
 		return nil, err
 	}
 
-	tokenDoc := new(token_model.Token)
+	tokenDoc := new(model.Token)
 	result := db.Where("token = ? AND user_id = ?", tokenStr, userID).
 		First(tokenDoc)
 
@@ -141,8 +140,8 @@ func GetTokenByUserID(db *gorm.DB, tokenStr string) (*token_model.Token, error) 
 	return tokenDoc, nil
 }
 
-func GetTokenByType(db *gorm.DB, userID string, tokenType string) (*token_model.Token, error) {
-	tokenDoc := new(token_model.Token)
+func GetTokenByType(db *gorm.DB, userID string, tokenType string) (*model.Token, error) {
+	tokenDoc := new(model.Token)
 	result := db.Where("type = ? AND user_id = ?", tokenType, userID).
 		First(tokenDoc)
 
@@ -153,8 +152,8 @@ func GetTokenByType(db *gorm.DB, userID string, tokenType string) (*token_model.
 	return tokenDoc, nil
 }
 
-func GetUserByID(db *gorm.DB, id string) (*user_model.User, error) {
-	user := new(user_model.User)
+func GetUserByID(db *gorm.DB, id string) (*model.User, error) {
+	user := new(model.User)
 
 	result := db.First(user, "id = ?", id)
 

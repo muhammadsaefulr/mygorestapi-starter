@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"{{ .ModulePath }}/internal/domain/model/{{.Name}}"
+	"{{ .ModulePath }}/internal/domain/model"
 	"{{ .ModulePath }}/internal/domain/dto/{{.Name}}/request"
 )
 

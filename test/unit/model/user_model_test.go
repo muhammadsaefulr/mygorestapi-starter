@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	request "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/request"
-	user_model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model/user"
+	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/validation"
 
 	"github.com/stretchr/testify/assert"
@@ -126,7 +126,7 @@ func TestUserModel(t *testing.T) {
 
 	t.Run("User toJSON()", func(t *testing.T) {
 		t.Run("should not return user password when toJSON is called", func(t *testing.T) {
-			user := &user_model.User{
+			user := &model.User{
 				Name:     "John Doe",
 				Email:    "johndoe@gmail.com",
 				Password: "password1",

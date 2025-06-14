@@ -1,6 +1,6 @@
 package example
 
-import od_anime_entity "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/entity/otakudesu_scrape"
+import model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 
 type RegisterResponse struct {
 	Code    int    `json:"code" example:"201"`
@@ -101,29 +101,29 @@ type DeleteUserResponse struct {
 }
 
 type GetOdAnimeHomeResponse struct {
-	Code    int                         `json:"code" example:"200"`
-	Status  string                      `json:"status" example:"success"`
-	Message string                      `json:"message" example:"Berhasil mengambil data!"`
-	Result  []od_anime_entity.AnimeData `json:"data"`
+	Code    int               `json:"code" example:"200"`
+	Status  string            `json:"status" example:"success"`
+	Message string            `json:"message" example:"Berhasil mengambil data!"`
+	Result  []model.AnimeData `json:"data"`
 }
 
 type GetOdAnimeEpisodeResponse struct {
-	Code    int                               `json:"code" example:"200"`
-	Status  string                            `json:"status" example:"success"`
-	Message string                            `json:"message" example:"Berhasil mengambil data!"`
-	Result  od_anime_entity.EpisodePageResult `json:"data"`
+	Code    int                     `json:"code" example:"200"`
+	Status  string                  `json:"status" example:"success"`
+	Message string                  `json:"message" example:"Berhasil mengambil data!"`
+	Result  model.EpisodePageResult `json:"data"`
 }
 
 type GetOdAnimeEpisodeVideoResponse struct {
 	Code    int
 	Status  string
 	Message string
-	Result  od_anime_entity.AnimeSourceData `json:"data"`
+	Result  model.AnimeSourceData `json:"data"`
 }
 
 type GetOdAnimeByGenreResponse struct {
 	Code    int
 	Status  string
 	Message string
-	Result  od_anime_entity.GenreAnime `json:"data"`
+	Result  model.GenreAnime `json:"data"`
 }

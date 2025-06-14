@@ -12,7 +12,7 @@ import (
 	user_dto_request "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/request"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
 
-	user_model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model/user"
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	auth_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/auth_service"
 	system_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/system_service"
 	user_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_service"
@@ -238,7 +238,7 @@ func (a *AuthController) ResetPassword(c *fiber.Ctx) error {
 // @Success      200  {object}  example.SendVerificationEmailResponse
 // @Failure      401  {object}  example.Unauthorized  "Unauthorized"
 func (a *AuthController) SendVerificationEmail(c *fiber.Ctx) error {
-	user, _ := c.Locals("user").(*user_model.User)
+	user, _ := c.Locals("user").(*model.User)
 
 	verifyEmailToken, err := a.TokenService.GenerateVerifyEmailToken(c, user)
 	if err != nil {

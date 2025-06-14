@@ -1,12 +1,12 @@
 package fixture
 
 import (
-	user_model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model/user"
+	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 
 	"github.com/google/uuid"
 )
 
-var UserOne = &user_model.User{
+var UserOne = &model.User{
 	ID:            uuid.New(),
 	Name:          "Test1",
 	Email:         "test1@gmail.com",
@@ -15,7 +15,7 @@ var UserOne = &user_model.User{
 	VerifiedEmail: false,
 }
 
-var UserTwo = &user_model.User{
+var UserTwo = &model.User{
 	ID:            uuid.New(),
 	Name:          "Test2",
 	Email:         "test2@gmail.com",
@@ -24,7 +24,7 @@ var UserTwo = &user_model.User{
 	VerifiedEmail: false,
 }
 
-var Admin = &user_model.User{
+var Admin = &model.User{
 	ID:            uuid.New(),
 	Name:          "Admin",
 	Email:         "admin@gmail.com",

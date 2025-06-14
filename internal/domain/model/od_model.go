@@ -1,4 +1,4 @@
-package od_anime_entity
+package model
 
 type AnimeData struct {
 	Title        string `json:"title"`
@@ -48,8 +48,8 @@ type AnimeDetail struct {
 	Duration     string      `json:"duration"`
 	Studio       string      `json:"studio"`
 	ReleaseDate  string      `json:"release_date"`
-	Genres       []GenreInfo `json:"genres"`
 	Synopsis     string      `json:"synopsis"`
+	Genres       []GenreInfo `json:"genres"`
 }
 
 type EpisodePageResult struct {

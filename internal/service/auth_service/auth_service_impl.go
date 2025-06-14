@@ -8,7 +8,7 @@ import (
 	auth_request_dto "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/auth/request"
 	auth_response_dto "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/auth/response"
 	request "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/request"
-	user_model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model/user"
+	user_model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	system_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/system_service"
 	user_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_service"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"

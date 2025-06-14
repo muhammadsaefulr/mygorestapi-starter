@@ -2,7 +2,7 @@ package config
 
 var allRoles = map[string][]string{
 	"user":  {},
-	"admin": {"getUsers", "manageUsers"},
+	"admin": {"getUsers", "manageUsers", "manageAnime"},
 	"vip":   {},
 }
 

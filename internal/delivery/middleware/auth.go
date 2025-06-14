@@ -12,7 +12,13 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func Auth(userService service.UserService, requiredRights ...string) fiber.Handler {
+var userService service.UserService
+
+func InitAuthMiddleware(us service.UserService) {
+	userService = us
+}
+
+func Auth(requiredRights ...string) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		authHeader := c.Get("Authorization")
 		token := strings.TrimSpace(strings.TrimPrefix(authHeader, "Bearer "))

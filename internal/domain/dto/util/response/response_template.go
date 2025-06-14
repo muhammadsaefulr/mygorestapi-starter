@@ -2,7 +2,7 @@ package response
 
 import (
 	response_dto_auth "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/auth/response"
-	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model/user"
+	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 )
 
 type Common struct {

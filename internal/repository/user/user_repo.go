@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/request"
-	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model/user"
+	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 )
 
 type UserRepo interface {

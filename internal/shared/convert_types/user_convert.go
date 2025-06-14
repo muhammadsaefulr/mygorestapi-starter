@@ -2,7 +2,7 @@ package convert_types
 
 import (
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/request"
-	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model/user"
+	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 )
 
 func CreateUserToUserModel(user *request.CreateUser) *model.User {

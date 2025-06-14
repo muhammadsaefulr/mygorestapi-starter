@@ -5,7 +5,7 @@ import (
 
 	request "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/request"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
-	user_model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model/user"
+	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 
 	system_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/system_service"
 	user_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_service"
@@ -51,7 +51,7 @@ func (u *UserController) GetUsers(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).
-		JSON(response.SuccessWithPaginate[user_model.User]{
+		JSON(response.SuccessWithPaginate[model.User]{
 			Code:         fiber.StatusOK,
 			Status:       "success",
 			Message:      "Get all users successfully",

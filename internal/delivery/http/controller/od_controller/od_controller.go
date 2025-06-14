@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
-	od_anime_entity "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/entity/otakudesu_scrape"
+	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 
 	od_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/otakudesu_scrape"
 
@@ -35,7 +35,7 @@ func (a *OdAnimeController) GetHomePageAnime(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(response.SuccessWithCommonData[od_anime_entity.AnimeData]{
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithCommonData[model.AnimeData]{
 		Code:    fiber.StatusOK,
 		Status:  "success",
 		Message: "Successfully Retrieved Anime!",
@@ -54,7 +54,7 @@ func (a *OdAnimeController) GetAnimeEpisode(c *fiber.Ctx) error {
 	judul := c.Params("judul")
 	detail, episode, err := a.AnimeService.GetAnimeEpisode(judul)
 
-	results := od_anime_entity.EpisodePageResult{
+	results := model.EpisodePageResult{
 		AnimeDetail: detail,
 		AnimeEps:    episode,
 	}
@@ -67,7 +67,7 @@ func (a *OdAnimeController) GetAnimeEpisode(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(response.SuccessWithDetail[od_anime_entity.EpisodePageResult]{
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithDetail[model.EpisodePageResult]{
 		Code:    fiber.StatusOK,
 		Status:  "success",
 		Message: "Success Retrieved Anime!",
@@ -94,7 +94,7 @@ func (a *OdAnimeController) GetAnimeSourceVid(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(response.SuccessWithDetail[od_anime_entity.AnimeSourceData]{
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithDetail[model.AnimeSourceData]{
 		Code:    fiber.StatusOK,
 		Status:  "success",
 		Message: "Success Retrieved Anime",
@@ -124,7 +124,7 @@ func (a *OdAnimeController) GetAnimeGenreList(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(response.SuccessWithCommonData[od_anime_entity.GenreAnime]{
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithCommonData[model.GenreAnime]{
 		Code:    fiber.StatusOK,
 		Status:  "success",
 		Message: "Success Retrieved Anime!",
@@ -152,7 +152,7 @@ func (a *OdAnimeController) GetAnimeSearchList(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(response.SuccessWithCommonData[od_anime_entity.SearchResult]{
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithCommonData[model.SearchResult]{
 		Code:    fiber.StatusOK,
 		Status:  "success",
 		Message: "Success Retrieved Anime!",

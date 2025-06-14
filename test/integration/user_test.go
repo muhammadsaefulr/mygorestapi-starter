@@ -12,7 +12,7 @@ import (
 
 	request_dto_user "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/request"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
-	user_model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model/user"
+	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	"github.com/muhammadsaefulr/NimeStreamAPI/test/fixture"
 	"github.com/muhammadsaefulr/NimeStreamAPI/test/helper"
 
@@ -310,7 +310,7 @@ func TestUserRoutes(t *testing.T) {
 			bytes, err := io.ReadAll(apiResponse.Body)
 			assert.Nil(t, err)
 
-			responseBody := new(response.SuccessWithPaginate[user_model.User])
+			responseBody := new(response.SuccessWithPaginate[model.User])
 
 			err = json.Unmarshal(bytes, responseBody)
 			assert.Nil(t, err)
@@ -373,7 +373,7 @@ func TestUserRoutes(t *testing.T) {
 			bytes, err := io.ReadAll(apiResponse.Body)
 			assert.Nil(t, err)
 
-			responseBody := new(response.SuccessWithPaginate[user_model.User])
+			responseBody := new(response.SuccessWithPaginate[model.User])
 
 			err = json.Unmarshal(bytes, responseBody)
 			assert.Nil(t, err)
@@ -405,7 +405,7 @@ func TestUserRoutes(t *testing.T) {
 			bytes, err := io.ReadAll(apiResponse.Body)
 			assert.Nil(t, err)
 
-			responseBody := new(response.SuccessWithPaginate[user_model.User])
+			responseBody := new(response.SuccessWithPaginate[model.User])
 
 			err = json.Unmarshal(bytes, responseBody)
 			assert.Nil(t, err)

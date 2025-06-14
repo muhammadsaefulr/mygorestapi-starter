@@ -5,7 +5,7 @@ import (
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 
-	user_model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model/user"
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	"github.com/muhammadsaefulr/NimeStreamAPI/test/helper"
 )
 
@@ -14,7 +14,7 @@ var ExpiresRefreshToken = time.Now().UTC().Add(time.Hour * 24 * time.Duration(co
 var ExpiresResetPasswordToken = time.Now().UTC().Add(time.Minute * time.Duration(config.JWTResetPasswordExp))
 var ExpiresVerifyEmailToken = time.Now().UTC().Add(time.Minute * time.Duration(config.JWTVerifyEmailExp))
 
-func AccessToken(user *user_model.User) (string, error) {
+func AccessToken(user *model.User) (string, error) {
 	accessToken, err := helper.GenerateToken(user.ID.String(), ExpiresAccessToken, config.TokenTypeAccess)
 	if err != nil {
 		return accessToken, err
@@ -22,7 +22,7 @@ func AccessToken(user *user_model.User) (string, error) {
 	return accessToken, nil
 }
 
-func RefreshToken(user *user_model.User) (string, error) {
+func RefreshToken(user *model.User) (string, error) {
 	refreshToken, err := helper.GenerateToken(user.ID.String(), ExpiresRefreshToken, config.TokenTypeRefresh)
 	if err != nil {
 		return refreshToken, err
@@ -30,7 +30,7 @@ func RefreshToken(user *user_model.User) (string, error) {
 	return refreshToken, nil
 }
 
-func ResetPasswordToken(user *user_model.User) (string, error) {
+func ResetPasswordToken(user *model.User) (string, error) {
 	resetPasswordToken, err := helper.GenerateToken(
 		user.ID.String(), ExpiresResetPasswordToken, config.TokenTypeResetPassword,
 	)
@@ -40,7 +40,7 @@ func ResetPasswordToken(user *user_model.User) (string, error) {
 	return resetPasswordToken, nil
 }
 
-func VerifyEmailToken(user *user_model.User) (string, error) {
+func VerifyEmailToken(user *model.User) (string, error) {
 	verifyEmailToken, err := helper.GenerateToken(user.ID.String(), ExpiresVerifyEmailToken, config.TokenTypeVerifyEmail)
 	if err != nil {
 		return verifyEmailToken, err

@@ -5,7 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/request"
-	user_model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model/user"
+	user_model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	repository "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/user"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/convert_types"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"

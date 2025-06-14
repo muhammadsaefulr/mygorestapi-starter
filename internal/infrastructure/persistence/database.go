@@ -6,6 +6,8 @@ import (
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
+
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 
 	"gorm.io/driver/postgres"
@@ -33,6 +35,10 @@ func Connect(dbHost, dbName string) *gorm.DB {
 	if errDB != nil {
 		utils.Log.Errorf("Failed to connect to database: %+v", errDB)
 	}
+
+	//auto migrations
+	// db.Migrator().DropTable(&model.User{}, &model.Token{}, &model.Watchlist{})
+	db.AutoMigrate(&model.User{}, &model.Token{}, &model.Watchlist{})
 
 	// Config connection pooling
 	sqlDB.SetMaxIdleConns(10)

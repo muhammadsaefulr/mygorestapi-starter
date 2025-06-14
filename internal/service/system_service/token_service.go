@@ -4,8 +4,7 @@ import (
 	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 
 	auth_request_dto "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/auth/request"
-	token_model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model/token"
-	user_model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model/user"
+	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 
 	"time"
 
@@ -27,10 +26,10 @@ type TokenService interface {
 	SaveToken(c *fiber.Ctx, token, userID, tokenType string, expires time.Time) error
 	DeleteToken(c *fiber.Ctx, tokenType string, userID string) error
 	DeleteAllToken(c *fiber.Ctx, userID string) error
-	GetTokenByUserID(c *fiber.Ctx, tokenStr string) (*token_model.Token, error)
-	GenerateAuthTokens(c *fiber.Ctx, user *user_model.User) (*res.Tokens, error)
+	GetTokenByUserID(c *fiber.Ctx, tokenStr string) (*model.Token, error)
+	GenerateAuthTokens(c *fiber.Ctx, user *model.User) (*res.Tokens, error)
 	GenerateResetPasswordToken(c *fiber.Ctx, req *auth_request_dto.ForgotPassword) (string, error)
-	GenerateVerifyEmailToken(c *fiber.Ctx, user *user_model.User) (*string, error)
+	GenerateVerifyEmailToken(c *fiber.Ctx, user *model.User) (*string, error)
 }
 
 type tokenService struct {
@@ -66,7 +65,7 @@ func (s *tokenService) SaveToken(c *fiber.Ctx, token, userID, tokenType string, 
 		return err
 	}
 
-	tokenDoc := &token_model.Token{
+	tokenDoc := &model.Token{
 		Token:   token,
 		UserID:  uuid.MustParse(userID),
 		Type:    tokenType,
@@ -83,7 +82,7 @@ func (s *tokenService) SaveToken(c *fiber.Ctx, token, userID, tokenType string, 
 }
 
 func (s *tokenService) DeleteToken(c *fiber.Ctx, tokenType string, userID string) error {
-	tokenDoc := new(token_model.Token)
+	tokenDoc := new(model.Token)
 
 	result := s.DB.WithContext(c.Context()).
 		Where("type = ? AND user_id = ?", tokenType, userID).
@@ -97,7 +96,7 @@ func (s *tokenService) DeleteToken(c *fiber.Ctx, tokenType string, userID string
 }
 
 func (s *tokenService) DeleteAllToken(c *fiber.Ctx, userID string) error {
-	tokenDoc := new(token_model.Token)
+	tokenDoc := new(model.Token)
 
 	result := s.DB.WithContext(c.Context()).Where("user_id = ?", userID).Delete(tokenDoc)
 
@@ -108,13 +107,13 @@ func (s *tokenService) DeleteAllToken(c *fiber.Ctx, userID string) error {
 	return result.Error
 }
 
-func (s *tokenService) GetTokenByUserID(c *fiber.Ctx, tokenStr string) (*token_model.Token, error) {
+func (s *tokenService) GetTokenByUserID(c *fiber.Ctx, tokenStr string) (*model.Token, error) {
 	userID, err := utils.VerifyToken(tokenStr, config.JWTSecret, config.TokenTypeRefresh)
 	if err != nil {
 		return nil, err
 	}
 
-	tokenDoc := new(token_model.Token)
+	tokenDoc := new(model.Token)
 
 	result := s.DB.WithContext(c.Context()).
 		Where("token = ? AND user_id = ?", tokenStr, userID).
@@ -128,7 +127,7 @@ func (s *tokenService) GetTokenByUserID(c *fiber.Ctx, tokenStr string) (*token_m
 	return tokenDoc, nil
 }
 
-func (s *tokenService) GenerateAuthTokens(c *fiber.Ctx, user *user_model.User) (*res.Tokens, error) {
+func (s *tokenService) GenerateAuthTokens(c *fiber.Ctx, user *model.User) (*res.Tokens, error) {
 	accessTokenExpires := time.Now().UTC().Add(time.Minute * time.Duration(config.JWTAccessExp))
 	accessToken, err := s.GenerateToken(user.ID.String(), accessTokenExpires, config.TokenTypeAccess)
 	if err != nil {
@@ -183,7 +182,7 @@ func (s *tokenService) GenerateResetPasswordToken(c *fiber.Ctx, req *auth_reques
 	return resetPasswordToken, nil
 }
 
-func (s *tokenService) GenerateVerifyEmailToken(c *fiber.Ctx, user *user_model.User) (*string, error) {
+func (s *tokenService) GenerateVerifyEmailToken(c *fiber.Ctx, user *model.User) (*string, error) {
 	expires := time.Now().UTC().Add(time.Minute * time.Duration(config.JWTVerifyEmailExp))
 	verifyEmailToken, err := s.GenerateToken(user.ID.String(), expires, config.TokenTypeVerifyEmail)
 	if err != nil {

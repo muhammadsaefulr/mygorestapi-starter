@@ -2,7 +2,7 @@ package response
 
 import "time"
 
-type {{.PascalName}}Response struct {
+type CommentResponse struct {
     // contoh field, sesuaikan dengan kebutuhan
 	ID            uint      `json:"id"`
 	Name		  string    `json:"name"`

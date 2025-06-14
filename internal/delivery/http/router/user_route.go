@@ -15,10 +15,10 @@ func UserRoutes(v1 fiber.Router, u user_service.UserService, t system_service.To
 
 	user := v1.Group("/users")
 
-	user.Get("/", m.Auth(u, "getUsers"), userController.GetUsers)
-	user.Post("/", m.Auth(u, "manageUsers"), userController.CreateUser)
-	user.Get("/:userId", m.Auth(u, "getUsers"), userController.GetUserByID)
-	user.Patch("/:userId", m.Auth(u, "manageAcc"), userController.UpdateUser)
-	user.Delete("/:userId", m.Auth(u, "manageUsers"), userController.DeleteUser)
+	user.Get("/", m.Auth("getUsers"), userController.GetUsers)
+	user.Post("/", m.Auth("manageUsers"), userController.CreateUser)
+	user.Get("/:userId", m.Auth("getUsers"), userController.GetUserByID)
+	user.Patch("/:userId", m.Auth("manageAcc"), userController.UpdateUser)
+	user.Delete("/:userId", m.Auth("manageUsers"), userController.DeleteUser)
 
 }

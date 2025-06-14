@@ -1,15 +1,15 @@
 package request
 
-type Create{{.PascalName}} struct {
+type CreateComment struct {
 	Name string `json:"name"`
 }
 
-type Update{{.PascalName}} struct {
+type UpdateComment struct {
 	ID uint `json:"-"`
 	Name string `json:"name"`
 }
 
-type Query{{.PascalName}} struct {
+type QueryComment struct {
 	Page  int    `query:"page"`
 	Limit int    `query:"limit"`
 	Sort  string `query:"sort"`

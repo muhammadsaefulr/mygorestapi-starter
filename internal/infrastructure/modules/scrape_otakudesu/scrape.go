@@ -8,18 +8,18 @@ import (
 	"strings"
 	"sync"
 
-	od_anime_entity "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/entity/otakudesu_scrape"
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly"
 )
 
-func ScrapeHomePage() []od_anime_entity.AnimeData {
+func ScrapeHomePage() []model.AnimeData {
 	c := colly.NewCollector(colly.UserAgent("Mozilla/5.0"))
-	var results []od_anime_entity.AnimeData
+	var results []model.AnimeData
 
 	c.OnHTML(".venz li", func(e *colly.HTMLElement) {
-		results = append(results, od_anime_entity.AnimeData{
+		results = append(results, model.AnimeData{
 			Title:        e.ChildText(".jdlflm"),
 			URL:          e.ChildAttr(".thumb a", "href"),
 			JudulPath:    strings.TrimSuffix(path.Base(e.ChildAttr(".thumb a", "href")), "/"),
@@ -32,12 +32,12 @@ func ScrapeHomePage() []od_anime_entity.AnimeData {
 	return results
 }
 
-func ScrapeGenreAnime(url string) []od_anime_entity.GenreAnime {
+func ScrapeGenreAnime(url string) []model.GenreAnime {
 	c := colly.NewCollector(colly.UserAgent("Mozilla/5.0"))
-	var results []od_anime_entity.GenreAnime
+	var results []model.GenreAnime
 
 	c.OnHTML(".col-anime", func(e *colly.HTMLElement) {
-		results = append(results, od_anime_entity.GenreAnime{
+		results = append(results, model.GenreAnime{
 			Title:    e.ChildText(".col-anime-title a"),
 			URL:      e.ChildAttr(".col-anime-title a", "href"),
 			Studio:   e.ChildText(".col-anime-studio"),
@@ -52,28 +52,25 @@ func ScrapeGenreAnime(url string) []od_anime_entity.GenreAnime {
 	return results
 }
 
-func ScrapeAnimeEpisodes(url string) (od_anime_entity.AnimeDetail, []od_anime_entity.AnimeEpisode) {
+func ScrapeAnimeEpisodes(url string) (model.AnimeDetail, []model.AnimeEpisode) {
 	c := colly.NewCollector(
 		colly.UserAgent("Mozilla/5.0"),
 		colly.Async(true),
 	)
 	var (
-		detail   od_anime_entity.AnimeDetail
-		episodes []od_anime_entity.AnimeEpisode
-		found    = false
+		detail   model.AnimeDetail
+		episodes []model.AnimeEpisode
 	)
 
-	c.OnHTML(".infozingle", func(e *colly.HTMLElement) {
-		if found {
-			return
-		}
-		found = true
+	c.OnHTML(".fotoanime", func(e *colly.HTMLElement) {
+		infozingle := e.DOM.Find(".infozingle")
+		sinopc := e.DOM.Find(".sinopc")
 
-		var genres []od_anime_entity.GenreInfo
-		e.ForEach("span b", func(_ int, el *colly.HTMLElement) {
-			if strings.Contains(el.Text, "Genre") {
-				el.DOM.Parent().Find("a").Each(func(_ int, s *goquery.Selection) {
-					genres = append(genres, od_anime_entity.GenreInfo{
+		var genres []model.GenreInfo
+		infozingle.Find("span b").Each(func(_ int, el *goquery.Selection) {
+			if strings.Contains(el.Text(), "Genre") {
+				el.Parent().Find("a").Each(func(_ int, s *goquery.Selection) {
+					genres = append(genres, model.GenreInfo{
 						Title: s.Text(),
 						URL:   s.AttrOr("href", ""),
 					})
@@ -81,23 +78,26 @@ func ScrapeAnimeEpisodes(url string) (od_anime_entity.AnimeDetail, []od_anime_en
 			}
 		})
 
-		detail = od_anime_entity.AnimeDetail{
-			ThumbnailURL: e.DOM.Parent().Find("img").AttrOr("src", ""),
-			Title:        strings.TrimPrefix(e.ChildText("p:contains('Judul')"), "Judul: "),
-			Rating:       strings.TrimPrefix(e.ChildText("p:contains('Skor')"), "Skor: "),
-			Producer:     strings.TrimPrefix(e.ChildText("p:contains('Produser')"), "Produser: "),
-			Status:       strings.TrimPrefix(e.ChildText("p:contains('Status')"), "Status: "),
-			TotalEps:     strings.TrimPrefix(e.ChildText("p:contains('Total Episode')"), "Total Episode: "),
-			Duration:     strings.TrimSuffix(strings.TrimPrefix(e.ChildText("p:contains('Durasi')"), "Durasi: "), "per ep."),
-			Studio:       strings.TrimPrefix(e.ChildText("p:contains('Studio:')"), "Studio: "),
-			ReleaseDate:  e.ChildText("p:contains('Tanggal Rilis')"),
+		re := regexp.MustCompile(`(?i)\(Info: Episode sebelumnya akan ditambahkan secara berkala\)`)
+		cleanSynopsis := re.ReplaceAllString(sinopc.Find("p").Text(), "")
+
+		detail = model.AnimeDetail{
+			ThumbnailURL: infozingle.Parent().Find("img.attachment-post-thumbnail.size-post-thumbnail").AttrOr("src", ""),
+			Title:        strings.TrimPrefix(infozingle.Find("p:contains('Judul')").Text(), "Judul: "),
+			Rating:       strings.TrimPrefix(infozingle.Find("p:contains('Skor')").Text(), "Skor: "),
+			Producer:     strings.TrimPrefix(infozingle.Find("p:contains('Produser')").Text(), "Produser: "),
+			Status:       strings.TrimPrefix(infozingle.Find("p:contains('Status')").Text(), "Status: "),
+			TotalEps:     strings.TrimPrefix(infozingle.Find("p:contains('Total Episode')").Text(), "Total Episode: "),
+			Duration:     strings.TrimSuffix(strings.TrimPrefix(infozingle.Find("p:contains('Durasi')").Text(), "Durasi: "), "per ep."),
+			Studio:       strings.TrimPrefix(infozingle.Find("p:contains('Studio:')").Text(), "Studio: "),
+			ReleaseDate:  infozingle.Find("p:contains('Tanggal Rilis')").Text(),
+			Synopsis:     cleanSynopsis,
 			Genres:       genres,
-			Synopsis:     e.DOM.SiblingsFiltered(".sinopc").Find("p").Text(),
 		}
 	})
 
 	c.OnHTML(".episodelist li", func(e *colly.HTMLElement) {
-		episodes = append(episodes, od_anime_entity.AnimeEpisode{
+		episodes = append(episodes, model.AnimeEpisode{
 			Title:    e.ChildText("span a"),
 			VideoURL: e.ChildAttr("span a", "href"),
 		})
@@ -109,23 +109,23 @@ func ScrapeAnimeEpisodes(url string) (od_anime_entity.AnimeDetail, []od_anime_en
 	return detail, episodes
 }
 
-func ScrapeSearchAnimeByTitle(url string) []od_anime_entity.SearchResult {
+func ScrapeSearchAnimeByTitle(url string) []model.SearchResult {
 	c := colly.NewCollector(colly.UserAgent("Mozilla/5.0"))
-	var results []od_anime_entity.SearchResult
+	var results []model.SearchResult
 
 	c.OnHTML("ul.chivsrc li", func(e *colly.HTMLElement) {
-		var genres []od_anime_entity.GenreInfo
+		var genres []model.GenreInfo
 		e.ForEach(".set b", func(_ int, el *colly.HTMLElement) {
 			if strings.Contains(el.Text, "Genres") {
 				el.DOM.Parent().Find("a").Each(func(_ int, s *goquery.Selection) {
-					genres = append(genres, od_anime_entity.GenreInfo{
+					genres = append(genres, model.GenreInfo{
 						Title: s.Text(),
 						URL:   s.AttrOr("href", ""),
 					})
 				})
 			}
 		})
-		results = append(results, od_anime_entity.SearchResult{
+		results = append(results, model.SearchResult{
 			Title:        e.ChildText("h2 a"),
 			URL:          e.ChildAttr("h2 a", "href"),
 			ThumbnailURL: e.ChildAttr("img", "src"),
@@ -141,12 +141,12 @@ func ScrapeSearchAnimeByTitle(url string) []od_anime_entity.SearchResult {
 	return results
 }
 
-func ScrapeOngoingAnime(url string) []od_anime_entity.AnimeData {
+func ScrapeOngoingAnime(url string) []model.AnimeData {
 	c := colly.NewCollector(colly.UserAgent("Mozilla/5.0"))
-	var results []od_anime_entity.AnimeData
+	var results []model.AnimeData
 
 	c.OnHTML(".venz li", func(e *colly.HTMLElement) {
-		results = append(results, od_anime_entity.AnimeData{
+		results = append(results, model.AnimeData{
 			Title:        e.ChildText(".jdlflm"),
 			LatestEp:     e.ChildText(".epz"),
 			URL:          e.ChildAttr(".thumb a", "href"),
@@ -161,21 +161,21 @@ func ScrapeOngoingAnime(url string) []od_anime_entity.AnimeData {
 	return results
 }
 
-func ScrapeAnimeSourceData(url string) od_anime_entity.AnimeSourceData {
+func ScrapeAnimeSourceData(url string) model.AnimeSourceData {
 	c := colly.NewCollector()
-	var epsList []od_anime_entity.AnimeEpisode
-	var animeSource []od_anime_entity.VideoSource
-	var result od_anime_entity.AnimeSourceData
+	var epsList []model.AnimeEpisode
+	var animeSource []model.VideoSource
+	var result model.AnimeSourceData
 
 	c.OnHTML(".keyingpost li", func(e *colly.HTMLElement) {
-		epsList = append(epsList, od_anime_entity.AnimeEpisode{
+		epsList = append(epsList, model.AnimeEpisode{
 			Title:    e.ChildText("a"),
 			VideoURL: e.ChildAttr("a", "href"),
 		})
 	})
 
 	c.OnHTML(".download ul li", func(e *colly.HTMLElement) {
-		var dataList []od_anime_entity.AnimeEpisode
+		var dataList []model.AnimeEpisode
 		titleRes := e.ChildText("strong")
 
 		var wg sync.WaitGroup
@@ -192,7 +192,7 @@ func ScrapeAnimeSourceData(url string) od_anime_entity.AnimeSourceData {
 					extracted := ExtractPdrainUrl(link)
 					if extracted != "" {
 						mu.Lock()
-						dataList = append(dataList, od_anime_entity.AnimeEpisode{
+						dataList = append(dataList, model.AnimeEpisode{
 							Title:    title,
 							VideoURL: extracted,
 						})
@@ -201,7 +201,7 @@ func ScrapeAnimeSourceData(url string) od_anime_entity.AnimeSourceData {
 				}(title, link)
 			} else {
 				mu.Lock()
-				dataList = append(dataList, od_anime_entity.AnimeEpisode{
+				dataList = append(dataList, model.AnimeEpisode{
 					Title:    title,
 					VideoURL: link,
 				})
@@ -211,7 +211,7 @@ func ScrapeAnimeSourceData(url string) od_anime_entity.AnimeSourceData {
 
 		wg.Wait()
 
-		animeSource = append(animeSource, od_anime_entity.VideoSource{
+		animeSource = append(animeSource, model.VideoSource{
 			Res:      titleRes,
 			DataList: dataList,
 		})
@@ -276,14 +276,14 @@ func ExtractPdrainUrl(url string) string {
 // 	fmt.Printf("%s | %s\n", a.Title, a.URL)
 // }
 
-// // Test scrapeod_anime_entity.GenreAnimes
-// od_anime_entity.GenreAnimes := Scrapeod_anime_entity.GenreAnimes("https://otakudesu.cloud/genre/romance/")
+// // Test scrapemodel.GenreAnimes
+// model.GenreAnimes := Scrapemodel.GenreAnimes("https://otakudesu.cloud/genre/romance/")
 // fmt.Println("\n== Genre Animes ==")
-// for _, g := range od_anime_entity.GenreAnimes {
+// for _, g := range model.GenreAnimes {
 // 	fmt.Printf("%s | %s\n", g.Title, g.Links)
 // }
 
-// Test scrapeod_anime_entity.AnimeEpisodes
+// Test scrapemodel.AnimeEpisodes
 // detail, episodes := ScrapeAnimeEpisodes("https://otakudesu.cloud/anime/zatsu-tabi-journey-sub-indo")
 // fmt.Println("\n== Anime Detail ==")
 // fmt.Printf("Title: %s\nEpisodes: %d\n", detail.Title, len(episodes))
@@ -297,9 +297,9 @@ func ExtractPdrainUrl(url string) string {
 // fmt.Println(sourceData)
 
 // Test scrapeSearchAnimeByTitle
-// od_anime_entity.SearchResults := ScrapeSearchAnimeByTitle("https://otakudesu.cloud/?s=one+piece")
+// model.SearchResults := ScrapeSearchAnimeByTitle("https://otakudesu.cloud/?s=one+piece")
 // fmt.Println("\n== Search Result ==")
-// for _, s := range od_anime_entity.SearchResults {
+// for _, s := range model.SearchResults {
 // 	fmt.Printf("%s | %s\n", s.Title, s.AnimeLinks)
 // }
 

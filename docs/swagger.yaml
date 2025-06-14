@@ -131,7 +131,7 @@ definitions:
       code:
         type: integer
       data:
-        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.GenreAnime'
+        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.GenreAnime'
       message:
         type: string
       status:
@@ -143,7 +143,7 @@ definitions:
         example: 200
         type: integer
       data:
-        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.EpisodePageResult'
+        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.EpisodePageResult'
       message:
         example: Berhasil mengambil data!
         type: string
@@ -156,7 +156,7 @@ definitions:
       code:
         type: integer
       data:
-        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeSourceData'
+        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.AnimeSourceData'
       message:
         type: string
       status:
@@ -169,7 +169,7 @@ definitions:
         type: integer
       data:
         items:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeData'
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.AnimeData'
         type: array
       message:
         example: Berhasil mengambil data!
@@ -556,8 +556,15 @@ definitions:
         maxLength: 20
         minLength: 8
         type: string
+      role:
+        enum:
+        - user
+        - admin
+        example: user
+        maxLength: 50
+        type: string
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeData:
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.AnimeData:
     properties:
       judul_path:
         type: string
@@ -572,13 +579,13 @@ definitions:
       url:
         type: string
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeDetail:
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.AnimeDetail:
     properties:
       duration:
         type: string
       genres:
         items:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.GenreInfo'
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.GenreInfo'
         type: array
       producer:
         type: string
@@ -599,14 +606,14 @@ definitions:
       total_eps:
         type: string
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeEpisode:
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.AnimeEpisode:
     properties:
       title:
         type: string
       video_url:
         type: string
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeSourceData:
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.AnimeSourceData:
     properties:
       current_ep:
         type: string
@@ -614,7 +621,7 @@ definitions:
         type: string
       episodes:
         items:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeEpisode'
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.AnimeEpisode'
         type: array
       next_ep_url:
         type: string
@@ -622,21 +629,21 @@ definitions:
         type: string
       sources:
         items:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.VideoSource'
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.VideoSource'
         type: array
       title:
         type: string
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.EpisodePageResult:
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.EpisodePageResult:
     properties:
       anime_detail:
-        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeDetail'
+        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.AnimeDetail'
       episode:
         items:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeEpisode'
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.AnimeEpisode'
         type: array
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.GenreAnime:
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.GenreAnime:
     properties:
       episodes:
         type: string
@@ -649,23 +656,23 @@ definitions:
       url:
         type: string
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.GenreInfo:
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.GenreInfo:
     properties:
       title:
         type: string
       url:
         type: string
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.VideoSource:
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.VideoSource:
     properties:
       data_list:
         items:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_entity_otakudesu_scrape.AnimeEpisode'
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.AnimeEpisode'
         type: array
       res:
         type: string
     type: object
-host: localhost:3000
+host: dev.msaepul.my.id
 info:
   contact: {}
   title: NimeStream API documentation
@@ -1179,6 +1186,17 @@ paths:
       summary: Update a user
       tags:
       - Users
+  /watchlists/:
+    get:
+      description: Only admins can retrieve all watchlists.
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get all watchlists
+      tags:
+      - Watchlist
 securityDefinitions:
   BearerAuth:
     description: 'Example Value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'

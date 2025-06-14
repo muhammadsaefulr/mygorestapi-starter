@@ -1,8 +1,8 @@
 package router
 
 import (
-	controller "github.com/your/module/internal/delivery/http/controller/{{.Name}}_controller"
-	m "github.com/your/module/internal/delivery/middleware"
+	controller "{{ .ModulePath }}/internal/delivery/http/controller/{{.Name}}_controller"
+	m "{{ .ModulePath }}/internal/delivery/middleware"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -12,9 +12,9 @@ func {{.PascalName}}Routes(v1 fiber.Router) {
 
 	group := v1.Group("/{{.Name}}s")
 
-	group.Get("/", m.Auth(nil, "get{{.PascalName}}s"), {{.Name}}Controller.GetAll)
-	group.Post("/", m.Auth(nil, "manage{{.PascalName}}s"), {{.Name}}Controller.Create)
-	group.Get("/:id", m.Auth(nil, "get{{.PascalName}}s"), {{.Name}}Controller.GetByID)
-	group.Patch("/:id", m.Auth(nil, "manage{{.PascalName}}s"), {{.Name}}Controller.Update)
-	group.Delete("/:id", m.Auth(nil, "manage{{.PascalName}}s"), {{.Name}}Controller.Delete)
+	group.Get("/", m.Auth(), {{.Name}}Controller.GetAll{{.PascalName}})
+	group.Post("/", m.Auth(), {{.Name}}Controller.Create{{.PascalName}})
+	group.Get("/:id", m.Auth(), {{.Name}}Controller.Get{{.PascalName}}ByID)
+	group.Patch("/:id", m.Auth(), {{.Name}}Controller.Update{{.PascalName}})
+	group.Delete("/:id", m.Auth(), {{.Name}}Controller.Delete{{.PascalName}})
 }
