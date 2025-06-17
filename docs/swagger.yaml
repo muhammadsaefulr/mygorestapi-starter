@@ -709,7 +709,7 @@ definitions:
       res:
         type: string
     type: object
-host: localhost:8080
+host: dev.msaepul.my.id
 info:
   contact: {}
   title: NimeStream API documentation
