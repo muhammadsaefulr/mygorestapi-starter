@@ -10,6 +10,9 @@ import (
 	userService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_service"
 	watchlistService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/watchlist_service"
 
+	commentRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/comment"
+	commetService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/comment_service"
+
 	authService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/auth_service"
 	odService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/otakudesu_scrape"
 	systemService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/system_service"
@@ -28,6 +31,9 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	watchlistRepo := watchListRepo.NewWatchlistRepositoryImpl(db)
 	watchListSvc := watchlistService.NewWatchlistService(watchlistRepo, validate)
 
+	commentRepo := commentRepo.NewCommentRepository(db)
+	commentSvc := commetService.NewCommentService(commentRepo)
+
 	tokenSvc := systemService.NewTokenService(db, validate, userSvc)
 	authSvc := authService.NewAuthService(db, validate, userSvc, tokenSvc)
 	emailSvc := systemService.NewEmailService()
@@ -44,6 +50,7 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	router.HealthCheckRoutes(v1, healthSvc)
 	router.DocsRoutes(v1)
 	router.WatchlistRoutes(v1, watchListSvc)
+	router.CommentsRoutes(v1, commentSvc)
 
 	if !config.IsProd {
 		v1.Get("/docs", func(c *fiber.Ctx) error {

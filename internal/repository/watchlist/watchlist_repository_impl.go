@@ -18,12 +18,14 @@ func NewWatchlistRepositoryImpl(db *gorm.DB) WatchlistRepo {
 	}
 }
 
-func (r *WatchlistRepositoryImpl) GetAllWatchlist(ctx context.Context, param *request.QueryWatchlist) ([]model.Watchlist, int64, error) {
+func (r *WatchlistRepositoryImpl) GetAllWatchlist(ctx context.Context, param *request.QueryWatchlist, user_id string) ([]model.Watchlist, int64, error) {
 	var data []model.Watchlist
 	var total int64
 
-	query := r.DB.WithContext(ctx).Model(&model.Watchlist{})
+	query := r.DB.WithContext(ctx).Model(&model.Watchlist{}).Where("user_id = ?", user_id)
 	offset := (param.Page - 1) * param.Limit
+
+	// log.Println(param)
 
 	if param.Search != "" {
 		searchLike := "%" + param.Search + "%"

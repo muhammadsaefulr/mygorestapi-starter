@@ -505,6 +505,23 @@ definitions:
     - name
     - password
     type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_comment_request.CreateComment:
+    properties:
+      content:
+        type: string
+      movie_id:
+        type: string
+    required:
+    - content
+    - movie_id
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_comment_request.UpdateComment:
+    properties:
+      content:
+        type: string
+    required:
+    - content
+    type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_request.CreateUser:
     properties:
       email:
@@ -563,6 +580,26 @@ definitions:
         example: user
         maxLength: 50
         type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_watchlist_request.CreateWatchlist:
+    properties:
+      movie_id:
+        type: string
+      thumb_image_url:
+        type: string
+    required:
+    - movie_id
+    - thumb_image_url
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_watchlist_request.UpdateWatchlist:
+    properties:
+      movie_id:
+        type: string
+      thumb_image_url:
+        type: string
+    required:
+    - movie_id
+    - thumb_image_url
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.AnimeData:
     properties:
@@ -672,7 +709,7 @@ definitions:
       res:
         type: string
     type: object
-host: dev.msaepul.my.id
+host: localhost:8080
 info:
   contact: {}
   title: NimeStream API documentation
@@ -887,6 +924,86 @@ paths:
       summary: Verify email
       tags:
       - Auth
+  /comments:
+    post:
+      description: Create a comment
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_comment_request.CreateComment'
+      produces:
+      - application/json
+      responses: {}
+      summary: Create a comment
+      tags:
+      - Comments
+  /comments/{id}:
+    delete:
+      description: Delete a comment
+      parameters:
+      - description: Comment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Delete a comment
+      tags:
+      - Comments
+    get:
+      description: Get a comment by ID
+      parameters:
+      - description: Comment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Get a comment by ID
+      tags:
+      - Comments
+    put:
+      description: Update a comment
+      parameters:
+      - description: Comment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_comment_request.UpdateComment'
+      produces:
+      - application/json
+      responses: {}
+      summary: Update a comment
+      tags:
+      - Comments
+  /comments/movie/{movieId}:
+    get:
+      description: Get comments by movie ID
+      parameters:
+      - description: Movie ID
+        in: path
+        name: movieId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Get comments by movie ID
+      tags:
+      - Comments
   /health-check:
     get:
       consumes:
@@ -917,6 +1034,26 @@ paths:
           schema:
             $ref: '#/definitions/example.GetOdAnimeHomeResponse'
       summary: Get homepage anime data
+      tags:
+      - Otakudesu
+  /otakudesu/complete-anime/page/{page}:
+    get:
+      description: Scrape and get complete anime from Otakudesu.
+      parameters:
+      - description: Page
+        example: 2
+        in: query
+        name: page
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/example.GetOdAnimeHomeResponse'
+      summary: Get complete anime
       tags:
       - Otakudesu
   /otakudesu/detail/{judul}:
@@ -965,6 +1102,26 @@ paths:
       summary: Get Anime Genre
       tags:
       - Otakudesu
+  /otakudesu/ongoing-anime/page/{page}:
+    get:
+      description: Scrape and get ongoing anime from Otakudesu.
+      parameters:
+      - description: Page
+        example: 2
+        in: query
+        name: page
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/example.GetOdAnimeHomeResponse'
+      summary: Get ongoing anime
+      tags:
+      - Otakudesu
   /otakudesu/play/{judul_eps}:
     get:
       description: Scrape and get episode source video from Otakudesu.
@@ -983,6 +1140,15 @@ paths:
           schema:
             $ref: '#/definitions/example.GetOdAnimeEpisodeVideoResponse'
       summary: Get Episode Video Source
+      tags:
+      - Otakudesu
+  /otakudesu/popular:
+    get:
+      description: Scrape and get popular anime from Otakudesu.
+      produces:
+      - application/json
+      responses: {}
+      summary: Get popular anime
       tags:
       - Otakudesu
   /otakudesu/search:
@@ -1186,6 +1352,24 @@ paths:
       summary: Update a user
       tags:
       - Users
+  /watchlists:
+    post:
+      description: User Create watchlist
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_watchlist_request.CreateWatchlist'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Create watchlist
+      tags:
+      - Watchlist
   /watchlists/:
     get:
       description: Only admins can retrieve all watchlists.
@@ -1195,6 +1379,39 @@ paths:
       security:
       - BearerAuth: []
       summary: Get all watchlists
+      tags:
+      - Watchlist
+  /watchlists/{id}:
+    delete:
+      description: User Delete watchlist
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Delete watchlist
+      tags:
+      - Watchlist
+    put:
+      description: User Update watchlist
+      parameters:
+      - description: Watchlist id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_watchlist_request.UpdateWatchlist'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update watchlist
       tags:
       - Watchlist
 securityDefinitions:

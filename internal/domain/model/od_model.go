@@ -9,6 +9,35 @@ type AnimeData struct {
 	UpdateAnime  string `json:"update_anime"`
 }
 
+type PopularAnime struct {
+	Title        string `json:"title"`
+	URL          string `json:"url"`
+	JudulPath    string `json:"judul_path"`
+	ThumbnailURL string `json:"thumbnail_url"`
+	LatestEp     string `json:"latest_ep"`
+	UpdateAnime  string `json:"update_anime"`
+}
+
+type OngoingAnime struct {
+	Title        string `json:"title"`
+	URL          string `json:"url"`
+	JudulPath    string `json:"judul_path"`
+	ThumbnailURL string `json:"thumbnail_url"`
+	Episode      string `json:"episode"`
+	DaysUpdated  string `json:"days_updated"`
+	UpdatedAt    string `json:"updated_at"`
+}
+
+type CompleteAnime struct {
+	Title        string `json:"title"`
+	URL          string `json:"url"`
+	JudulPath    string `json:"judul_path"`
+	ThumbnailURL string `json:"thumbnail_url"`
+	LatestEp     string `json:"latest_ep"`
+	Rating       string `json:"rating"`
+	UpdatedAt    string `json:"updated_at"`
+}
+
 type GenreAnime struct {
 	Title    string `json:"title"`
 	URL      string `json:"url"`

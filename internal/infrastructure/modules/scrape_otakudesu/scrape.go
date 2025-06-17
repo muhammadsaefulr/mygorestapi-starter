@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"path"
 	"regexp"
+	"sort"
+	"strconv"
 	"strings"
 	"sync"
 
@@ -29,6 +31,62 @@ func ScrapeHomePage() []model.AnimeData {
 		})
 	})
 	_ = c.Visit("https://otakudesu.cloud/")
+	return results
+}
+
+func ScrapeCompleteAnime(page string) []model.CompleteAnime {
+	c := colly.NewCollector(colly.UserAgent("Mozilla/5.0"))
+	var results []model.CompleteAnime
+
+	c.OnHTML(".venz li", func(e *colly.HTMLElement) {
+		animeURL := e.ChildAttr(".thumb a", "href")
+		ratingStr := e.ChildText(".epztipe")
+
+		results = append(results, model.CompleteAnime{
+			Title:        e.ChildText(".jdlflm"),
+			URL:          animeURL,
+			JudulPath:    strings.TrimSuffix(path.Base(animeURL), "/"),
+			ThumbnailURL: e.ChildAttr(".thumb img", "src"),
+			LatestEp:     e.ChildText(".epz"),
+			Rating:       ratingStr,
+			UpdatedAt:    e.ChildText(".newnime"),
+		})
+	})
+
+	_ = c.Visit("https://otakudesu.cloud/complete-anime/page/" + page)
+
+	sort.SliceStable(results, func(i, j int) bool {
+		ratingI, _ := strconv.ParseFloat(results[i].Rating, 64)
+		ratingJ, _ := strconv.ParseFloat(results[j].Rating, 64)
+		return ratingI > ratingJ
+	})
+
+	return results
+}
+
+func ScrapeOngoingAnime(page string) []model.OngoingAnime {
+	c := colly.NewCollector(colly.UserAgent("Mozilla/5.0"))
+	var results []model.OngoingAnime
+
+	c.OnHTML(".venz li", func(e *colly.HTMLElement) {
+		animeURL := e.ChildAttr(".thumb a", "href")
+
+		results = append(results, model.OngoingAnime{
+			Title:        e.ChildText(".jdlflm"),
+			URL:          animeURL,
+			JudulPath:    strings.TrimSuffix(path.Base(animeURL), "/"),
+			ThumbnailURL: e.ChildAttr(".thumb img", "src"),
+			Episode:      e.ChildText(".epz"),
+			DaysUpdated:  e.ChildText(".epztipe"),
+			UpdatedAt:    e.ChildText(".newnime"),
+		})
+	})
+
+	err := c.Visit("https://otakudesu.cloud/ongoing-anime/page/" + page)
+	if err != nil {
+		log.Println("Visit error:", err)
+	}
+
 	return results
 }
 
@@ -132,26 +190,6 @@ func ScrapeSearchAnimeByTitle(url string) []model.SearchResult {
 			Genres:       genres,
 			Status:       e.ChildText(".set b:contains('Status')"),
 			Rating:       e.ChildText(".set b:contains('Rating')"),
-		})
-	})
-	_ = c.Visit(url)
-	if len(results) > 15 {
-		return results[:15]
-	}
-	return results
-}
-
-func ScrapeOngoingAnime(url string) []model.AnimeData {
-	c := colly.NewCollector(colly.UserAgent("Mozilla/5.0"))
-	var results []model.AnimeData
-
-	c.OnHTML(".venz li", func(e *colly.HTMLElement) {
-		results = append(results, model.AnimeData{
-			Title:        e.ChildText(".jdlflm"),
-			LatestEp:     e.ChildText(".epz"),
-			URL:          e.ChildAttr(".thumb a", "href"),
-			UpdateAnime:  e.ChildText(".epztipe"),
-			ThumbnailURL: e.ChildAttr(".thumbz img", "src"),
 		})
 	})
 	_ = c.Visit(url)

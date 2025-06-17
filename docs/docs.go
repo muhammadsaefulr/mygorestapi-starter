@@ -339,6 +339,123 @@ const docTemplate = `{
                 }
             }
         },
+        "/comments": {
+            "post": {
+                "description": "Create a comment",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "Create a comment",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_comment_request.CreateComment"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/comments/movie/{movieId}": {
+            "get": {
+                "description": "Get comments by movie ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "Get comments by movie ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Movie ID",
+                        "name": "movieId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/comments/{id}": {
+            "get": {
+                "description": "Get a comment by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "Get a comment by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Comment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "put": {
+                "description": "Update a comment",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "Update a comment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Comment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_comment_request.UpdateComment"
+                        }
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "description": "Delete a comment",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "Delete a comment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Comment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/health-check": {
             "get": {
                 "description": "Check the status of services and database connections",
@@ -378,6 +495,36 @@ const docTemplate = `{
                     "Otakudesu"
                 ],
                 "summary": "Get homepage anime data",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/example.GetOdAnimeHomeResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/otakudesu/complete-anime/page/{page}": {
+            "get": {
+                "description": "Scrape and get complete anime from Otakudesu.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Otakudesu"
+                ],
+                "summary": "Get complete anime",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "example": 2,
+                        "description": "Page",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -456,6 +603,36 @@ const docTemplate = `{
                 }
             }
         },
+        "/otakudesu/ongoing-anime/page/{page}": {
+            "get": {
+                "description": "Scrape and get ongoing anime from Otakudesu.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Otakudesu"
+                ],
+                "summary": "Get ongoing anime",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "example": 2,
+                        "description": "Page",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/example.GetOdAnimeHomeResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/otakudesu/play/{judul_eps}": {
             "get": {
                 "description": "Scrape and get episode source video from Otakudesu.",
@@ -484,6 +661,19 @@ const docTemplate = `{
                         }
                     }
                 }
+            }
+        },
+        "/otakudesu/popular": {
+            "get": {
+                "description": "Scrape and get popular anime from Otakudesu.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Otakudesu"
+                ],
+                "summary": "Get popular anime",
+                "responses": {}
             }
         },
         "/otakudesu/search": {
@@ -794,6 +984,35 @@ const docTemplate = `{
                 }
             }
         },
+        "/watchlists": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "User Create watchlist",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Watchlist"
+                ],
+                "summary": "Create watchlist",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_watchlist_request.CreateWatchlist"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/watchlists/": {
             "get": {
                 "security": [
@@ -809,6 +1028,58 @@ const docTemplate = `{
                     "Watchlist"
                 ],
                 "summary": "Get all watchlists",
+                "responses": {}
+            }
+        },
+        "/watchlists/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "User Update watchlist",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Watchlist"
+                ],
+                "summary": "Update watchlist",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Watchlist id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_watchlist_request.UpdateWatchlist"
+                        }
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "User Delete watchlist",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Watchlist"
+                ],
+                "summary": "Delete watchlist",
                 "responses": {}
             }
         }
@@ -1530,6 +1801,32 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_comment_request.CreateComment": {
+            "type": "object",
+            "required": [
+                "content",
+                "movie_id"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "movie_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_comment_request.UpdateComment": {
+            "type": "object",
+            "required": [
+                "content"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string"
+                }
+            }
+        },
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_request.CreateUser": {
             "type": "object",
             "required": [
@@ -1604,6 +1901,36 @@ const docTemplate = `{
                         "admin"
                     ],
                     "example": "user"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_watchlist_request.CreateWatchlist": {
+            "type": "object",
+            "required": [
+                "movie_id",
+                "thumb_image_url"
+            ],
+            "properties": {
+                "movie_id": {
+                    "type": "string"
+                },
+                "thumb_image_url": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_watchlist_request.UpdateWatchlist": {
+            "type": "object",
+            "required": [
+                "movie_id",
+                "thumb_image_url"
+            ],
+            "properties": {
+                "movie_id": {
+                    "type": "string"
+                },
+                "thumb_image_url": {
+                    "type": "string"
                 }
             }
         },
@@ -1787,7 +2114,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0.0",
-	Host:             "dev.msaepul.my.id",
+	Host:             "localhost:8080",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
 	Title:            "NimeStream API documentation",

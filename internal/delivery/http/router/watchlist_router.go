@@ -14,8 +14,7 @@ func WatchlistRoutes(v1 fiber.Router, u service.WatchlistService) {
 	group := v1.Group("/watchlists")
 
 	group.Get("/", m.Auth(), watchlistController.GetAllWatchlist)
-	// group.Post("/", m.Auth(nil), watchlistController.Create)
-	// group.Get("/:id", m.Auth(nil), watchlistController.GetByID)
-	// group.Patch("/:id", m.Auth(nil), watchlistController.Update)
-	// group.Delete("/:id", m.Auth(nil), watchlistController.Delete)
+	group.Post("/", m.Auth(), watchlistController.CreateWatchlist)
+	group.Put("/:id", m.Auth(), watchlistController.UpdateWatchlist)
+	group.Delete("/:id", m.Auth(), watchlistController.DeleteWatchlist)
 }

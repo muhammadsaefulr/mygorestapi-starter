@@ -44,6 +44,81 @@ func (a *OdAnimeController) GetHomePageAnime(c *fiber.Ctx) error {
 }
 
 // @Tags         Otakudesu
+// @Summary      Get complete anime
+// @Description  Scrape and get complete anime from Otakudesu.
+// @Produce      json
+// @Param        page query int true "Page" Example(2)
+// @Success      200 {object} example.GetOdAnimeHomeResponse
+// @Router       /otakudesu/complete-anime/page/{page} [get]
+func (a *OdAnimeController) GetCompleteAnime(c *fiber.Ctx) error {
+	page := c.Query("page")
+
+	completeAnime, err := a.AnimeService.GetCompleteAnime(page)
+
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorDetails{
+			Code:    fiber.StatusInternalServerError,
+			Status:  "error",
+			Message: "Internal Server Error",
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithCommonData[model.CompleteAnime]{
+		Code:    fiber.StatusOK,
+		Status:  "success",
+		Message: "Successfully Retrieved Anime!",
+		Results: completeAnime,
+	})
+}
+
+// @Tags         Otakudesu
+// @Summary      Get ongoing anime
+// @Description  Scrape and get ongoing anime from Otakudesu.
+// @Produce      json
+// @Param        page query int true "Page" Example(2)
+// @Success      200 {object} example.GetOdAnimeHomeResponse
+// @Router       /otakudesu/ongoing-anime/page/{page} [get]
+func (a *OdAnimeController) GetOngoingAnime(c *fiber.Ctx) error {
+	page := c.Query("page")
+
+	ongoingAnime, err := a.AnimeService.GetOngoingAnime(page)
+
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorDetails{
+			Code:    fiber.StatusInternalServerError,
+			Status:  "error",
+			Message: "Internal Server Error",
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithCommonData[model.OngoingAnime]{
+		Code:    fiber.StatusOK,
+		Status:  "success",
+		Message: "Successfully Retrieved Anime!",
+		Results: ongoingAnime,
+	})
+}
+
+// @Tags         Otakudesu
+// @Summary      Get popular anime
+// @Description  Scrape and get popular anime from Otakudesu.
+// @Produce      json
+// @Router       /otakudesu/popular [get]
+func (a *OdAnimeController) GetAnimePopular(c *fiber.Ctx) error {
+	popularAnime, err := a.AnimeService.GetAnimePopular()
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, "Error getting popular anime")
+	}
+
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithCommonData[model.PopularAnime]{
+		Code:    fiber.StatusOK,
+		Status:  "success",
+		Message: "Successfully Retrieved Popular Anime!",
+		Results: popularAnime,
+	})
+}
+
+// @Tags         Otakudesu
 // @Summary      Get details and episode
 // @Description  Scrape and get details and episode from Otakudesu.
 // @Produce      json

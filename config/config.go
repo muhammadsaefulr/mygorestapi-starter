@@ -2,7 +2,6 @@ package config
 
 import (
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
-
 	"github.com/spf13/viper"
 )
 
@@ -67,7 +66,7 @@ func init() {
 
 func loadConfig() {
 	configPaths := []string{
-		"./",     // For app
+		"../",    // For app
 		"../../", // For test folder
 	}
 

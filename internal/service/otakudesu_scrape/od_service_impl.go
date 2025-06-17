@@ -1,6 +1,10 @@
 package od_service
 
 import (
+	"sort"
+	"strconv"
+	"strings"
+
 	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	modules "github.com/muhammadsaefulr/NimeStreamAPI/internal/infrastructure/modules/scrape_otakudesu"
 )
@@ -17,6 +21,65 @@ func (s *animeService) GetHomePage() ([]model.AnimeData, error) {
 	animes := modules.ScrapeHomePage()
 
 	return animes, nil
+}
+
+func (s *animeService) GetCompleteAnime(page string) ([]model.CompleteAnime, error) {
+	ongoinAnime := modules.ScrapeCompleteAnime(page)
+
+	return ongoinAnime, nil
+}
+
+func (s *animeService) GetOngoingAnime(page string) ([]model.OngoingAnime, error) {
+	ongoingAnime := modules.ScrapeOngoingAnime(page)
+
+	return ongoingAnime, nil
+}
+
+func (s *animeService) GetAnimePopular() ([]model.PopularAnime, error) {
+	var results []model.PopularAnime
+
+	// Ambil ongoing: hanya yang update hari Sabtu, Minggu, atau Senin
+	ongoing := modules.ScrapeOngoingAnime("1")
+	for _, o := range ongoing {
+		if strings.Contains(o.DaysUpdated, "Sabtu") ||
+			strings.Contains(o.DaysUpdated, "Minggu") ||
+			strings.Contains(o.DaysUpdated, "Senin") {
+			results = append(results, model.PopularAnime{
+				Title:        o.Title,
+				URL:          o.URL,
+				JudulPath:    o.JudulPath,
+				ThumbnailURL: o.ThumbnailURL,
+				LatestEp:     o.Episode,
+				UpdateAnime:  o.UpdatedAt,
+			})
+		}
+	}
+
+	// Ambil complete: hanya yang rating-nya >= 7.5
+	complete := modules.ScrapeCompleteAnime("1")
+	for _, c := range complete {
+		rating, err := strconv.ParseFloat(c.Rating, 64)
+		if err != nil {
+			rating = 0.0
+		}
+		if rating >= 7.5 {
+			results = append(results, model.PopularAnime{
+				Title:        c.Title,
+				URL:          c.URL,
+				JudulPath:    c.JudulPath,
+				ThumbnailURL: c.ThumbnailURL,
+				LatestEp:     c.LatestEp,
+				UpdateAnime:  c.UpdatedAt,
+			})
+		}
+	}
+
+	// Sort berdasarkan tanggal update terbaru (descending)
+	sort.SliceStable(results, func(i, j int) bool {
+		return results[i].UpdateAnime > results[j].UpdateAnime
+	})
+
+	return results, nil
 }
 
 func (s *animeService) GetAnimeEpisode(judul string) (model.AnimeDetail, []model.AnimeEpisode, error) {

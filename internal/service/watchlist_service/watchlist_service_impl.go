@@ -1,10 +1,15 @@
 package service
 
 import (
+	"fmt"
+	"log"
+	"strings"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 
+	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/watchlist/request"
 	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	repository "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/watchlist"
@@ -28,6 +33,12 @@ func NewWatchlistService(repo repository.WatchlistRepo, validate *validator.Vali
 }
 
 func (s *newWatchlistService) GetAllWatchlist(c *fiber.Ctx, params *request.QueryWatchlist) ([]model.Watchlist, int64, error) {
+
+	if err := s.Validate.Struct(params); err != nil {
+		log.Println("Validation error:", err)
+		return nil, 0, fiber.NewError(fiber.StatusBadRequest, "Invalid query parameters")
+	}
+
 	if err := s.Validate.Struct(params); err != nil {
 		return nil, 0, err
 	}
@@ -39,7 +50,15 @@ func (s *newWatchlistService) GetAllWatchlist(c *fiber.Ctx, params *request.Quer
 		params.Limit = 10
 	}
 
-	return s.Repository.GetAllWatchlist(c.Context(), params)
+	authHeader := c.Get("Authorization")
+	token := strings.TrimSpace(strings.TrimPrefix(authHeader, "Bearer "))
+
+	IdUsr, err := utils.VerifyToken(token, config.JWTSecret, config.TokenTypeAccess)
+	if err != nil {
+		return nil, 0, fiber.NewError(fiber.StatusUnauthorized, fmt.Sprintf("Error verifying token: %s", err.Error()))
+	}
+
+	return s.Repository.GetAllWatchlist(c.Context(), params, IdUsr)
 }
 
 func (s *newWatchlistService) GetWatchlistByID(c *fiber.Ctx, id uint) (*model.Watchlist, error) {
@@ -59,11 +78,23 @@ func (s *newWatchlistService) CreateWatchlist(c *fiber.Ctx, req *request.CreateW
 		return nil, err
 	}
 
-	data := convert_types.CreateWatchlistToModel(req)
+	authHeader := c.Get("Authorization")
+	token := strings.TrimSpace(strings.TrimPrefix(authHeader, "Bearer "))
+
+	IdUsr, err := utils.VerifyToken(token, config.JWTSecret, config.TokenTypeAccess)
+	if err != nil {
+		return nil, fiber.NewError(fiber.StatusUnauthorized, fmt.Sprintf("Error verifying token: %s", err.Error()))
+	}
+
+	data := convert_types.CreateWatchlistToModel(&request.CreateWatchlist{
+		UserId:        IdUsr,
+		MovieId:       req.MovieId,
+		ThumbImageUrl: req.ThumbImageUrl,
+	})
 
 	if err := s.Repository.CreateWatchlist(c.Context(), data); err != nil {
 		s.Log.Errorf("CreateWatchlist error: %+v", err)
-		return nil, fiber.NewError(fiber.StatusInternalServerError, "Failed to create watchlist")
+		return nil, fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Failed to create watchlist because %s", err.Error()))
 	}
 	return data, nil
 }

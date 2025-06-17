@@ -1,12 +1,16 @@
 package request
 
 type CreateComment struct {
-	Name string `json:"name"`
+	UserId  string `json:"-"`
+	MovieId string `json:"movie_id" validate:"required"`
+	Content string `json:"content" validate:"required"`
 }
 
 type UpdateComment struct {
-	ID uint `json:"-"`
-	Name string `json:"name"`
+	ID      uint   `json:"-"`
+	UserId  string `json:"-"`
+	MovieId string `json:"-"`
+	Content string `json:"content" validate:"required"`
 }
 
 type QueryComment struct {

@@ -1,14 +1,16 @@
 package request
 
 type CreateWatchlist struct {
-	UserId  string `json:"user_id" validate:"required,uuid"`
-	MovieId string `json:"movie_id" validate:"required,uuid"`
+	UserId        string `json:"-"`
+	MovieId       string `json:"movie_id" validate:"required"`
+	ThumbImageUrl string `json:"thumb_image_url" validate:"required"`
 }
 
 type UpdateWatchlist struct {
-	ID      uint   `json:"-"`
-	UserId  string `json:"user_id" validate:"required,uuid"`
-	MovieId string `json:"movie_id" validate:"required,uuid"`
+	ID            uint   `json:"-"`
+	UserId        string `json:"-"`
+	MovieId       string `json:"movie_id" validate:"required"`
+	ThumbImageUrl string `json:"thumb_image_url" validate:"required"`
 }
 
 type QueryWatchlist struct {

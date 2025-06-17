@@ -2,6 +2,8 @@
 .env*
 !.env*.example
 
+scrape_test/
+
 # Temporary
 tmp/
 
