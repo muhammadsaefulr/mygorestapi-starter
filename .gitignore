@@ -6,6 +6,6 @@ scrape_test/
 
 # Temporary
 tmp/
-
+index.html
 lint.txt
 main
