@@ -5,7 +5,7 @@
         "contact": {},
         "version": "1.0.0"
     },
-    "host": "dev.msaepul.my.id",
+    "host": "localhost:8080",
     "basePath": "/api/v1",
     "paths": {
         "/auth/forgot-password": {
@@ -514,7 +514,7 @@
                         "example": 2,
                         "description": "Page",
                         "name": "page",
-                        "in": "query",
+                        "in": "path",
                         "required": true
                     }
                 ],
@@ -612,7 +612,7 @@
                         "example": 2,
                         "description": "Page",
                         "name": "page",
-                        "in": "query",
+                        "in": "path",
                         "required": true
                     }
                 ],
@@ -656,19 +656,6 @@
                 }
             }
         },
-        "/otakudesu/popular": {
-            "get": {
-                "description": "Scrape and get popular anime from Otakudesu.",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Otakudesu"
-                ],
-                "summary": "Get popular anime",
-                "responses": {}
-            }
-        },
         "/otakudesu/search": {
             "get": {
                 "description": "Scrape and search anime by title from Otakudesu.",
@@ -697,6 +684,19 @@
                         }
                     }
                 }
+            }
+        },
+        "/otakudesu/trending": {
+            "get": {
+                "description": "Scrape and get trending anime from Otakudesu.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Otakudesu"
+                ],
+                "summary": "Get trending anime",
+                "responses": {}
             }
         },
         "/users": {

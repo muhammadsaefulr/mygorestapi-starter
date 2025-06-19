@@ -47,11 +47,11 @@ func (a *OdAnimeController) GetHomePageAnime(c *fiber.Ctx) error {
 // @Summary      Get complete anime
 // @Description  Scrape and get complete anime from Otakudesu.
 // @Produce      json
-// @Param        page query int true "Page" Example(2)
+// @Param        page path int true "Page" Example(2)
 // @Success      200 {object} example.GetOdAnimeHomeResponse
 // @Router       /otakudesu/complete-anime/page/{page} [get]
 func (a *OdAnimeController) GetCompleteAnime(c *fiber.Ctx) error {
-	page := c.Query("page")
+	page := c.Params("page")
 
 	completeAnime, err := a.AnimeService.GetCompleteAnime(page)
 
@@ -75,11 +75,11 @@ func (a *OdAnimeController) GetCompleteAnime(c *fiber.Ctx) error {
 // @Summary      Get ongoing anime
 // @Description  Scrape and get ongoing anime from Otakudesu.
 // @Produce      json
-// @Param        page query int true "Page" Example(2)
+// @Param        page path int true "Page" Example(2)
 // @Success      200 {object} example.GetOdAnimeHomeResponse
 // @Router       /otakudesu/ongoing-anime/page/{page} [get]
 func (a *OdAnimeController) GetOngoingAnime(c *fiber.Ctx) error {
-	page := c.Query("page")
+	page := c.Params("page")
 
 	ongoingAnime, err := a.AnimeService.GetOngoingAnime(page)
 
@@ -100,21 +100,21 @@ func (a *OdAnimeController) GetOngoingAnime(c *fiber.Ctx) error {
 }
 
 // @Tags         Otakudesu
-// @Summary      Get popular anime
-// @Description  Scrape and get popular anime from Otakudesu.
+// @Summary      Get trending anime
+// @Description  Scrape and get trending anime from Otakudesu.
 // @Produce      json
-// @Router       /otakudesu/popular [get]
-func (a *OdAnimeController) GetAnimePopular(c *fiber.Ctx) error {
-	popularAnime, err := a.AnimeService.GetAnimePopular()
+// @Router       /otakudesu/trending [get]
+func (a *OdAnimeController) GetTrendingAnime(c *fiber.Ctx) error {
+	TrendingAnime, err := a.AnimeService.GetTrendingAnime()
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Error getting popular anime")
+		return fiber.NewError(fiber.StatusInternalServerError, "Error getting trending anime")
 	}
 
-	return c.Status(fiber.StatusOK).JSON(response.SuccessWithCommonData[model.PopularAnime]{
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithCommonData[model.TrendingAnime]{
 		Code:    fiber.StatusOK,
 		Status:  "success",
 		Message: "Successfully Retrieved Popular Anime!",
-		Results: popularAnime,
+		Results: TrendingAnime,
 	})
 }
 

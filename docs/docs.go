@@ -521,7 +521,7 @@ const docTemplate = `{
                         "example": 2,
                         "description": "Page",
                         "name": "page",
-                        "in": "query",
+                        "in": "path",
                         "required": true
                     }
                 ],
@@ -619,7 +619,7 @@ const docTemplate = `{
                         "example": 2,
                         "description": "Page",
                         "name": "page",
-                        "in": "query",
+                        "in": "path",
                         "required": true
                     }
                 ],
@@ -663,19 +663,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/otakudesu/popular": {
-            "get": {
-                "description": "Scrape and get popular anime from Otakudesu.",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Otakudesu"
-                ],
-                "summary": "Get popular anime",
-                "responses": {}
-            }
-        },
         "/otakudesu/search": {
             "get": {
                 "description": "Scrape and search anime by title from Otakudesu.",
@@ -704,6 +691,19 @@ const docTemplate = `{
                         }
                     }
                 }
+            }
+        },
+        "/otakudesu/trending": {
+            "get": {
+                "description": "Scrape and get trending anime from Otakudesu.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Otakudesu"
+                ],
+                "summary": "Get trending anime",
+                "responses": {}
             }
         },
         "/users": {
@@ -2114,7 +2114,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0.0",
-	Host:             "dev.msaepul.my.id",
+	Host:             "localhost:8080",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
 	Title:            "NimeStream API documentation",

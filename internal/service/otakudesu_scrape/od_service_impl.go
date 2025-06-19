@@ -35,27 +35,9 @@ func (s *animeService) GetOngoingAnime(page string) ([]model.OngoingAnime, error
 	return ongoingAnime, nil
 }
 
-func (s *animeService) GetAnimePopular() ([]model.PopularAnime, error) {
-	var results []model.PopularAnime
+func (s *animeService) GetTrendingAnime() ([]model.TrendingAnime, error) {
+	var results []model.TrendingAnime
 
-	// Ambil ongoing: hanya yang update hari Sabtu, Minggu, atau Senin
-	ongoing := modules.ScrapeOngoingAnime("1")
-	for _, o := range ongoing {
-		if strings.Contains(o.DaysUpdated, "Sabtu") ||
-			strings.Contains(o.DaysUpdated, "Minggu") ||
-			strings.Contains(o.DaysUpdated, "Senin") {
-			results = append(results, model.PopularAnime{
-				Title:        o.Title,
-				URL:          o.URL,
-				JudulPath:    o.JudulPath,
-				ThumbnailURL: o.ThumbnailURL,
-				LatestEp:     o.Episode,
-				UpdateAnime:  o.UpdatedAt,
-			})
-		}
-	}
-
-	// Ambil complete: hanya yang rating-nya >= 7.5
 	complete := modules.ScrapeCompleteAnime("1")
 	for _, c := range complete {
 		rating, err := strconv.ParseFloat(c.Rating, 64)
@@ -63,13 +45,29 @@ func (s *animeService) GetAnimePopular() ([]model.PopularAnime, error) {
 			rating = 0.0
 		}
 		if rating >= 7.5 {
-			results = append(results, model.PopularAnime{
+			results = append(results, model.TrendingAnime{
 				Title:        c.Title,
 				URL:          c.URL,
 				JudulPath:    c.JudulPath,
 				ThumbnailURL: c.ThumbnailURL,
 				LatestEp:     c.LatestEp,
 				UpdateAnime:  c.UpdatedAt,
+			})
+		}
+	}
+
+	ongoing := modules.ScrapeOngoingAnime("1")
+	for _, o := range ongoing {
+		if strings.Contains(o.DaysUpdated, "Sabtu") ||
+			strings.Contains(o.DaysUpdated, "Minggu") ||
+			strings.Contains(o.DaysUpdated, "Senin") {
+			results = append(results, model.TrendingAnime{
+				Title:        o.Title,
+				URL:          o.URL,
+				JudulPath:    o.JudulPath,
+				ThumbnailURL: o.ThumbnailURL,
+				LatestEp:     o.Episode,
+				UpdateAnime:  o.UpdatedAt,
 			})
 		}
 	}

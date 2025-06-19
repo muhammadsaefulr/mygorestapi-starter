@@ -24,7 +24,7 @@ import (
 // ketika mau upload ganti ke dev.msaepul.my.id
 // @title						NimeStream API documentation
 // @version						1.0.0
-// @host						dev.msaepul.my.id
+// @host						localhost:8080
 // @BasePath					/api/v1
 // @securityDefinitions.apikey	BearerAuth
 // @in							header

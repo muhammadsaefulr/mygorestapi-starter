@@ -709,7 +709,7 @@ definitions:
       res:
         type: string
     type: object
-host: dev.msaepul.my.id
+host: localhost:8080
 info:
   contact: {}
   title: NimeStream API documentation
@@ -1042,7 +1042,7 @@ paths:
       parameters:
       - description: Page
         example: 2
-        in: query
+        in: path
         name: page
         required: true
         type: integer
@@ -1108,7 +1108,7 @@ paths:
       parameters:
       - description: Page
         example: 2
-        in: query
+        in: path
         name: page
         required: true
         type: integer
@@ -1142,15 +1142,6 @@ paths:
       summary: Get Episode Video Source
       tags:
       - Otakudesu
-  /otakudesu/popular:
-    get:
-      description: Scrape and get popular anime from Otakudesu.
-      produces:
-      - application/json
-      responses: {}
-      summary: Get popular anime
-      tags:
-      - Otakudesu
   /otakudesu/search:
     get:
       description: Scrape and search anime by title from Otakudesu.
@@ -1169,6 +1160,15 @@ paths:
           schema:
             $ref: '#/definitions/example.GetOdAnimeEpisodeVideoResponse'
       summary: Search Anime
+      tags:
+      - Otakudesu
+  /otakudesu/trending:
+    get:
+      description: Scrape and get trending anime from Otakudesu.
+      produces:
+      - application/json
+      responses: {}
+      summary: Get trending anime
       tags:
       - Otakudesu
   /users:

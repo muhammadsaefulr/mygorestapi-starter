@@ -9,7 +9,7 @@ type AnimeData struct {
 	UpdateAnime  string `json:"update_anime"`
 }
 
-type PopularAnime struct {
+type TrendingAnime struct {
 	Title        string `json:"title"`
 	URL          string `json:"url"`
 	JudulPath    string `json:"judul_path"`
