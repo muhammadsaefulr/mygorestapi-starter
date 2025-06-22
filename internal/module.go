@@ -10,6 +10,8 @@ import (
 	userService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_service"
 	watchlistService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/watchlist_service"
 
+	trackRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/track_episode_view"
+
 	commentRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/comment"
 	commetService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/comment_service"
 
@@ -28,6 +30,8 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	userRepo := userRepo.NewUserRepositryImpl(db)
 	userSvc := userService.NewUserService(userRepo, validate)
 
+	trackEpsRepo := trackRepo.NewTrackEpisodeViewRepository(db)
+
 	watchlistRepo := watchListRepo.NewWatchlistRepositoryImpl(db)
 	watchListSvc := watchlistService.NewWatchlistService(watchlistRepo, validate)
 
@@ -38,7 +42,7 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	authSvc := authService.NewAuthService(db, validate, userSvc, tokenSvc)
 	emailSvc := systemService.NewEmailService()
 	healthSvc := systemService.NewHealthCheckService(db)
-	animeSvc := odService.NewAnimeService()
+	animeSvc := odService.NewAnimeService(trackEpsRepo)
 
 	middleware.InitAuthMiddleware(userSvc)
 

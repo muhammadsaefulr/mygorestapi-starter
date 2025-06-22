@@ -113,8 +113,27 @@ func (a *OdAnimeController) GetTrendingAnime(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(response.SuccessWithCommonData[model.TrendingAnime]{
 		Code:    fiber.StatusOK,
 		Status:  "success",
-		Message: "Successfully Retrieved Popular Anime!",
+		Message: "Successfully Retrieved Trending Anime!",
 		Results: TrendingAnime,
+	})
+}
+
+// @Tags         Otakudesu
+// @Summary      Get popular anime
+// @Description  Scrape and get popular anime from Otakudesu.
+// @Produce      json
+// @Router       /otakudesu/popular [get]
+func (a *OdAnimeController) GetAnimePopular(c *fiber.Ctx) error {
+	PopularAnime, err := a.AnimeService.GetAnimePopular()
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, "Error getting popular anime")
+	}
+
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithCommonData[model.AnimeData]{
+		Code:    fiber.StatusOK,
+		Status:  "success",
+		Message: "Successfully Retrieved Popular Anime!",
+		Results: PopularAnime,
 	})
 }
 
@@ -154,12 +173,13 @@ func (a *OdAnimeController) GetAnimeEpisode(c *fiber.Ctx) error {
 // @Summary      Get Episode Video Source
 // @Description  Scrape and get episode source video from Otakudesu.
 // @Produce      json
+// @Security BearerAuth
 // @Param        judul_eps path string true "Judul Episode" Example(drstn-s4-episode-8-sub-indo)
 // @Success      200 {object} example.GetOdAnimeEpisodeVideoResponse
 // @Router       /otakudesu/play/{judul_eps} [get]
 func (a *OdAnimeController) GetAnimeSourceVid(c *fiber.Ctx) error {
 	judul_eps := c.Params("judul_eps")
-	animSource, err := a.AnimeService.GetAnimeSourceVid(judul_eps)
+	animSource, err := a.AnimeService.GetAnimeSourceVid(c, judul_eps)
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorDetails{

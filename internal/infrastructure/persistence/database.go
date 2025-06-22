@@ -38,7 +38,7 @@ func Connect(dbHost, dbName string) *gorm.DB {
 
 	//auto migrations
 	// db.Migrator().DropTable(&model.User{}, &model.Token{}, &model.Watchlist{})
-	db.AutoMigrate(&model.User{}, &model.Token{}, &model.Watchlist{})
+	db.AutoMigrate(&model.User{}, &model.Token{}, &model.Watchlist{}, &model.TrackEpisodeView{})
 
 	// Config connection pooling
 	sqlDB.SetMaxIdleConns(10)

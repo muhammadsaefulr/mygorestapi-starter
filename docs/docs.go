@@ -635,6 +635,11 @@ const docTemplate = `{
         },
         "/otakudesu/play/{judul_eps}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Scrape and get episode source video from Otakudesu.",
                 "produces": [
                     "application/json"
@@ -661,6 +666,19 @@ const docTemplate = `{
                         }
                     }
                 }
+            }
+        },
+        "/otakudesu/popular": {
+            "get": {
+                "description": "Scrape and get popular anime from Otakudesu.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Otakudesu"
+                ],
+                "summary": "Get popular anime",
+                "responses": {}
             }
         },
         "/otakudesu/search": {
@@ -2013,6 +2031,9 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "current_ep": {
+                    "type": "string"
+                },
+                "detail_url": {
                     "type": "string"
                 },
                 "download_url": {

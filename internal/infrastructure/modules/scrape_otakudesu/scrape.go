@@ -128,9 +128,12 @@ func ScrapeAnimeEpisodes(url string) (model.AnimeDetail, []model.AnimeEpisode) {
 		infozingle.Find("span b").Each(func(_ int, el *goquery.Selection) {
 			if strings.Contains(el.Text(), "Genre") {
 				el.Parent().Find("a").Each(func(_ int, s *goquery.Selection) {
+
+					href := s.AttrOr("href", "")
+					slug := path.Base(strings.TrimSuffix(href, "/"))
 					genres = append(genres, model.GenreInfo{
 						Title: s.Text(),
-						URL:   s.AttrOr("href", ""),
+						URL:   "/" + slug + "/page/",
 					})
 				})
 			}
@@ -140,7 +143,7 @@ func ScrapeAnimeEpisodes(url string) (model.AnimeDetail, []model.AnimeEpisode) {
 		cleanSynopsis := re.ReplaceAllString(sinopc.Find("p").Text(), "")
 
 		detail = model.AnimeDetail{
-			ThumbnailURL: infozingle.Parent().Find("img.attachment-post-thumbnail.size-post-thumbnail").AttrOr("src", ""),
+			ThumbnailURL: e.DOM.Find("img").First().AttrOr("src", ""),
 			Title:        strings.TrimPrefix(infozingle.Find("p:contains('Judul')").Text(), "Judul: "),
 			Rating:       strings.TrimPrefix(infozingle.Find("p:contains('Skor')").Text(), "Skor: "),
 			Producer:     strings.TrimPrefix(infozingle.Find("p:contains('Produser')").Text(), "Produser: "),
@@ -157,7 +160,7 @@ func ScrapeAnimeEpisodes(url string) (model.AnimeDetail, []model.AnimeEpisode) {
 	c.OnHTML(".episodelist li", func(e *colly.HTMLElement) {
 		episodes = append(episodes, model.AnimeEpisode{
 			Title:    e.ChildText("span a"),
-			VideoURL: e.ChildAttr("span a", "href"),
+			VideoURL: "/play/" + path.Base(strings.TrimSuffix(e.ChildAttr("span a", "href"), "/")),
 		})
 	})
 
@@ -208,7 +211,7 @@ func ScrapeAnimeSourceData(url string) model.AnimeSourceData {
 	c.OnHTML(".keyingpost li", func(e *colly.HTMLElement) {
 		epsList = append(epsList, model.AnimeEpisode{
 			Title:    e.ChildText("a"),
-			VideoURL: e.ChildAttr("a", "href"),
+			VideoURL: "/play/" + path.Base(strings.TrimSuffix(e.ChildAttr("a", "href"), "/")),
 		})
 	})
 
@@ -237,14 +240,15 @@ func ScrapeAnimeSourceData(url string) model.AnimeSourceData {
 						mu.Unlock()
 					}
 				}(title, link)
-			} else {
-				mu.Lock()
-				dataList = append(dataList, model.AnimeEpisode{
-					Title:    title,
-					VideoURL: link,
-				})
-				mu.Unlock()
 			}
+			//  else {
+			// 	mu.Lock()
+			// 	dataList = append(dataList, model.AnimeEpisode{
+			// 		Title:    title,
+			// 		VideoURL: link,
+			// 	})
+			// 	mu.Unlock()
+			// }
 		})
 
 		wg.Wait()
@@ -278,6 +282,10 @@ func ScrapeAnimeSourceData(url string) model.AnimeSourceData {
 		if strings.Contains(e.Text, "Next Eps.") {
 			result.NextEpURL = e.Attr("href")
 		}
+
+		if strings.Contains(e.Text, "See All Episodes") {
+			result.DetailURL = "/detail/" + path.Base(strings.TrimSuffix(e.Attr("href"), "/"))
+		}
 	})
 
 	if err := c.Visit(url); err != nil {
@@ -305,48 +313,3 @@ func ExtractPdrainUrl(url string) string {
 
 	return doc.Find(`meta[name="twitter:player:stream"]`).AttrOr("content", "")
 }
-
-// func main() {
-// // Test scrapeHomePage
-// home := ScrapeHomePage()
-// fmt.Println("\n== Home Page ==")
-// for _, a := range home {
-// 	fmt.Printf("%s | %s\n", a.Title, a.URL)
-// }
-
-// // Test scrapemodel.GenreAnimes
-// model.GenreAnimes := Scrapemodel.GenreAnimes("https://otakudesu.cloud/genre/romance/")
-// fmt.Println("\n== Genre Animes ==")
-// for _, g := range model.GenreAnimes {
-// 	fmt.Printf("%s | %s\n", g.Title, g.Links)
-// }
-
-// Test scrapemodel.AnimeEpisodes
-// detail, episodes := ScrapeAnimeEpisodes("https://otakudesu.cloud/anime/zatsu-tabi-journey-sub-indo")
-// fmt.Println("\n== Anime Detail ==")
-// fmt.Printf("Title: %s\nEpisodes: %d\n", detail.Title, len(episodes))
-// for _, e := range episodes {
-// 	fmt.Printf("Ep: %s | %s\n", e.Title, e.VideoURL)
-// }
-
-// sourceData := scrapeAnimeSourceData("https://otakudesu.cloud/episode/zttj-episode-2-sub-indo/")
-
-// fmt.Println("\n== Anime Source Data ==")
-// fmt.Println(sourceData)
-
-// Test scrapeSearchAnimeByTitle
-// model.SearchResults := ScrapeSearchAnimeByTitle("https://otakudesu.cloud/?s=one+piece")
-// fmt.Println("\n== Search Result ==")
-// for _, s := range model.SearchResults {
-// 	fmt.Printf("%s | %s\n", s.Title, s.AnimeLinks)
-// }
-
-// // Test scrapeOngoingAnime
-// ongoing := ScrapeOngoingAnime("https://otakudesu.cloud/ongoing-anime/")
-// fmt.Println("\n== Ongoing Anime ==")
-// for _, o := range ongoing {
-// 	fmt.Printf("%s | %s\n", o.Title, o.URL)
-// }
-
-// 	fmt.Println("\n== DONE TESTING ==")
-// }

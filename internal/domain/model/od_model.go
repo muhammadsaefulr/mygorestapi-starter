@@ -103,6 +103,7 @@ type AnimeSourceData struct {
 	ReleaseDate string         `json:"release_date"`
 	CurrentEp   string         `json:"current_ep"`
 	DownloadURL string         `json:"download_url"`
+	DetailURL   string         `json:"detail_url"`
 	NextEpURL   string         `json:"next_ep_url"`
 	Sources     []VideoSource  `json:"sources"`
 	Episodes    []AnimeEpisode `json:"episodes"`

@@ -1,18 +1,31 @@
 package od_service
 
 import (
+	"context"
+	"fmt"
+	"path"
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 
+	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
+	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	modules "github.com/muhammadsaefulr/NimeStreamAPI/internal/infrastructure/modules/scrape_otakudesu"
+	repository "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/track_episode_view"
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 )
 
-type animeService struct{}
+type animeService struct {
+	TrackEpisodeViewRepo repository.TrackEpisodeViewRepository
+}
 
-func NewAnimeService() AnimeService {
-	return &animeService{}
+func NewAnimeService(trackRepo repository.TrackEpisodeViewRepository) AnimeService {
+	return &animeService{
+		TrackEpisodeViewRepo: trackRepo,
+	}
 }
 
 var mainUrl = "https://otakudesu.cloud"
@@ -79,14 +92,129 @@ func (s *animeService) GetTrendingAnime() ([]model.TrendingAnime, error) {
 	return results, nil
 }
 
+func (s *animeService) GetAnimePopular() ([]model.AnimeData, error) {
+	var animeData []model.AnimeData
+	ctx := context.Background()
+
+	// --- PRIORITASKAN DUMMY SCRAPE ---
+	dummySlugs := []string{
+		"1piece-sub-indo",
+		"bleach-oukoku-tan-sub-indo",
+		"kimetsu-yaiba-subtitle-indonesia",
+		"one-punch-sub-indo",
+		"dea-note-subtitle-indonesia",
+		"fulltal-alchemist-sub-indo",
+	}
+
+	var wgDummy sync.WaitGroup
+	dummyChan := make(chan model.AnimeData, len(dummySlugs))
+
+	for _, slug := range dummySlugs {
+		wgDummy.Add(1)
+		go func(slug string) {
+			defer wgDummy.Done()
+
+			detail, _ := modules.ScrapeAnimeEpisodes(mainUrl + "/anime/" + slug)
+
+			dummyChan <- model.AnimeData{
+				Title:        detail.Title,
+				URL:          slug,
+				ThumbnailURL: detail.ThumbnailURL,
+				LatestEp:     detail.TotalEps,
+				UpdateAnime:  detail.ReleaseDate,
+				JudulPath:    slug,
+			}
+		}(slug)
+	}
+
+	go func() {
+		wgDummy.Wait()
+		close(dummyChan)
+	}()
+
+	for data := range dummyChan {
+		animeData = append(animeData, data)
+	}
+
+	// --- LALU SCRAPE DARI TRACK VIEW EPISODE ---
+	topEpisodes, err := s.TrackEpisodeViewRepo.GetAll(ctx)
+	if err != nil {
+		return animeData, nil
+	}
+
+	var wg sync.WaitGroup
+	resultChan := make(chan model.AnimeData, len(topEpisodes))
+
+	for _, top := range topEpisodes {
+		wg.Add(1)
+
+		go func(epID string) {
+			defer wg.Done()
+
+			episode, err := s.TrackEpisodeViewRepo.GetByEpisodeId(ctx, epID)
+			if err != nil || episode.MovieDetailUrl == "" {
+				return
+			}
+
+			slug := path.Base(strings.TrimSuffix(episode.MovieDetailUrl, "/"))
+			detail, _ := modules.ScrapeAnimeEpisodes(mainUrl + "/anime/" + slug)
+
+			resultChan <- model.AnimeData{
+				Title:        detail.Title,
+				URL:          episode.EpisodeId,
+				ThumbnailURL: detail.ThumbnailURL,
+				LatestEp:     detail.TotalEps,
+				UpdateAnime:  detail.ReleaseDate,
+				JudulPath:    slug,
+			}
+		}(top.EpisodeID)
+	}
+
+	go func() {
+		wg.Wait()
+		close(resultChan)
+	}()
+
+	for data := range resultChan {
+		animeData = append(animeData, data)
+	}
+
+	// --- LIMIT MAKSIMAL ---
+	if len(animeData) > 15 {
+		animeData = animeData[:15]
+	}
+
+	return animeData, nil
+}
+
 func (s *animeService) GetAnimeEpisode(judul string) (model.AnimeDetail, []model.AnimeEpisode, error) {
+
 	detail, eps := modules.ScrapeAnimeEpisodes(mainUrl + ("/anime/" + judul))
 
 	return detail, eps, nil
 }
 
-func (s *animeService) GetAnimeSourceVid(judul_eps string) (model.AnimeSourceData, error) {
+func (s *animeService) GetAnimeSourceVid(ctx *fiber.Ctx, judul_eps string) (model.AnimeSourceData, error) {
+	authHeader := ctx.Get("Authorization")
+	token := strings.TrimSpace(strings.TrimPrefix(authHeader, "Bearer "))
+
+	IdUsr, err := utils.VerifyToken(token, config.JWTSecret, config.TokenTypeAccess)
+	if err != nil {
+		return model.AnimeSourceData{}, fiber.NewError(fiber.StatusUnauthorized, fmt.Sprintf("Error verifying token: %s", err.Error()))
+	}
+
+	userUUID, err := uuid.Parse(IdUsr)
+	if err != nil {
+		return model.AnimeSourceData{}, fiber.NewError(fiber.StatusBadRequest, "Invalid user ID format")
+	}
+
 	animSource := modules.ScrapeAnimeSourceData(mainUrl + ("/episode/" + judul_eps))
+
+	s.TrackEpisodeViewRepo.Create(context.Background(), model.TrackEpisodeView{
+		UserId:         userUUID,
+		MovieDetailUrl: animSource.DetailURL,
+		EpisodeId:      judul_eps,
+	})
 
 	return animSource, nil
 }

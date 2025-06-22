@@ -654,6 +654,8 @@ definitions:
     properties:
       current_ep:
         type: string
+      detail_url:
+        type: string
       download_url:
         type: string
       episodes:
@@ -1139,7 +1141,18 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/example.GetOdAnimeEpisodeVideoResponse'
+      security:
+      - BearerAuth: []
       summary: Get Episode Video Source
+      tags:
+      - Otakudesu
+  /otakudesu/popular:
+    get:
+      description: Scrape and get popular anime from Otakudesu.
+      produces:
+      - application/json
+      responses: {}
+      summary: Get popular anime
       tags:
       - Otakudesu
   /otakudesu/search:

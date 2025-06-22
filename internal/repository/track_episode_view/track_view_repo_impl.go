@@ -1,0 +1,52 @@
+package repository
+
+import (
+	"context"
+
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
+	"gorm.io/gorm"
+)
+
+type TrackEpisodeViewRepositoryImpl struct {
+	db *gorm.DB
+}
+
+type TrackEpisodeViewSummary struct {
+	MovieDetailUrl string `json:"movie_detail_url"`
+	EpisodeID      string `json:"episode_id"`
+	ViewCount      int    `json:"view_count"`
+}
+
+func NewTrackEpisodeViewRepository(db *gorm.DB) TrackEpisodeViewRepository {
+	return &TrackEpisodeViewRepositoryImpl{db: db}
+}
+
+func (t *TrackEpisodeViewRepositoryImpl) Create(ctx context.Context, trackEpisodeView model.TrackEpisodeView) error {
+	return t.db.WithContext(ctx).Create(&trackEpisodeView).Error
+}
+
+func (t *TrackEpisodeViewRepositoryImpl) GetAll(ctx context.Context) ([]TrackEpisodeViewSummary, error) {
+	var results []TrackEpisodeViewSummary
+
+	err := t.db.WithContext(ctx).
+		Model(&model.TrackEpisodeView{}).
+		Select("episode_id, COUNT(*) as view_count").
+		Group("episode_id").
+		Order("view_count DESC").
+		Limit(15).
+		Scan(&results).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}
+
+func (t *TrackEpisodeViewRepositoryImpl) GetByEpisodeId(ctx context.Context, episodeId string) (model.TrackEpisodeView, error) {
+	var trackEpisodeView model.TrackEpisodeView
+	if err := t.db.WithContext(ctx).Where("episode_id = ?", episodeId).First(&trackEpisodeView).Error; err != nil {
+		return model.TrackEpisodeView{}, err
+	}
+	return trackEpisodeView, nil
+}
