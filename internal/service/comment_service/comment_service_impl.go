@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/comment/request"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/comment/response"
@@ -26,19 +25,17 @@ func NewCommentService(commentRepository repository.CommentRepository) CommentSe
 }
 
 func (c *commentService) CreateComment(ctx *fiber.Ctx, req *request.CreateComment) error {
-	comment := convert_types.CreateCommentToModel(req)
-
 	authHeader := ctx.Get("Authorization")
 	token := strings.TrimSpace(strings.TrimPrefix(authHeader, "Bearer "))
 
-	IdUsr, errVerify := utils.VerifyToken(token, config.JWTSecret, config.TokenTypeAccess)
-	if errVerify != nil {
-		return fiber.NewError(fiber.StatusUnauthorized, fmt.Sprintf("Error verifying user token: %s", errVerify.Error()))
+	IdUsr, errVerToken := utils.VerifyToken(token, config.JWTSecret, config.TokenTypeAccess)
+	if errVerToken != nil {
+		return fiber.NewError(fiber.StatusUnauthorized, fmt.Sprintf("Error verifying token: %s", errVerToken.Error()))
 	}
 
-	comment.UserId = uuid.MustParse(IdUsr)
+	req.UserId = IdUsr
 
-	err := c.commentRepository.CreateComment(ctx.Context(), comment)
+	err := c.commentRepository.CreateComment(ctx.Context(), convert_types.CreateCommentToModel(req))
 	if err != nil {
 		return err
 	}

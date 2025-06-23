@@ -12,10 +12,10 @@ func CommentsRoutes(v1 fiber.Router, c service.CommentService) {
 
 	group := v1.Group("/comments")
 
-	group.Get("/movie/{movieId}", m.Auth(), commentController.GetCommentsMovieId)
+	group.Get("/movie/:movieId", commentController.GetCommentsMovieId)
 
 	group.Post("/", m.Auth(), commentController.CreateComment)
-	group.Put("/{id}", m.Auth(), commentController.UpdateComment)
-	group.Get("/{id}", m.Auth(), commentController.GetCommentByID)
-	group.Delete("/{id}", m.Auth(), commentController.DeleteComment)
+	group.Put("/:id", m.Auth(), commentController.UpdateComment)
+	group.Get("/:id", commentController.GetCommentByID)
+	group.Delete("/:id", m.Auth(), commentController.DeleteComment)
 }
