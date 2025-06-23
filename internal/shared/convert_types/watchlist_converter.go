@@ -9,18 +9,16 @@ import (
 
 func CreateWatchlistToModel(req *request.CreateWatchlist) *model.Watchlist {
 	return &model.Watchlist{
-		UserId:        uuid.MustParse(req.UserId),
-		MovieId:       req.MovieId,
-		ThumbImageUrl: req.ThumbImageUrl,
+		UserId:  uuid.MustParse(req.UserId),
+		MovieId: req.MovieId,
 	}
 }
 
 func UpdateWatchlistToModel(req *request.UpdateWatchlist) *model.Watchlist {
 	return &model.Watchlist{
-		ID:            req.ID,
-		UserId:        uuid.MustParse(req.UserId),
-		MovieId:       req.MovieId,
-		ThumbImageUrl: req.ThumbImageUrl,
+		ID:      req.ID,
+		UserId:  uuid.MustParse(req.UserId),
+		MovieId: req.MovieId,
 	}
 }
 

@@ -123,9 +123,8 @@ func (s *newWatchlistService) CreateWatchlist(c *fiber.Ctx, req *request.CreateW
 	}
 
 	data := convert_types.CreateWatchlistToModel(&request.CreateWatchlist{
-		UserId:        IdUsr,
-		MovieId:       req.MovieId,
-		ThumbImageUrl: req.ThumbImageUrl,
+		UserId:  IdUsr,
+		MovieId: req.MovieId,
 	})
 
 	if err := s.Repository.CreateWatchlist(c.Context(), data); err != nil {
