@@ -8,6 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/watchlist/request"
+	responseWatchlist "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/watchlist/response"
 	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/watchlist_service"
 )
@@ -41,7 +42,7 @@ func (h *WatchlistController) GetAllWatchlist(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).
-		JSON(response.SuccessWithPaginate[model.Watchlist]{
+		JSON(response.SuccessWithPaginate[responseWatchlist.WatchlistResponse]{
 			Code:         fiber.StatusOK,
 			Status:       "success",
 			Message:      "Get all watchlists successfully",

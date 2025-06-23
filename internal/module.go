@@ -31,9 +31,10 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	userSvc := userService.NewUserService(userRepo, validate)
 
 	trackEpsRepo := trackRepo.NewTrackEpisodeViewRepository(db)
+	animeSvc := odService.NewAnimeService(trackEpsRepo)
 
 	watchlistRepo := watchListRepo.NewWatchlistRepositoryImpl(db)
-	watchListSvc := watchlistService.NewWatchlistService(watchlistRepo, validate)
+	watchListSvc := watchlistService.NewWatchlistService(watchlistRepo, validate, animeSvc)
 
 	commentRepo := commentRepo.NewCommentRepository(db)
 	commentSvc := commetService.NewCommentService(commentRepo)
@@ -42,7 +43,6 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	authSvc := authService.NewAuthService(db, validate, userSvc, tokenSvc)
 	emailSvc := systemService.NewEmailService()
 	healthSvc := systemService.NewHealthCheckService(db)
-	animeSvc := odService.NewAnimeService(trackEpsRepo)
 
 	middleware.InitAuthMiddleware(userSvc)
 
