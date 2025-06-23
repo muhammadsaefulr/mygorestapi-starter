@@ -77,8 +77,8 @@ func (co *CommentController) GetCommentByID(c *fiber.Ctx) error {
 // @Summary      Get comments by movie ID
 // @Description  Get comments by movie ID
 // @Produce      json
-// @Param        movieId  path  string  true  "Movie ID"
-// @Router       /comments/movie/{movieId} [get]
+// @Param        movieEpsId  path  string  true  "Movie Eps ID"
+// @Router       /comments/movie/{movieEpsId} [get]
 func (co *CommentController) GetCommentsMovieId(c *fiber.Ctx) error {
 	movieId := c.Params("movieId")
 	comments, err := co.CommentService.GetCommentsMovieId(c, movieId)

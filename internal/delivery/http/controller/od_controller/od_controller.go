@@ -144,9 +144,9 @@ func (a *OdAnimeController) GetAnimePopular(c *fiber.Ctx) error {
 // @Param        judul path      string  true   "Judul Anime" Example(ds-future-sub-indo)
 // @Success      200   {object}  example.GetOdAnimeEpisodeResponse
 // @Router       /otakudesu/detail/{judul} [get]
-func (a *OdAnimeController) GetAnimeEpisode(c *fiber.Ctx) error {
+func (a *OdAnimeController) GetAnimeDetails(c *fiber.Ctx) error {
 	judul := c.Params("judul")
-	detail, episode, err := a.AnimeService.GetAnimeEpisode(judul)
+	detail, episode, err := a.AnimeService.GetAnimeDetails(judul)
 
 	results := model.EpisodePageResult{
 		AnimeDetail: detail,

@@ -14,7 +14,7 @@ func OdRoutes(v1 fiber.Router, u od_service.AnimeService) {
 	anime := v1.Group("/otakudesu")
 
 	anime.Get("/", odController.GetHomePageAnime)
-	anime.Get("/detail/:judul", odController.GetAnimeEpisode)
+	anime.Get("/detail/:judul", odController.GetAnimeDetails)
 	anime.Get("/complete-anime/page/:page", odController.GetCompleteAnime)
 	anime.Get("/trending", odController.GetTrendingAnime)
 	anime.Get("/popular", odController.GetAnimePopular)

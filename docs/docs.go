@@ -363,7 +363,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/comments/movie/{movieId}": {
+        "/comments/movie/{movieEpsId}": {
             "get": {
                 "description": "Get comments by movie ID",
                 "produces": [
@@ -376,8 +376,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Movie ID",
-                        "name": "movieId",
+                        "description": "Movie Eps ID",
+                        "name": "movieEpsId",
                         "in": "path",
                         "required": true
                     }

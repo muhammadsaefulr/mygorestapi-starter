@@ -991,13 +991,13 @@ paths:
       summary: Update a comment
       tags:
       - Comments
-  /comments/movie/{movieId}:
+  /comments/movie/{movieEpsId}:
     get:
       description: Get comments by movie ID
       parameters:
-      - description: Movie ID
+      - description: Movie Eps ID
         in: path
-        name: movieId
+        name: movieEpsId
         required: true
         type: string
       produces:

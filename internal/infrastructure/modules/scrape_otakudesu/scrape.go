@@ -110,7 +110,7 @@ func ScrapeGenreAnime(url string) []model.GenreAnime {
 	return results
 }
 
-func ScrapeAnimeEpisodes(url string) (model.AnimeDetail, []model.AnimeEpisode) {
+func ScrapeAnimeDetail(url string) (model.AnimeDetail, []model.AnimeEpisode) {
 	c := colly.NewCollector(
 		colly.UserAgent("Mozilla/5.0"),
 		colly.Async(true),
@@ -158,10 +158,15 @@ func ScrapeAnimeEpisodes(url string) (model.AnimeDetail, []model.AnimeEpisode) {
 	})
 
 	c.OnHTML(".episodelist li", func(e *colly.HTMLElement) {
-		episodes = append(episodes, model.AnimeEpisode{
-			Title:    e.ChildText("span a"),
-			VideoURL: "/play/" + path.Base(strings.TrimSuffix(e.ChildAttr("span a", "href"), "/")),
-		})
+		title := e.ChildText("span a")
+		href := e.ChildAttr("span a", "href")
+
+		if !strings.Contains(strings.ToLower(href), "batch") && !strings.Contains(strings.ToLower(href), "lengkap") {
+			episodes = append(episodes, model.AnimeEpisode{
+				Title:    title,
+				VideoURL: "/play/" + path.Base(strings.TrimSuffix(href, "/")),
+			})
+		}
 	})
 
 	_ = c.Visit(url)

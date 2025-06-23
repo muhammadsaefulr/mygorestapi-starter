@@ -114,7 +114,7 @@ func (s *animeService) GetAnimePopular() ([]model.AnimeData, error) {
 		go func(slug string) {
 			defer wgDummy.Done()
 
-			detail, _ := modules.ScrapeAnimeEpisodes(mainUrl + "/anime/" + slug)
+			detail, _ := modules.ScrapeAnimeDetail(mainUrl + "/anime/" + slug)
 
 			dummyChan <- model.AnimeData{
 				Title:        detail.Title,
@@ -157,7 +157,7 @@ func (s *animeService) GetAnimePopular() ([]model.AnimeData, error) {
 			}
 
 			slug := path.Base(strings.TrimSuffix(episode.MovieDetailUrl, "/"))
-			detail, _ := modules.ScrapeAnimeEpisodes(mainUrl + "/anime/" + slug)
+			detail, _ := modules.ScrapeAnimeDetail(mainUrl + "/anime/" + slug)
 
 			resultChan <- model.AnimeData{
 				Title:        detail.Title,
@@ -187,9 +187,9 @@ func (s *animeService) GetAnimePopular() ([]model.AnimeData, error) {
 	return animeData, nil
 }
 
-func (s *animeService) GetAnimeEpisode(judul string) (model.AnimeDetail, []model.AnimeEpisode, error) {
+func (s *animeService) GetAnimeDetails(judul string) (model.AnimeDetail, []model.AnimeEpisode, error) {
 
-	detail, eps := modules.ScrapeAnimeEpisodes(mainUrl + ("/anime/" + judul))
+	detail, eps := modules.ScrapeAnimeDetail(mainUrl + ("/anime/" + judul))
 
 	return detail, eps, nil
 }
