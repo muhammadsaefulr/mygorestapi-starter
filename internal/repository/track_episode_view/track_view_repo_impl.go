@@ -13,7 +13,7 @@ type TrackEpisodeViewRepositoryImpl struct {
 
 type TrackEpisodeViewSummary struct {
 	MovieDetailUrl string `json:"movie_detail_url"`
-	EpisodeID      string `json:"episode_id"`
+	EpisodeId      string `json:"episode_id"`
 	ViewCount      int    `json:"view_count"`
 }
 
@@ -30,8 +30,8 @@ func (t *TrackEpisodeViewRepositoryImpl) GetAll(ctx context.Context) ([]TrackEpi
 
 	err := t.db.WithContext(ctx).
 		Model(&model.TrackEpisodeView{}).
-		Select("episode_id, COUNT(*) as view_count").
-		Group("episode_id").
+		Select("movie_detail_url, episode_id, COUNT(*) as view_count").
+		Group("movie_detail_url, episode_id").
 		Order("view_count DESC").
 		Limit(15).
 		Scan(&results).Error
@@ -45,7 +45,7 @@ func (t *TrackEpisodeViewRepositoryImpl) GetAll(ctx context.Context) ([]TrackEpi
 
 func (t *TrackEpisodeViewRepositoryImpl) GetByEpisodeId(ctx context.Context, episodeId string) (model.TrackEpisodeView, error) {
 	var trackEpisodeView model.TrackEpisodeView
-	if err := t.db.WithContext(ctx).Where("episode_id = ?", episodeId).First(&trackEpisodeView).Error; err != nil {
+	if err := t.db.WithContext(ctx).Where("movie_detail_url = ?", episodeId).First(&trackEpisodeView).Error; err != nil {
 		return model.TrackEpisodeView{}, err
 	}
 	return trackEpisodeView, nil

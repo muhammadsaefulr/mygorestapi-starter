@@ -3,6 +3,7 @@ package od_service
 import (
 	"context"
 	"fmt"
+	"log"
 	"path"
 	"sort"
 	"strconv"
@@ -136,7 +137,7 @@ func (s *animeService) GetAnimePopular() ([]model.AnimeData, error) {
 		animeData = append(animeData, data)
 	}
 
-	// --- LALU SCRAPE DARI TRACK VIEW EPISODE ---
+	// --- SCRAPE DARI TRACK VIEW (POPULAR) ---
 	topEpisodes, err := s.TrackEpisodeViewRepo.GetAll(ctx)
 	if err != nil {
 		return animeData, nil
@@ -148,26 +149,24 @@ func (s *animeService) GetAnimePopular() ([]model.AnimeData, error) {
 	for _, top := range topEpisodes {
 		wg.Add(1)
 
-		go func(epID string) {
+		go func(top repository.TrackEpisodeViewSummary) {
 			defer wg.Done()
 
-			episode, err := s.TrackEpisodeViewRepo.GetByEpisodeId(ctx, epID)
-			if err != nil || episode.MovieDetailUrl == "" {
-				return
-			}
+			slug := path.Base(strings.TrimSuffix(top.MovieDetailUrl, "/"))
+			log.Println("Scraping slug:", slug)
 
-			slug := path.Base(strings.TrimSuffix(episode.MovieDetailUrl, "/"))
 			detail, _ := modules.ScrapeAnimeDetail(mainUrl + "/anime/" + slug)
 
+			log.Printf("Scraped %s\n", detail.Title)
 			resultChan <- model.AnimeData{
 				Title:        detail.Title,
-				URL:          episode.EpisodeId,
+				URL:          top.EpisodeId,
 				ThumbnailURL: detail.ThumbnailURL,
 				LatestEp:     detail.TotalEps,
 				UpdateAnime:  detail.ReleaseDate,
 				JudulPath:    slug,
 			}
-		}(top.EpisodeID)
+		}(top)
 	}
 
 	go func() {
@@ -179,7 +178,6 @@ func (s *animeService) GetAnimePopular() ([]model.AnimeData, error) {
 		animeData = append(animeData, data)
 	}
 
-	// --- LIMIT MAKSIMAL ---
 	if len(animeData) > 15 {
 		animeData = animeData[:15]
 	}
