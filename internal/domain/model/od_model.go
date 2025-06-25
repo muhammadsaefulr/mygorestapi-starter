@@ -39,11 +39,12 @@ type CompleteAnime struct {
 }
 
 type GenreAnime struct {
-	Title    string `json:"title"`
-	URL      string `json:"url"`
-	Studio   string `json:"studio"`
-	Episodes string `json:"episodes"`
-	Rating   string `json:"rating"`
+	Title        string `json:"title"`
+	ThumbnailURL string `json:"thumbnail_url"`
+	URL          string `json:"url"`
+	Studio       string `json:"studio"`
+	Episodes     string `json:"episodes"`
+	Rating       string `json:"rating"`
 }
 
 type GenreList struct {

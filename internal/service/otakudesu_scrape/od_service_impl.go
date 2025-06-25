@@ -115,9 +115,7 @@ func (s *animeService) GetAnimePopular() ([]model.AnimeData, error) {
 		wgDummy.Add(1)
 		go func(slug string) {
 			defer wgDummy.Done()
-
 			detail, _, _ := modules.ScrapeAnimeDetail(mainUrl + "/anime/" + slug)
-
 			dummyChan <- model.AnimeData{
 				Title:        detail.Title,
 				URL:          slug,
@@ -144,39 +142,41 @@ func (s *animeService) GetAnimePopular() ([]model.AnimeData, error) {
 		return animeData, nil
 	}
 
-	var wg sync.WaitGroup
-	resultChan := make(chan model.AnimeData, len(topEpisodes))
+	// --- Worker Pool Configuration ---
+	const maxWorkers = 10
+	jobs := make(chan repository.TrackEpisodeViewSummary, len(topEpisodes))
+	results := make(chan model.AnimeData, len(topEpisodes))
 
-	for _, top := range topEpisodes {
-		wg.Add(1)
+	// Start worker goroutines
+	for w := 0; w < maxWorkers; w++ {
+		go func() {
+			for job := range jobs {
+				slug := path.Base(strings.TrimSuffix(job.MovieDetailUrl, "/"))
+				detail, _, _ := modules.ScrapeAnimeDetail(mainUrl + "/anime/" + slug)
 
-		go func(top repository.TrackEpisodeViewSummary) {
-			defer wg.Done()
-
-			slug := path.Base(strings.TrimSuffix(top.MovieDetailUrl, "/"))
-			// log.Println("Scraping slug:", slug)
-
-			detail, _, _ := modules.ScrapeAnimeDetail(mainUrl + "/anime/" + slug)
-
-			// log.Printf("Scraped %s\n", detail.Title)
-			resultChan <- model.AnimeData{
-				Title:        detail.Title,
-				URL:          top.EpisodeId,
-				ThumbnailURL: detail.ThumbnailURL,
-				LatestEp:     detail.TotalEps,
-				UpdateAnime:  detail.ReleaseDate,
-				JudulPath:    slug,
+				results <- model.AnimeData{
+					Title:        detail.Title,
+					URL:          job.EpisodeId,
+					ThumbnailURL: detail.ThumbnailURL,
+					LatestEp:     detail.TotalEps,
+					UpdateAnime:  detail.ReleaseDate,
+					JudulPath:    slug,
+				}
 			}
-		}(top)
+		}()
 	}
 
+	// Kirim semua pekerjaan ke channel
 	go func() {
-		wg.Wait()
-		close(resultChan)
+		for _, top := range topEpisodes {
+			jobs <- top
+		}
+		close(jobs)
 	}()
 
-	for data := range resultChan {
-		animeData = append(animeData, data)
+	// Terima semua hasil
+	for i := 0; i < len(topEpisodes); i++ {
+		animeData = append(animeData, <-results)
 	}
 
 	if len(animeData) > 15 {

@@ -101,11 +101,12 @@ func ScrapeGenreAnime(url string) []model.GenreAnime {
 
 	c.OnHTML(".col-anime", func(e *colly.HTMLElement) {
 		results = append(results, model.GenreAnime{
-			Title:    e.ChildText(".col-anime-title a"),
-			URL:      e.ChildAttr(".col-anime-title a", "href"),
-			Studio:   e.ChildText(".col-anime-studio"),
-			Episodes: e.ChildText(".col-anime-eps"),
-			Rating:   e.ChildText(".col-anime-rating"),
+			Title:        e.ChildText(".col-anime-title a"),
+			URL:          "/detail/" + path.Base(strings.TrimSuffix(e.ChildAttr(".col-anime-title a", "href"), "/")),
+			Studio:       e.ChildText(".col-anime-studio"),
+			ThumbnailURL: e.ChildAttr(".col-anime-cover img", "src"),
+			Episodes:     e.ChildText(".col-anime-eps"),
+			Rating:       e.ChildText(".col-anime-rating"),
 		})
 	})
 	_ = c.Visit(url)
@@ -126,7 +127,7 @@ func ScrapeGenreList(url string) []model.GenreList {
 		if name != "" && href != "" {
 			results = append(results, model.GenreList{
 				Title: name,
-				URL:   e.Request.AbsoluteURL(href),
+				URL:   "/genre/" + path.Base(strings.TrimSuffix(e.Request.AbsoluteURL(href), "/")) + "/page/1",
 			})
 		}
 	})
