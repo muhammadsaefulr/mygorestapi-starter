@@ -89,6 +89,7 @@ type AnimeDetail struct {
 type EpisodePageResult struct {
 	AnimeDetail AnimeDetail    `json:"anime_detail"`
 	AnimeEps    []AnimeEpisode `json:"episode"`
+	AnimeRekom  []SearchResult `json:"rekomend"`
 }
 
 // Anime Video Source Data

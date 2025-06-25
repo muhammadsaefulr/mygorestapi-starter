@@ -70,7 +70,7 @@ func (s *newWatchlistService) GetAllWatchlist(c *fiber.Ctx, params *request.Quer
 	var watchlistResponses []response.WatchlistResponse
 
 	for _, watch := range resultFromDB {
-		detailMovie, _, errAnimeService := s.AnimeService.GetAnimeDetails(watch.MovieId)
+		detailMovie, _, _, errAnimeService := s.AnimeService.GetAnimeDetails(watch.MovieId)
 		if errAnimeService != nil {
 			log.Println("Gagal ambil detail anime:", errAnimeService.Error())
 			detailMovie = model.AnimeDetail{}
@@ -112,7 +112,7 @@ func (s *newWatchlistService) CreateWatchlist(c *fiber.Ctx, req *request.CreateW
 		return nil, fiber.NewError(fiber.StatusUnauthorized, fmt.Sprintf("Error verifying token: %s", err.Error()))
 	}
 
-	detailMovie, _, errAnimeService := s.AnimeService.GetAnimeDetails(req.MovieId)
+	detailMovie, _, _, errAnimeService := s.AnimeService.GetAnimeDetails(req.MovieId)
 
 	if errAnimeService != nil {
 		return nil, fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Failed to get anime detail because %s", errAnimeService.Error()))

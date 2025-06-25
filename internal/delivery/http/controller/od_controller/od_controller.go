@@ -146,11 +146,12 @@ func (a *OdAnimeController) GetAnimePopular(c *fiber.Ctx) error {
 // @Router       /otakudesu/detail/{judul} [get]
 func (a *OdAnimeController) GetAnimeDetails(c *fiber.Ctx) error {
 	judul := c.Params("judul")
-	detail, episode, err := a.AnimeService.GetAnimeDetails(judul)
+	detail, episode, rekom, err := a.AnimeService.GetAnimeDetails(judul)
 
 	results := model.EpisodePageResult{
 		AnimeDetail: detail,
 		AnimeEps:    episode,
+		AnimeRekom:  rekom,
 	}
 
 	if err != nil {

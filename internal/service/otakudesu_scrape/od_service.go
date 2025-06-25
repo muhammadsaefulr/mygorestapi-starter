@@ -9,7 +9,7 @@ type AnimeService interface {
 	GetHomePage() ([]od_anime_model.AnimeData, error)
 	GetCompleteAnime(page string) ([]od_anime_model.CompleteAnime, error)
 	GetOngoingAnime(page string) ([]od_anime_model.OngoingAnime, error)
-	GetAnimeDetails(judul string) (od_anime_model.AnimeDetail, []od_anime_model.AnimeEpisode, error)
+	GetAnimeDetails(judul string) (od_anime_model.AnimeDetail, []od_anime_model.AnimeEpisode, []od_anime_model.SearchResult, error)
 	GetTrendingAnime() ([]od_anime_model.TrendingAnime, error)
 	GetAnimePopular() ([]od_anime_model.AnimeData, error)
 	GetAnimeSourceVid(ctx *fiber.Ctx, judul_eps string) (od_anime_model.AnimeSourceData, error)

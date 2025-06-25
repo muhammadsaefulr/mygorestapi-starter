@@ -116,7 +116,7 @@ func (s *animeService) GetAnimePopular() ([]model.AnimeData, error) {
 		go func(slug string) {
 			defer wgDummy.Done()
 
-			detail, _ := modules.ScrapeAnimeDetail(mainUrl + "/anime/" + slug)
+			detail, _, _ := modules.ScrapeAnimeDetail(mainUrl + "/anime/" + slug)
 
 			dummyChan <- model.AnimeData{
 				Title:        detail.Title,
@@ -156,7 +156,7 @@ func (s *animeService) GetAnimePopular() ([]model.AnimeData, error) {
 			slug := path.Base(strings.TrimSuffix(top.MovieDetailUrl, "/"))
 			// log.Println("Scraping slug:", slug)
 
-			detail, _ := modules.ScrapeAnimeDetail(mainUrl + "/anime/" + slug)
+			detail, _, _ := modules.ScrapeAnimeDetail(mainUrl + "/anime/" + slug)
 
 			// log.Printf("Scraped %s\n", detail.Title)
 			resultChan <- model.AnimeData{
@@ -186,11 +186,11 @@ func (s *animeService) GetAnimePopular() ([]model.AnimeData, error) {
 	return animeData, nil
 }
 
-func (s *animeService) GetAnimeDetails(judul string) (model.AnimeDetail, []model.AnimeEpisode, error) {
+func (s *animeService) GetAnimeDetails(judul string) (model.AnimeDetail, []model.AnimeEpisode, []model.SearchResult, error) {
 
-	detail, eps := modules.ScrapeAnimeDetail(mainUrl + ("/anime/" + judul))
+	detail, eps, rekomend := modules.ScrapeAnimeDetail(mainUrl + ("/anime/" + judul))
 
-	return detail, eps, nil
+	return detail, eps, rekomend, nil
 }
 
 func (s *animeService) GetAnimeSourceVid(ctx *fiber.Ctx, judul_eps string) (model.AnimeSourceData, error) {

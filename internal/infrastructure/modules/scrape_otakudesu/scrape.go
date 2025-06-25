@@ -1,8 +1,13 @@
 package modules
 
 import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"path"
 	"regexp"
 	"sort"
@@ -130,7 +135,7 @@ func ScrapeGenreList(url string) []model.GenreList {
 	return results
 }
 
-func ScrapeAnimeDetail(url string) (model.AnimeDetail, []model.AnimeEpisode) {
+func ScrapeAnimeDetail(url string) (model.AnimeDetail, []model.AnimeEpisode, []model.SearchResult) {
 	c := colly.NewCollector(
 		colly.UserAgent("Mozilla/5.0"),
 		colly.Async(true),
@@ -192,12 +197,20 @@ func ScrapeAnimeDetail(url string) (model.AnimeDetail, []model.AnimeEpisode) {
 	_ = c.Visit(url)
 	c.Wait()
 
-	return detail, episodes
+	recommendations, _ := fetchRecommendationsFromAniList(detail.Title)
+
+	// log.Printf("Recommendations: %+v", recommendations)
+
+	return detail, episodes, recommendations
 }
 
 func ScrapeSearchAnimeByTitle(url string) []model.SearchResult {
 	c := colly.NewCollector(colly.UserAgent("Mozilla/5.0"))
 	var results []model.SearchResult
+
+	// log.Printf("Scraping search title: %s", url)
+
+	// searchTitle := strings.ReplaceAll(title, " ", "+")
 
 	c.OnHTML("ul.chivsrc li", func(e *colly.HTMLElement) {
 		var genres []model.GenreInfo
@@ -216,11 +229,11 @@ func ScrapeSearchAnimeByTitle(url string) []model.SearchResult {
 			URL:          e.ChildAttr("h2 a", "href"),
 			ThumbnailURL: e.ChildAttr("img", "src"),
 			Genres:       genres,
-			Status:       e.ChildText(".set b:contains('Status')"),
-			Rating:       e.ChildText(".set b:contains('Rating')"),
+			Status:       strings.TrimSpace(strings.Split(e.DOM.Find(".set b:contains('Status')").Parent().Text(), ":")[1]),
+			Rating:       strings.TrimSpace(strings.Split(e.DOM.Find(".set b:contains('Rating')").Parent().Text(), ":")[1]),
 		})
 	})
-	_ = c.Visit(url)
+	_ = c.Visit(url + "&post_type=anime")
 	if len(results) > 15 {
 		return results[:15]
 	}
@@ -325,6 +338,8 @@ func ScrapeAnimeSourceData(url string) model.AnimeSourceData {
 	return result
 }
 
+// Utils
+
 func ExtractPdrainUrl(url string) string {
 	res, err := http.Get(url)
 	if err != nil {
@@ -340,4 +355,125 @@ func ExtractPdrainUrl(url string) string {
 	}
 
 	return doc.Find(`meta[name="twitter:player:stream"]`).AttrOr("content", "")
+}
+
+func fetchRecommendationsFromAniList(animeURL string) ([]model.SearchResult, error) {
+
+	query := `
+	query ($search: String) {
+		Media(search: $search, type: ANIME) {
+			recommendations(page: 1, perPage: 10, sort: RATING_DESC) {
+				nodes {
+					mediaRecommendation {
+						title {
+							romaji
+						}
+						siteUrl
+						genres
+						averageScore
+						coverImage {
+							large
+						}
+					}
+				}
+			}
+		}
+	}`
+
+	variables := map[string]interface{}{
+		"search": animeURL,
+	}
+	body := map[string]interface{}{
+		"query":     query,
+		"variables": variables,
+	}
+	jsonBody, _ := json.Marshal(body)
+
+	req, _ := http.NewRequest("POST", "https://graphql.anilist.co", bytes.NewBuffer(jsonBody))
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	respBody, _ := io.ReadAll(resp.Body)
+
+	type gqlResponse struct {
+		Data struct {
+			Media struct {
+				Recommendations struct {
+					Nodes []struct {
+						MediaRecommendation struct {
+							Title struct {
+								Romaji string `json:"romaji"`
+							} `json:"title"`
+							SiteURL      string   `json:"siteUrl"`
+							Genres       []string `json:"genres"`
+							AverageScore int      `json:"averageScore"`
+							CoverImage   struct {
+								Large string `json:"large"`
+							} `json:"coverImage"`
+						} `json:"mediaRecommendation"`
+					} `json:"nodes"`
+				} `json:"recommendations"`
+			} `json:"Media"`
+		} `json:"data"`
+	}
+
+	var gqlRes gqlResponse
+	if err := json.Unmarshal(respBody, &gqlRes); err != nil {
+		return nil, err
+	}
+
+	var (
+		results []model.SearchResult
+		mu      sync.Mutex
+		wg      sync.WaitGroup
+		sem     = make(chan struct{}, 6)
+	)
+
+	for _, node := range gqlRes.Data.Media.Recommendations.Nodes {
+		m := node.MediaRecommendation
+
+		wg.Add(1)
+		go func(mrTitle string, mGenres []string, mCover string, mScore int) {
+			defer wg.Done()
+			sem <- struct{}{}
+			defer func() { <-sem }()
+
+			searchResults := ScrapeSearchAnimeByTitle("https://otakudesu.cloud/?s=" + url.QueryEscape(mrTitle))
+			if len(searchResults) == 0 {
+				// log.Println("[INFO] Gagal temukan di Otakudesu:", mrTitle)
+				return
+			}
+
+			first := searchResults[0]
+
+			if first.ThumbnailURL == "" {
+				first.ThumbnailURL = mCover
+			}
+			if first.Rating == "" && mScore > 0 {
+				first.Rating = fmt.Sprintf("%d", float64(mScore)/100)
+			}
+			if len(first.Genres) == 0 && len(mGenres) > 0 {
+				for _, g := range mGenres {
+					first.Genres = append(first.Genres, model.GenreInfo{
+						Title: strings.ToLower(g),
+					})
+				}
+			}
+			if first.Status == "" {
+				first.Status = "Unknown"
+			}
+
+			mu.Lock()
+			results = append(results, first)
+			mu.Unlock()
+		}(m.Title.Romaji, m.Genres, m.CoverImage.Large, m.AverageScore)
+	}
+
+	wg.Wait()
+	return results, nil
 }
