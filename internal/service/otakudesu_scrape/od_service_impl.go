@@ -3,7 +3,8 @@ package od_service
 import (
 	"context"
 	"fmt"
-	"log"
+
+	// "log"
 	"path"
 	"sort"
 	"strconv"
@@ -153,11 +154,11 @@ func (s *animeService) GetAnimePopular() ([]model.AnimeData, error) {
 			defer wg.Done()
 
 			slug := path.Base(strings.TrimSuffix(top.MovieDetailUrl, "/"))
-			log.Println("Scraping slug:", slug)
+			// log.Println("Scraping slug:", slug)
 
 			detail, _ := modules.ScrapeAnimeDetail(mainUrl + "/anime/" + slug)
 
-			log.Printf("Scraped %s\n", detail.Title)
+			// log.Printf("Scraped %s\n", detail.Title)
 			resultChan <- model.AnimeData{
 				Title:        detail.Title,
 				URL:          top.EpisodeId,
@@ -219,6 +220,12 @@ func (s *animeService) GetAnimeSourceVid(ctx *fiber.Ctx, judul_eps string) (mode
 
 func (s *animeService) GetAnimeGenreList(genre string, page string) ([]model.GenreAnime, error) {
 	animGenre := modules.ScrapeGenreAnime(mainUrl + "/genres/" + (genre + "/page/" + page))
+
+	return animGenre, nil
+}
+
+func (s *animeService) GetAllAnimeGenre() ([]model.GenreList, error) {
+	animGenre := modules.ScrapeGenreList(mainUrl + "/genre-list")
 
 	return animGenre, nil
 }

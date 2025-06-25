@@ -110,6 +110,26 @@ func ScrapeGenreAnime(url string) []model.GenreAnime {
 	return results
 }
 
+func ScrapeGenreList(url string) []model.GenreList {
+	c := colly.NewCollector(colly.UserAgent("Mozilla/5.0"))
+	var results []model.GenreList
+
+	c.OnHTML("ul.genres a", func(e *colly.HTMLElement) {
+		name := strings.TrimSpace(e.Text)
+		href := strings.TrimSpace(e.Attr("href"))
+
+		if name != "" && href != "" {
+			results = append(results, model.GenreList{
+				Title: name,
+				URL:   e.Request.AbsoluteURL(href),
+			})
+		}
+	})
+
+	_ = c.Visit(url)
+	return results
+}
+
 func ScrapeAnimeDetail(url string) (model.AnimeDetail, []model.AnimeEpisode) {
 	c := colly.NewCollector(
 		colly.UserAgent("Mozilla/5.0"),
@@ -266,11 +286,14 @@ func ScrapeAnimeSourceData(url string) model.AnimeSourceData {
 
 	c.OnHTML(".venutama h1.posttl", func(e *colly.HTMLElement) {
 		txt := e.Text
-		r := regexp.MustCompile(`(?i)^(.*?)\s(Episode\s\d+\sSubtitle\sIndonesia)$`)
-		if parts := r.FindStringSubmatch(txt); len(parts) >= 3 {
-			result.Title = parts[1]
-			result.CurrentEp = parts[2]
+
+		epRegex := regexp.MustCompile(`(?i)(Episode\s\d+)`)
+		if match := epRegex.FindString(txt); match != "" {
+			result.CurrentEp = strings.TrimSpace(match)
 		}
+
+		titleRegex := regexp.MustCompile(`(?i)\s+Episode\s\d+.*`)
+		result.Title = strings.TrimSpace(titleRegex.ReplaceAllString(txt, ""))
 	})
 
 	c.OnHTML(".kategoz span", func(e *colly.HTMLElement) {

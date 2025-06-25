@@ -21,5 +21,6 @@ func OdRoutes(v1 fiber.Router, u od_service.AnimeService) {
 	anime.Get("/ongoing-anime/page/:page", odController.GetOngoingAnime)
 	anime.Get("/play/:judul_eps", m.Auth(), odController.GetAnimeSourceVid)
 	anime.Get("/genre/:genre/page/:page", odController.GetAnimeGenreList)
+	anime.Get("/genre-list", odController.GetAllGenreList)
 	anime.Get("/search", odController.GetAnimeSearchList)
 }

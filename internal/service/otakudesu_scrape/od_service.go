@@ -14,5 +14,6 @@ type AnimeService interface {
 	GetAnimePopular() ([]od_anime_model.AnimeData, error)
 	GetAnimeSourceVid(ctx *fiber.Ctx, judul_eps string) (od_anime_model.AnimeSourceData, error)
 	GetAnimeGenreList(genre string, page string) ([]od_anime_model.GenreAnime, error)
+	GetAllAnimeGenre() ([]od_anime_model.GenreList, error)
 	GetAnimeByTitle(title string) ([]od_anime_model.SearchResult, error)
 }

@@ -228,6 +228,28 @@ func (a *OdAnimeController) GetAnimeGenreList(c *fiber.Ctx) error {
 }
 
 // @Tags         Otakudesu
+// @Summary      Get All Anime Genre
+// @Description  Scrape and get all anime genre from Otakudesu.
+// @Produce      json
+// @Router       /otakudesu/genre-list [get]
+func (a *OdAnimeController) GetAllGenreList(c *fiber.Ctx) error {
+	result, err := a.AnimeService.GetAllAnimeGenre()
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorDetails{
+			Code:    fiber.StatusInternalServerError,
+			Status:  "error",
+			Message: "Internal Server Error",
+		})
+	}
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithCommonData[model.GenreList]{
+		Code:    fiber.StatusOK,
+		Status:  "success",
+		Message: "Success Retrieved Anime Genre!",
+		Results: result,
+	})
+}
+
+// @Tags         Otakudesu
 // @Summary      Search Anime
 // @Description  Scrape and search anime by title from Otakudesu.
 // @Produce      json

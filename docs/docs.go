@@ -565,6 +565,19 @@ const docTemplate = `{
                 }
             }
         },
+        "/otakudesu/genre-list": {
+            "get": {
+                "description": "Scrape and get all anime genre from Otakudesu.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Otakudesu"
+                ],
+                "summary": "Get All Anime Genre",
+                "responses": {}
+            }
+        },
         "/otakudesu/genre/{genre}/page/{page}": {
             "get": {
                 "description": "Scrape and get anime by genre from Otakudesu.",
@@ -1925,14 +1938,10 @@ const docTemplate = `{
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_watchlist_request.CreateWatchlist": {
             "type": "object",
             "required": [
-                "movie_id",
-                "thumb_image_url"
+                "movie_id"
             ],
             "properties": {
                 "movie_id": {
-                    "type": "string"
-                },
-                "thumb_image_url": {
                     "type": "string"
                 }
             }
@@ -1940,14 +1949,10 @@ const docTemplate = `{
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_watchlist_request.UpdateWatchlist": {
             "type": "object",
             "required": [
-                "movie_id",
-                "thumb_image_url"
+                "movie_id"
             ],
             "properties": {
                 "movie_id": {
-                    "type": "string"
-                },
-                "thumb_image_url": {
                     "type": "string"
                 }
             }

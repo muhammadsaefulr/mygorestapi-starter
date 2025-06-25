@@ -585,21 +585,15 @@ definitions:
     properties:
       movie_id:
         type: string
-      thumb_image_url:
-        type: string
     required:
     - movie_id
-    - thumb_image_url
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_watchlist_request.UpdateWatchlist:
     properties:
       movie_id:
         type: string
-      thumb_image_url:
-        type: string
     required:
     - movie_id
-    - thumb_image_url
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.AnimeData:
     properties:
@@ -1076,6 +1070,15 @@ paths:
           schema:
             $ref: '#/definitions/example.GetOdAnimeEpisodeResponse'
       summary: Get details and episode
+      tags:
+      - Otakudesu
+  /otakudesu/genre-list:
+    get:
+      description: Scrape and get all anime genre from Otakudesu.
+      produces:
+      - application/json
+      responses: {}
+      summary: Get All Anime Genre
       tags:
       - Otakudesu
   /otakudesu/genre/{genre}/page/{page}:

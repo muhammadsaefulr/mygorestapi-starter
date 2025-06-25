@@ -46,6 +46,11 @@ type GenreAnime struct {
 	Rating   string `json:"rating"`
 }
 
+type GenreList struct {
+	Title string `json:"title"`
+	URL   string `json:"url"`
+}
+
 type GenreInfo struct {
 	Title string `json:"title"`
 	URL   string `json:"url"`
