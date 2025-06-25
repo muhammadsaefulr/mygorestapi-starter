@@ -3,6 +3,7 @@ package od_service
 import (
 	"context"
 	"fmt"
+	"net/url"
 
 	// "log"
 	"path"
@@ -231,7 +232,7 @@ func (s *animeService) GetAllAnimeGenre() ([]model.GenreList, error) {
 }
 
 func (s *animeService) GetAnimeByTitle(title string) ([]model.SearchResult, error) {
-	animSearch := modules.ScrapeSearchAnimeByTitle(mainUrl + "?s=" + title + "&post_type=anime")
+	animSearch := modules.ScrapeSearchAnimeByTitle(mainUrl + "?s=" + url.QueryEscape(title) + "&post_type=anime")
 
 	return animSearch, nil
 }
