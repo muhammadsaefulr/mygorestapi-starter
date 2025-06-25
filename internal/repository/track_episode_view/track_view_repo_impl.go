@@ -28,10 +28,13 @@ func (t *TrackEpisodeViewRepositoryImpl) Create(ctx context.Context, trackEpisod
 func (t *TrackEpisodeViewRepositoryImpl) GetAll(ctx context.Context) ([]TrackEpisodeViewSummary, error) {
 	var results []TrackEpisodeViewSummary
 
-	err := t.db.WithContext(ctx).
-		Model(&model.TrackEpisodeView{}).
-		Select("movie_detail_url, episode_id, COUNT(*) as view_count").
+	subQuery := t.db.
+		Table("track_episode_views").
+		Select("DISTINCT ON (movie_detail_url) movie_detail_url, episode_id, COUNT(*) as view_count").
 		Group("movie_detail_url, episode_id").
+		Order("movie_detail_url, COUNT(*) DESC")
+
+	err := t.db.Table("(?) as ranked", subQuery).
 		Order("view_count DESC").
 		Limit(15).
 		Scan(&results).Error
