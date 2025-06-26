@@ -3,6 +3,7 @@
 !.env*.example
 
 scrape_test/
+config/config.go
 
 # Temporary
 tmp/

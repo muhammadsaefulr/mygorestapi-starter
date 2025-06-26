@@ -5,7 +5,7 @@
         "contact": {},
         "version": "1.0.0"
     },
-    "host": "dev.msaepul.my.id",
+    "host": "localhost:8081",
     "basePath": "/api/v1",
     "paths": {
         "/auth/forgot-password": {
@@ -334,6 +334,11 @@
         },
         "/comments": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Create a comment",
                 "produces": [
                     "application/json"
@@ -369,6 +374,7 @@
                 "parameters": [
                     {
                         "type": "string",
+                        "example": "drstn-s4-episode-8-sub-indo",
                         "description": "Movie Eps ID",
                         "name": "movieEpsId",
                         "in": "path",
@@ -400,6 +406,11 @@
                 "responses": {}
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Update a comment",
                 "produces": [
                     "application/json"
@@ -429,6 +440,11 @@
                 "responses": {}
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Delete a comment",
                 "produces": [
                     "application/json"
@@ -2071,6 +2087,12 @@
                     "items": {
                         "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.AnimeEpisode"
                     }
+                },
+                "rekomend": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.SearchResult"
+                    }
                 }
             }
         },
@@ -2086,6 +2108,9 @@
                 "studio": {
                     "type": "string"
                 },
+                "thumbnail_url": {
+                    "type": "string"
+                },
                 "title": {
                     "type": "string"
                 },
@@ -2097,6 +2122,32 @@
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.GenreInfo": {
             "type": "object",
             "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.SearchResult": {
+            "type": "object",
+            "properties": {
+                "genres": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.GenreInfo"
+                    }
+                },
+                "rating": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "thumbnail_url": {
+                    "type": "string"
+                },
                 "title": {
                     "type": "string"
                 },

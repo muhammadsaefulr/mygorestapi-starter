@@ -23,6 +23,7 @@ func NewCommentController(commentService service.CommentService) *CommentControl
 // @Tags         Comments
 // @Summary      Create a comment
 // @Description  Create a comment
+// @Security BearerAuth
 // @Produce      json
 // @Param        request  body  request.CreateComment  true  "Request body"
 // @Router       /comments [post]
@@ -77,7 +78,7 @@ func (co *CommentController) GetCommentByID(c *fiber.Ctx) error {
 // @Summary      Get comments by movie ID
 // @Description  Get comments by movie ID
 // @Produce      json
-// @Param        movieEpsId  path  string  true  "Movie Eps ID"
+// @Param        movieEpsId  path  string  true  "Movie Eps ID"  Example(drstn-s4-episode-8-sub-indo)
 // @Router       /comments/movie/{movieEpsId} [get]
 func (co *CommentController) GetCommentsMovieId(c *fiber.Ctx) error {
 	movieId := c.Params("movieId")
@@ -97,6 +98,7 @@ func (co *CommentController) GetCommentsMovieId(c *fiber.Ctx) error {
 // @Tags         Comments
 // @Summary      Update a comment
 // @Description  Update a comment
+// @Security BearerAuth
 // @Produce      json
 // @Param        id  path  uint  true  "Comment ID"
 // @Param        request  body  request.UpdateComment  true  "Request body"
@@ -130,6 +132,7 @@ func (co *CommentController) UpdateComment(c *fiber.Ctx) error {
 // @Tags         Comments
 // @Summary      Delete a comment
 // @Description  Delete a comment
+// @Security BearerAuth
 // @Produce      json
 // @Param        id  path  uint  true  "Comment ID"
 // @Router       /comments/{id} [delete]

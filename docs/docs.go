@@ -341,6 +341,11 @@ const docTemplate = `{
         },
         "/comments": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Create a comment",
                 "produces": [
                     "application/json"
@@ -376,6 +381,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "example": "drstn-s4-episode-8-sub-indo",
                         "description": "Movie Eps ID",
                         "name": "movieEpsId",
                         "in": "path",
@@ -407,6 +413,11 @@ const docTemplate = `{
                 "responses": {}
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Update a comment",
                 "produces": [
                     "application/json"
@@ -436,6 +447,11 @@ const docTemplate = `{
                 "responses": {}
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Delete a comment",
                 "produces": [
                     "application/json"
@@ -2078,6 +2094,12 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.AnimeEpisode"
                     }
+                },
+                "rekomend": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.SearchResult"
+                    }
                 }
             }
         },
@@ -2093,6 +2115,9 @@ const docTemplate = `{
                 "studio": {
                     "type": "string"
                 },
+                "thumbnail_url": {
+                    "type": "string"
+                },
                 "title": {
                     "type": "string"
                 },
@@ -2104,6 +2129,32 @@ const docTemplate = `{
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.GenreInfo": {
             "type": "object",
             "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.SearchResult": {
+            "type": "object",
+            "properties": {
+                "genres": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.GenreInfo"
+                    }
+                },
+                "rating": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "thumbnail_url": {
+                    "type": "string"
+                },
                 "title": {
                     "type": "string"
                 },
@@ -2140,7 +2191,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0.0",
-	Host:             "dev.msaepul.my.id",
+	Host:             "localhost:8081",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
 	Title:            "NimeStream API documentation",
