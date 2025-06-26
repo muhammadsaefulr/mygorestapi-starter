@@ -148,7 +148,14 @@ func (c *commentService) UpdateComment(ctx *fiber.Ctx, req *request.UpdateCommen
 		return nil, err
 	}
 
-	comment := convert_types.UpdateCommentToModel(req)
+	commentsDetails, errGetComm := c.GetCommentByID(ctx, uint(commentID))
+	if errGetComm != nil {
+		return nil, errGetComm
+	}
+
+	commentsDetails.Content = req.Content
+
+	comment := convert_types.CommentResponseToModel(commentsDetails)
 	comment.ID = uint(commentID)
 
 	updated, err := c.commentRepository.UpdateComment(ctx.Context(), comment)

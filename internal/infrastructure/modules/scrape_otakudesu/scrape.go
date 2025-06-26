@@ -432,7 +432,7 @@ func fetchRecommendationsFromAniList(animeURL string) ([]model.SearchResult, err
 		results []model.SearchResult
 		mu      sync.Mutex
 		wg      sync.WaitGroup
-		sem     = make(chan struct{}, 6)
+		sem     = make(chan struct{}, 6) // max pool
 	)
 
 	for _, node := range gqlRes.Data.Media.Recommendations.Nodes {
