@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -15,6 +16,7 @@ import (
 	repository "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/comment"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/convert_types"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
+	"gorm.io/gorm"
 )
 
 type commentService struct {
@@ -38,9 +40,8 @@ func (c *commentService) CreateComment(ctx *fiber.Ctx, req *request.CreateCommen
 
 	req.UserId = IdUsr
 
-	err := c.commentRepository.CreateComment(ctx.Context(), convert_types.CreateCommentToModel(req))
-	if err != nil {
-		return err
+	if err := c.commentRepository.CreateComment(ctx.Context(), convert_types.CreateCommentToModel(req)); err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, "Failed to create comment")
 	}
 
 	return nil
@@ -49,10 +50,13 @@ func (c *commentService) CreateComment(ctx *fiber.Ctx, req *request.CreateCommen
 func (c *commentService) GetCommentByID(ctx *fiber.Ctx, id uint) (*response.CommentResponse, error) {
 	comment, err := c.commentRepository.GetCommentByID(ctx.Context(), id)
 	if err != nil {
-		return nil, err
+		if err == gorm.ErrRecordNotFound {
+			return nil, fiber.NewError(fiber.StatusNotFound, "Comment not found")
+		}
+		return nil, fiber.NewError(fiber.StatusInternalServerError, "Failed to get comment")
 	}
 
-	result := &response.CommentResponse{
+	return &response.CommentResponse{
 		ID:      comment.ID,
 		UserId:  comment.UserId,
 		MovieId: comment.MovieId,
@@ -64,15 +68,13 @@ func (c *commentService) GetCommentByID(ctx *fiber.Ctx, id uint) (*response.Comm
 			Role:            comment.UserDetail.Role,
 			IsEmailVerified: comment.UserDetail.VerifiedEmail,
 		},
-	}
-
-	return result, nil
+	}, nil
 }
 
 func (c *commentService) GetCommentsMovieId(ctx *fiber.Ctx, movieId string) ([]response.CommentResponse, error) {
 	comments, err := c.commentRepository.GetCommentByMovieID(ctx.Context(), movieId)
 	if err != nil {
-		return nil, err
+		return nil, fiber.NewError(fiber.StatusInternalServerError, "Failed to get comments for movie")
 	}
 
 	dummyComments := []response.CommentResponse{
@@ -145,12 +147,15 @@ func (c *commentService) GetCommentsMovieId(ctx *fiber.Ctx, movieId string) ([]r
 func (c *commentService) UpdateComment(ctx *fiber.Ctx, req *request.UpdateComment, id string) (*response.CommentResponse, error) {
 	commentID, err := strconv.Atoi(id)
 	if err != nil {
-		return nil, err
+		return nil, fiber.NewError(fiber.StatusBadRequest, fmt.Sprintf("Invalid comment ID Because : %s", err.Error()))
 	}
 
 	commentsDetails, errGetComm := c.GetCommentByID(ctx, uint(commentID))
 	if errGetComm != nil {
-		return nil, errGetComm
+		if errors.Is(errGetComm, gorm.ErrRecordNotFound) {
+			return nil, fiber.NewError(fiber.StatusNotFound, "Comment not found")
+		}
+		return nil, fiber.NewError(fiber.StatusInternalServerError, "Failed to get comment")
 	}
 
 	commentsDetails.Content = req.Content
@@ -160,7 +165,7 @@ func (c *commentService) UpdateComment(ctx *fiber.Ctx, req *request.UpdateCommen
 
 	updated, err := c.commentRepository.UpdateComment(ctx.Context(), comment)
 	if err != nil {
-		return nil, err
+		return nil, fiber.NewError(fiber.StatusInternalServerError, "Failed to update comment")
 	}
 
 	result := &response.CommentResponse{

@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"math"
 	"strconv"
 
@@ -71,7 +70,7 @@ func (h *WatchlistController) CreateWatchlist(c *fiber.Ctx) error {
 	watchlist, err := h.WatchlistService.CreateWatchlist(c, req)
 
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Failed to create watchlist because %s", err.Error()))
+		return fiber.NewError(fiber.StatusInternalServerError, "Failed to create watchlist")
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(response.SuccessWithDetail[model.Watchlist]{

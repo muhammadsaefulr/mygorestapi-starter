@@ -38,7 +38,7 @@ func (co *CommentController) CreateComment(c *fiber.Ctx) error {
 	}
 
 	if err := co.CommentService.CreateComment(c, &req); err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Create comment failed")
+		return err
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(response.Common{
@@ -58,12 +58,12 @@ func (co *CommentController) GetCommentByID(c *fiber.Ctx) error {
 	idStr := c.Params("id")
 	id, err := strconv.ParseUint(idStr, 10, 64)
 	if err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, "Invalid comment ID")
+		return err
 	}
 
 	comment, err := co.CommentService.GetCommentByID(c, uint(id))
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Get comment by ID failed")
+		return err
 	}
 
 	return c.Status(fiber.StatusOK).JSON(response.SuccessWithDetail[dto_response.CommentResponse]{
@@ -84,7 +84,7 @@ func (co *CommentController) GetCommentsMovieId(c *fiber.Ctx) error {
 	movieId := c.Params("movieId")
 	comments, err := co.CommentService.GetCommentsMovieId(c, movieId)
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Get comments by movie ID failed")
+		return err
 	}
 
 	return c.Status(fiber.StatusOK).JSON(response.SuccessWithDetail[[]dto_response.CommentResponse]{
@@ -118,7 +118,7 @@ func (co *CommentController) UpdateComment(c *fiber.Ctx) error {
 
 	comment, err := co.CommentService.UpdateComment(c, &req, id)
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Update comment failed")
+		return err
 	}
 
 	return c.Status(fiber.StatusOK).JSON(response.SuccessWithDetail[dto_response.CommentResponse]{
@@ -140,11 +140,11 @@ func (co *CommentController) DeleteComment(c *fiber.Ctx) error {
 	idStr := c.Params("id")
 	id, err := strconv.ParseUint(idStr, 10, 64)
 	if err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, "Invalid comment ID")
+		return err
 	}
 
 	if err := co.CommentService.DeleteComment(c, uint(id)); err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Delete comment failed")
+		return err
 	}
 
 	return c.Status(fiber.StatusOK).JSON(response.Common{

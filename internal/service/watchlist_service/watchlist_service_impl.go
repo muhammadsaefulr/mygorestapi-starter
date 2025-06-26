@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"strings"
@@ -144,8 +145,14 @@ func (s *newWatchlistService) UpdateWatchlist(c *fiber.Ctx, id uint, req *reques
 
 	if err := s.Repository.UpdateWatchlist(c.Context(), data); err != nil {
 		s.Log.Errorf("UpdateWatchlist error: %+v", err)
+
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fiber.NewError(fiber.StatusNotFound, "Watchlist not found")
+		}
+
 		return nil, fiber.NewError(fiber.StatusInternalServerError, "Failed to update watchlist")
 	}
+
 	return s.GetWatchlistByID(c, id)
 }
 
