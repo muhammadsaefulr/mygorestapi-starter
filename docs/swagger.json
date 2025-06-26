@@ -5,7 +5,7 @@
         "contact": {},
         "version": "1.0.0"
     },
-    "host": "localhost:8081",
+    "host": "dev.msaepul.my.id",
     "basePath": "/api/v1",
     "paths": {
         "/auth/forgot-password": {
