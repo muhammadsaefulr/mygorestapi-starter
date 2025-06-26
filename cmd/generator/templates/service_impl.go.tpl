@@ -6,28 +6,28 @@ import (
 	"gorm.io/gorm"
 
 	"{{.ModulePath}}/internal/domain/dto/{{.Name}}/request"
-	model "{{.ModulePath}}/internal/domain/model/{{.Name}}"
+	model "{{.ModulePath}}/internal/domain/model"
 	"{{.ModulePath}}/internal/repository/{{.Name}}"
 	"{{.ModulePath}}/internal/shared/convert_types"
 	"{{.ModulePath}}/internal/shared/utils"
 	"github.com/sirupsen/logrus"
 )
 
-type {{.Name}}Service struct {
-	Log        *logrus.Logger
-	Validate   *validator.Validate
-	Repo repository.{{.PascalName}}Repo
+type {{.PascalName}}Service struct {
+	Log      *logrus.Logger
+	Validate *validator.Validate
+	Repo     repository.{{.PascalName}}Repo
 }
 
 func New{{.PascalName}}Service(repo repository.{{.PascalName}}Repo, validate *validator.Validate) {{.PascalName}}Service {
-	return {{.Name}}Service{
-		Log:        utils.Log,
-		Validate:   validate,
-		Repo: repo,
+	return {{.PascalName}}Service{
+		Log:      utils.Log,
+		Validate: validate,
+		Repo:     repo,
 	}
 }
 
-func (s *{{.Name}}Service) GetAll{{.PascalName}}(c *fiber.Ctx, params *request.Query{{.PascalName}}) ([]model.{{.PascalName}}, int64, error) {
+func (s *{{.PascalName}}Service) GetAll(c *fiber.Ctx, params *request.Query{{.PascalName}}) ([]model.{{.PascalName}}, int64, error) {
 	if err := s.Validate.Struct(params); err != nil {
 		return nil, 0, err
 	}
@@ -40,7 +40,7 @@ func (s *{{.Name}}Service) GetAll{{.PascalName}}(c *fiber.Ctx, params *request.Q
 	return s.Repo.GetAll(c.Context(), params)
 }
 
-func (s *{{.Name}}Service) Get{{.PascalName}}ByID(c *fiber.Ctx, id uint) (*model.{{.PascalName}}, error) {
+func (s *{{.PascalName}}Service) GetByID(c *fiber.Ctx, id uint) (*model.{{.PascalName}}, error) {
 	data, err := s.Repo.GetByID(c.Context(), id)
 	if err == gorm.ErrRecordNotFound {
 		return nil, fiber.NewError(fiber.StatusNotFound, "{{.PascalName}} not found")
@@ -52,7 +52,7 @@ func (s *{{.Name}}Service) Get{{.PascalName}}ByID(c *fiber.Ctx, id uint) (*model
 	return data, nil
 }
 
-func (s *{{.Name}}Service) Create{{.PascalName}}(c *fiber.Ctx, req *request.Create{{.PascalName}}) (*model.{{.PascalName}}, error) {
+func (s *{{.PascalName}}Service) Create(c *fiber.Ctx, req *request.Create{{.PascalName}}) (*model.{{.PascalName}}, error) {
 	if err := s.Validate.Struct(req); err != nil {
 		return nil, err
 	}
@@ -64,11 +64,10 @@ func (s *{{.Name}}Service) Create{{.PascalName}}(c *fiber.Ctx, req *request.Crea
 	return data, nil
 }
 
-func (s *{{.Name}}Service) Update{{.PascalName}}(c *fiber.Ctx, id uint, req *request.Update{{.PascalName}}) (*model.{{.PascalName}}, error) {
+func (s *{{.PascalName}}Service) Update(c *fiber.Ctx, id uint, req *request.Update{{.PascalName}}) (*model.{{.PascalName}}, error) {
 	if err := s.Validate.Struct(req); err != nil {
 		return nil, err
 	}
-
 	data := convert_types.Update{{.PascalName}}ToModel(req)
 	data.ID = id
 	if err := s.Repo.Update(c.Context(), data); err != nil {
@@ -78,7 +77,7 @@ func (s *{{.Name}}Service) Update{{.PascalName}}(c *fiber.Ctx, id uint, req *req
 	return s.GetByID(c, id)
 }
 
-func (s *{{.Name}}Service) Delete{{.PascalName}}(c *fiber.Ctx, id uint) error {
+func (s *{{.PascalName}}Service) Delete(c *fiber.Ctx, id uint) error {
 	if _, err := s.Repo.GetByID(c.Context(), id); err == gorm.ErrRecordNotFound {
 		return fiber.NewError(fiber.StatusNotFound, "{{.PascalName}} not found")
 	}

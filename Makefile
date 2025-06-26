@@ -2,12 +2,34 @@ include .env
 export $(shell sed 's/=.*//' .env)
 
 generator:
-	@echo "Usage: make generator NAME=yourModule"
+ifndef gen
+	@echo "Usage: make generator gen=namaModul"
 	@exit 1
+else
+	@echo "Generating module: $(gen)"
+	@go run cmd/generator/generate_base_service.go generate module $(gen)
+endif
 
-generator-%:
-	@echo "Generating base service for: $(subst :,_,$*)"
-	@go run cmd/generator/generate_base_service.go generate module $(subst :,_,$*)
+rem-generator:
+ifndef gen
+	@echo "Usage: make rem-generator gen=moduleName"
+	@exit 1
+else
+	@echo "Undoing generated module: $(gen)"
+	@rm -fv \
+		internal/delivery/http/controller/$(gen)_controller/$(gen)_controller.go \
+		internal/delivery/http/router/$(gen)_router.go \
+		internal/repository/$(gen)/$(gen)_repository.go \
+		internal/repository/$(gen)/$(gen)_repository_impl.go \
+		internal/service/$(gen)_service/$(gen)_service.go \
+		internal/service/$(gen)_service/$(gen)_service_impl.go \
+		internal/shared/convert_types/$(gen)_converter.go \
+		internal/domain/dto/$(gen)/request/request.go \
+		internal/domain/dto/$(gen)/response/response.go \
+		internal/domain/model/$(gen)_model.go
+	@echo "Checking for empty folders to remove..."
+	@find internal -type d -empty -delete
+endif
 
 start:
 	@go run cmd/main.go

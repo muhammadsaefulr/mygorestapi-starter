@@ -31,10 +31,9 @@ func (h *{{.PascalName}}Controller) GetAll{{.PascalName}}(c *fiber.Ctx) error {
 	query := &request.Query{{.PascalName}}{
 		Page:   c.QueryInt("page", 1),
 		Limit:  c.QueryInt("limit", 10),
-		Search: c.Query("search", ""),
 	}
 
-	data, total, err := h.Service.GetAll{{.PascalName}}(c, query)
+	data, total, err := h.Service.GetAll(c, query)
 	if err != nil {
 		return err
 	}
@@ -64,7 +63,7 @@ func (h *{{.PascalName}}Controller) Get{{.PascalName}}ByID(c *fiber.Ctx) error {
 	}
 	id := uint(idVal)
 
-	result, err := h.Service.GetBy{{.PascalName}}ID(c, id)
+	result, err := h.Service.GetByID(c, id)
 	if err != nil {
 		return err
 	}

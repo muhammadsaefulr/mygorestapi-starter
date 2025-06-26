@@ -2,7 +2,7 @@ package convert_types
 
 import (
 	"{{.ModulePath}}/internal/domain/dto/{{.Name}}/request"
-	model "{{.ModulePath}}/internal/domain/model/{{.Name}}"
+	model "{{.ModulePath}}/internal/domain/model"
 )
 
 func Create{{.PascalName}}ToModel(req *request.Create{{.PascalName}}) *model.{{.PascalName}} {
