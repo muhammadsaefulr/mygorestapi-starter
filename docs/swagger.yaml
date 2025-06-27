@@ -522,6 +522,18 @@ definitions:
     required:
     - content
     type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_history_request.CreateHistory:
+    properties:
+      movie_eps_id:
+        type: string
+      playback_time:
+        type: integer
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_history_request.UpdateHistory:
+    properties:
+      playback_time:
+        type: integer
+    type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_request.CreateUser:
     properties:
       email:
@@ -664,6 +676,8 @@ definitions:
         items:
           $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.VideoSource'
         type: array
+      thumbnail_url:
+        type: string
       title:
         type: string
     type: object
@@ -1049,6 +1063,103 @@ paths:
       summary: Health Check
       tags:
       - Health
+  /history:
+    get:
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      - description: Search term
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get all history
+      tags:
+      - history
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_history_request.CreateHistory'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Create a new history
+      tags:
+      - history
+  /history/{id}:
+    delete:
+      parameters:
+      - description: History ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Delete a history
+      tags:
+      - history
+    get:
+      parameters:
+      - description: History ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get a history by ID
+      tags:
+      - history
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: History ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_history_request.UpdateHistory'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update a history
+      tags:
+      - history
   /otakudesu/:
     get:
       description: Scrape and get list of anime from Otakudesu homepage.
