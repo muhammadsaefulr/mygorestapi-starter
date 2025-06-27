@@ -17,14 +17,14 @@ type ModuleData struct {
 
 func main() {
 	if len(os.Args) < 4 || os.Args[1] != "generate" || os.Args[2] != "module" {
-		fmt.Println("Usage: go run generate_base_service.go generate module <moduleName>")
+		fmt.Println("Usage: go run generate_base_service.go generate module <module_name>")
 		return
 	}
 
 	moduleName := os.Args[3]
 	data := ModuleData{
 		Name:       moduleName,
-		PascalName: strings.Title(moduleName),
+		PascalName: ToPascalCase(moduleName),
 		ModulePath: "github.com/muhammadsaefulr/NimeStreamAPI",
 	}
 
@@ -92,4 +92,17 @@ func parsePath(path string, data ModuleData) string {
 	path = strings.ReplaceAll(path, "{{.Name}}", data.Name)
 	path = strings.ReplaceAll(path, "{{.PascalName}}", data.PascalName)
 	return path
+}
+
+func ToPascalCase(s string) string {
+	s = strings.ReplaceAll(s, "-", " ")
+	s = strings.ReplaceAll(s, "_", " ")
+	words := strings.Fields(s)
+
+	for i, word := range words {
+		if len(word) > 0 {
+			words[i] = strings.ToUpper(string(word[0])) + strings.ToLower(word[1:])
+		}
+	}
+	return strings.Join(words, "")
 }

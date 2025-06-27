@@ -3,7 +3,7 @@ export $(shell sed 's/=.*//' .env)
 
 generator:
 ifndef gen
-	@echo "Usage: make generator gen=namaModul"
+	@echo "Usage: make generator gen=nama_modul"
 	@exit 1
 else
 	@echo "Generating module: $(gen)"

@@ -18,6 +18,9 @@ import (
 	historyRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/history"
 	HistoryService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/history_service"
 
+	requestMovieRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/request_movie"
+	requestMovieService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/request_movie_service"
+
 	authService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/auth_service"
 	odService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/otakudesu_scrape"
 	systemService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/system_service"
@@ -45,6 +48,9 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	historyRepo := historyRepo.NewHistoryRepositoryImpl(db)
 	historySvc := HistoryService.NewHistoryService(historyRepo, validate)
 
+	requestMovieRepo := requestMovieRepo.NewRequestMovieRepositoryImpl(db)
+	requestMovieSvc := requestMovieService.NewRequestMovieService(requestMovieRepo, validate)
+
 	tokenSvc := systemService.NewTokenService(db, validate, userSvc)
 	authSvc := authService.NewAuthService(db, validate, userSvc, tokenSvc)
 	emailSvc := systemService.NewEmailService()
@@ -62,6 +68,7 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	router.WatchlistRoutes(v1, watchListSvc)
 	router.CommentsRoutes(v1, commentSvc)
 	router.HistoryRoutes(v1, historySvc)
+	router.RequestMovieRoutes(v1, requestMovieSvc)
 
 	if !config.IsProd {
 		v1.Get("/docs", func(c *fiber.Ctx) error {

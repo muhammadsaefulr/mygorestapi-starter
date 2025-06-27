@@ -907,6 +907,174 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/request-movie": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RequestMovie"
+                ],
+                "summary": "Get all request_movie",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search term",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_response_RequestMovieResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RequestMovie"
+                ],
+                "summary": "Create a new request_movie",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_request.CreateRequestMovie"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/request-movie/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RequestMovie"
+                ],
+                "summary": "Get a request_movie by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "RequestMovie ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_response_RequestMovieResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RequestMovie"
+                ],
+                "summary": "Delete a request_movie",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "RequestMovie ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RequestMovie"
+                ],
+                "summary": "Update a request_movie",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "RequestMovie ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_request.UpdateRequestMovie"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/users": {
             "get": {
                 "security": [
@@ -2047,6 +2215,147 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_request.CreateRequestMovie": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "Yuuji Itadori joins Jujutsu Tech to exorcise curses."
+                },
+                "genre": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "Action",
+                        "Shounen"
+                    ]
+                },
+                "status_movie": {
+                    "type": "string",
+                    "example": "Ongoing"
+                },
+                "status_request": {
+                    "type": "string",
+                    "example": "Pending"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Jujutsu Kaisen Season 2"
+                },
+                "type_movie": {
+                    "type": "string",
+                    "example": "Anime"
+                },
+                "user_id_request": {
+                    "type": "string",
+                    "example": "e7f6e6f2-a8d2-4b3d-b1e8-f0e9f8a9b9c9"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_request.UpdateRequestMovie": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "Yuuji Itadori joins Jujutsu Tech to exorcise curses."
+                },
+                "genre": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "Action",
+                        "Shounen"
+                    ]
+                },
+                "status_movie": {
+                    "type": "string",
+                    "example": "Ongoing"
+                },
+                "status_request": {
+                    "type": "string",
+                    "example": "Pending"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Jujutsu Kaisen Season 2"
+                },
+                "type_movie": {
+                    "type": "string",
+                    "example": "TV"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_response.RequestMovieResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string",
+                    "example": "2025-06-27T15:04:05Z"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Yuuji Itadori joins Jujutsu Tech to exorcise curses."
+                },
+                "genre": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "[\"Action\"",
+                        " \"Shounen\"]"
+                    ]
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "requested_by": {
+                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_response.UserResponse"
+                },
+                "status_movie": {
+                    "type": "string",
+                    "example": "Ongoing"
+                },
+                "status_request": {
+                    "type": "string",
+                    "example": "Pending"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Jujutsu Kaisen Season 2"
+                },
+                "type_movie": {
+                    "type": "string",
+                    "example": "TV"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2025-06-27T15:04:05Z"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_response.UserResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Saeful"
+                },
+                "role": {
+                    "type": "string",
+                    "example": "user"
+                }
+            }
+        },
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_request.CreateUser": {
             "type": "object",
             "required": [
@@ -2121,6 +2430,55 @@ const docTemplate = `{
                         "admin"
                     ],
                     "example": "user"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_response_RequestMovieResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_response.RequestMovieResponse"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_response_RequestMovieResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_response.RequestMovieResponse"
+                    }
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "total_pages": {
+                    "type": "integer"
+                },
+                "total_results": {
+                    "type": "integer"
                 }
             }
         },
@@ -2367,7 +2725,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0.0",
-	Host:             "dev.msaepul.my.id",
+	Host:             "localhost:8080",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
 	Title:            "NimeStream API documentation",
