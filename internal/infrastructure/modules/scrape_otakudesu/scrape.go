@@ -316,6 +316,10 @@ func ScrapeAnimeSourceData(url string) model.AnimeSourceData {
 		}
 	})
 
+	c.OnHTML(".cukder img", func(e *colly.HTMLElement) {
+		result.ThumbnailURL = e.Attr("src")
+	})
+
 	c.OnHTML(".responsive-embed-stream iframe", func(e *colly.HTMLElement) {
 		result.DownloadURL = e.Attr("src")
 	})

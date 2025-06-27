@@ -106,12 +106,13 @@ type VideoSource struct {
 // }
 
 type AnimeSourceData struct {
-	Title       string         `json:"title"`
-	ReleaseDate string         `json:"release_date"`
-	CurrentEp   string         `json:"current_ep"`
-	DownloadURL string         `json:"download_url"`
-	DetailURL   string         `json:"detail_url"`
-	NextEpURL   string         `json:"next_ep_url"`
-	Sources     []VideoSource  `json:"sources"`
-	Episodes    []AnimeEpisode `json:"episodes"`
+	Title        string         `json:"title"`
+	ReleaseDate  string         `json:"release_date"`
+	ThumbnailURL string         `json:"thumbnail_url"`
+	CurrentEp    string         `json:"current_ep"`
+	DownloadURL  string         `json:"download_url"`
+	DetailURL    string         `json:"detail_url"`
+	NextEpURL    string         `json:"next_ep_url"`
+	Sources      []VideoSource  `json:"sources"`
+	Episodes     []AnimeEpisode `json:"episodes"`
 }
