@@ -7,7 +7,7 @@ import (
 )
 
 type TrackEpisodeViewRepository interface {
-	GetAll(ctx context.Context) ([]TrackEpisodeViewSummary, error)
+	GetAll(ctx context.Context, param *TrackEpsParam) ([]TrackEpisodeViewSummary, error)
 	Create(ctx context.Context, trackEpisodeView model.TrackEpisodeView) error
 	GetByEpisodeId(ctx context.Context, episodeId string) (model.TrackEpisodeView, error)
 }

@@ -17,6 +17,12 @@ type TrackEpisodeViewSummary struct {
 	ViewCount      int    `json:"view_count"`
 }
 
+type TrackEpsParam struct {
+	Page      int
+	Limit     int
+	MovieType string
+}
+
 func NewTrackEpisodeViewRepository(db *gorm.DB) TrackEpisodeViewRepository {
 	return &TrackEpisodeViewRepositoryImpl{db: db}
 }
@@ -25,8 +31,10 @@ func (t *TrackEpisodeViewRepositoryImpl) Create(ctx context.Context, trackEpisod
 	return t.db.WithContext(ctx).Create(&trackEpisodeView).Error
 }
 
-func (t *TrackEpisodeViewRepositoryImpl) GetAll(ctx context.Context) ([]TrackEpisodeViewSummary, error) {
+func (t *TrackEpisodeViewRepositoryImpl) GetAll(ctx context.Context, param *TrackEpsParam) ([]TrackEpisodeViewSummary, error) {
 	var results []TrackEpisodeViewSummary
+
+	offset := (param.Page - 1) * param.Limit
 
 	subQuery := t.db.
 		Table("track_episode_views").
@@ -36,7 +44,8 @@ func (t *TrackEpisodeViewRepositoryImpl) GetAll(ctx context.Context) ([]TrackEpi
 
 	err := t.db.Table("(?) as ranked", subQuery).
 		Order("view_count DESC").
-		Limit(15).
+		Limit(param.Limit).
+		Offset(offset).
 		Scan(&results).Error
 
 	if err != nil {

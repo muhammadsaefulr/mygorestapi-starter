@@ -138,7 +138,12 @@ func (s *animeService) GetAnimePopular() ([]model.AnimeData, error) {
 	}
 
 	// --- SCRAPE DARI TRACK VIEW (POPULAR) ---
-	topEpisodes, err := s.TrackEpisodeViewRepo.GetAll(ctx)
+	topEpisodes, err := s.TrackEpisodeViewRepo.GetAll(ctx, &repository.TrackEpsParam{
+		Page:      1,
+		Limit:     10,
+		MovieType: "anime",
+	})
+
 	if err != nil {
 		return animeData, nil
 	}
@@ -212,6 +217,7 @@ func (s *animeService) GetAnimeSourceVid(ctx *fiber.Ctx, judul_eps string) (mode
 
 	s.TrackEpisodeViewRepo.Create(context.Background(), model.TrackEpisodeView{
 		UserId:         userUUID,
+		TypeMovie:      "anime",
 		MovieDetailUrl: animSource.DetailURL,
 		EpisodeId:      judul_eps,
 	})
