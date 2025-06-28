@@ -558,9 +558,6 @@ definitions:
       type_movie:
         example: Anime
         type: string
-      user_id_request:
-        example: e7f6e6f2-a8d2-4b3d-b1e8-f0e9f8a9b9c9
-        type: string
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_request.UpdateRequestMovie:
     properties:
@@ -875,7 +872,7 @@ definitions:
       res:
         type: string
     type: object
-host: localhost:8080
+host: dev.msaepul.my.id
 info:
   contact: {}
   title: NimeStream API documentation
@@ -1779,6 +1776,12 @@ paths:
   /watchlists/{id}:
     delete:
       description: User Delete watchlist
+      parameters:
+      - description: Watchlist id
+        in: path
+        name: id
+        required: true
+        type: integer
       produces:
       - application/json
       responses: {}
@@ -1794,7 +1797,7 @@ paths:
         in: path
         name: id
         required: true
-        type: string
+        type: integer
       - description: Request body
         in: body
         name: request

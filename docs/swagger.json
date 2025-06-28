@@ -5,7 +5,7 @@
         "contact": {},
         "version": "1.0.0"
     },
-    "host": "localhost:8080",
+    "host": "dev.msaepul.my.id",
     "basePath": "/api/v1",
     "paths": {
         "/auth/forgot-password": {
@@ -1410,7 +1410,7 @@
                 "summary": "Update watchlist",
                 "parameters": [
                     {
-                        "type": "string",
+                        "type": "integer",
                         "description": "Watchlist id",
                         "name": "id",
                         "in": "path",
@@ -1442,6 +1442,15 @@
                     "Watchlist"
                 ],
                 "summary": "Delete watchlist",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Watchlist id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {}
             }
         }
@@ -2240,10 +2249,6 @@
                 "type_movie": {
                     "type": "string",
                     "example": "Anime"
-                },
-                "user_id_request": {
-                    "type": "string",
-                    "example": "e7f6e6f2-a8d2-4b3d-b1e8-f0e9f8a9b9c9"
                 }
             }
         },

@@ -1417,7 +1417,7 @@ const docTemplate = `{
                 "summary": "Update watchlist",
                 "parameters": [
                     {
-                        "type": "string",
+                        "type": "integer",
                         "description": "Watchlist id",
                         "name": "id",
                         "in": "path",
@@ -1449,6 +1449,15 @@ const docTemplate = `{
                     "Watchlist"
                 ],
                 "summary": "Delete watchlist",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Watchlist id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {}
             }
         }
@@ -2247,10 +2256,6 @@ const docTemplate = `{
                 "type_movie": {
                     "type": "string",
                     "example": "Anime"
-                },
-                "user_id_request": {
-                    "type": "string",
-                    "example": "e7f6e6f2-a8d2-4b3d-b1e8-f0e9f8a9b9c9"
                 }
             }
         },
@@ -2725,7 +2730,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0.0",
-	Host:             "localhost:8080",
+	Host:             "dev.msaepul.my.id",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
 	Title:            "NimeStream API documentation",

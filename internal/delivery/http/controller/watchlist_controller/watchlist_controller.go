@@ -92,7 +92,7 @@ func (h *WatchlistController) CreateWatchlist(c *fiber.Ctx) error {
 // @Summary      Update watchlist
 // @Description  User Update watchlist
 // @Security BearerAuth
-// @Param        id  path  string  true  "Watchlist id"
+// @Param        id  path  int  true  "Watchlist id"
 // @Param        request  body  request.UpdateWatchlist  true  "Request body"
 // @Produce      json
 // @Router       /watchlists/{id} [put]
@@ -132,6 +132,7 @@ func (h *WatchlistController) UpdateWatchlist(c *fiber.Ctx) error {
 // @Tags         Watchlist
 // @Summary      Delete watchlist
 // @Description  User Delete watchlist
+// @Param        id  path  int  true  "Watchlist id"
 // @Security BearerAuth
 // @Produce      json
 // @Router       /watchlists/{id} [delete]
