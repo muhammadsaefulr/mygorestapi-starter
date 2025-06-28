@@ -63,7 +63,6 @@ services:
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     volumes:
       - minio_data:/data
-      - /var/www/uploads:/data/uploads
     command: server /data --console-address ":9001"
     networks:
       - app-net
@@ -80,6 +79,7 @@ services:
     depends_on:
       - nimestreamapi-backend
       - minio
+      - pgadmin
     networks:
       - app-net
 
