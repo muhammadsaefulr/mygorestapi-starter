@@ -9,8 +9,7 @@ import (
 
 type WatchlistService interface {
 	GetAllWatchlist(c *fiber.Ctx, params *request.QueryWatchlist) ([]response.WatchlistResponse, int64, error)
-	GetWatchlistByID(c *fiber.Ctx, movie_id string) (*model.Watchlist, error)
 	CreateWatchlist(c *fiber.Ctx, req *request.CreateWatchlist) (*model.Watchlist, error)
-	UpdateWatchlist(c *fiber.Ctx, movie_id string, req *request.UpdateWatchlist) (*model.Watchlist, error)
+	UpdateWatchlist(c *fiber.Ctx, movie_id string, req *request.UpdateWatchlist) error
 	DeleteWatchlist(c *fiber.Ctx, movie_id string) error
 }

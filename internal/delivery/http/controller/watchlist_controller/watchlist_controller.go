@@ -103,23 +103,16 @@ func (h *WatchlistController) UpdateWatchlist(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid request body")
 	}
 
-	watchlist, err := h.WatchlistService.UpdateWatchlist(c, id, req)
+	err := h.WatchlistService.UpdateWatchlist(c, id, req)
 
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, "Failed to update watchlist")
 	}
 
-	return c.Status(fiber.StatusOK).JSON(response.SuccessWithDetail[model.Watchlist]{
+	return c.Status(fiber.StatusOK).JSON(response.Common{
 		Code:    fiber.StatusOK,
 		Status:  "success",
 		Message: "Update watchlist successfully",
-		Data: model.Watchlist{
-			UserId:    watchlist.UserId,
-			MovieId:   watchlist.MovieId,
-			ID:        watchlist.ID,
-			CreatedAt: watchlist.CreatedAt,
-			UpdatedAt: watchlist.UpdatedAt,
-		},
 	})
 }
 

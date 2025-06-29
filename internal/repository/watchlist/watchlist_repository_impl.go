@@ -43,22 +43,14 @@ func (r *WatchlistRepositoryImpl) GetAllWatchlist(ctx context.Context, param *re
 	return data, total, nil
 }
 
-func (r *WatchlistRepositoryImpl) GetWatchlistByID(ctx context.Context, movie_id string) (*model.Watchlist, error) {
-	var data model.Watchlist
-	if err := r.DB.WithContext(ctx).First(&data, "movie_id = ?", movie_id).Error; err != nil {
-		return nil, err
-	}
-	return &data, nil
-}
-
 func (r *WatchlistRepositoryImpl) CreateWatchlist(ctx context.Context, data *model.Watchlist) error {
 	return r.DB.WithContext(ctx).Create(data).Error
 }
 
 func (r *WatchlistRepositoryImpl) UpdateWatchlist(ctx context.Context, data *model.Watchlist) error {
-	return r.DB.WithContext(ctx).Where("movie_id = ?", data.MovieId).Updates(data).Error
+	return r.DB.WithContext(ctx).Where("movie_id = ? AND user_id = ?", data.MovieId, data.UserId).Updates(data).Error
 }
 
-func (r *WatchlistRepositoryImpl) DeleteWatchlist(ctx context.Context, movie_id string) error {
-	return r.DB.WithContext(ctx).Where("movie_id = ?", movie_id).Delete(&model.Watchlist{}).Error
+func (r *WatchlistRepositoryImpl) DeleteWatchlist(ctx context.Context, movie_id string, user_id string) error {
+	return r.DB.WithContext(ctx).Where("movie_id = ? AND user_id = ?", movie_id, user_id).Delete(&model.Watchlist{}).Error
 }
