@@ -88,8 +88,8 @@ func (s *newWatchlistService) GetAllWatchlist(c *fiber.Ctx, params *request.Quer
 	return watchlistResponses, totalResults, nil
 }
 
-func (s *newWatchlistService) GetWatchlistByID(c *fiber.Ctx, id uint) (*model.Watchlist, error) {
-	data, err := s.Repository.GetWatchlistByID(c.Context(), id)
+func (s *newWatchlistService) GetWatchlistByID(c *fiber.Ctx, movie_id string) (*model.Watchlist, error) {
+	data, err := s.Repository.GetWatchlistByID(c.Context(), movie_id)
 	if err == gorm.ErrRecordNotFound {
 		return nil, fiber.NewError(fiber.StatusNotFound, "Watchlist not found")
 	}
@@ -135,13 +135,13 @@ func (s *newWatchlistService) CreateWatchlist(c *fiber.Ctx, req *request.CreateW
 	return data, nil
 }
 
-func (s *newWatchlistService) UpdateWatchlist(c *fiber.Ctx, id uint, req *request.UpdateWatchlist) (*model.Watchlist, error) {
+func (s *newWatchlistService) UpdateWatchlist(c *fiber.Ctx, movie_id string, req *request.UpdateWatchlist) (*model.Watchlist, error) {
 	if err := s.Validate.Struct(req); err != nil {
 		return nil, err
 	}
 
 	data := convert_types.UpdateWatchlistToModel(req)
-	data.ID = id
+	data.MovieId = movie_id
 
 	if err := s.Repository.UpdateWatchlist(c.Context(), data); err != nil {
 		s.Log.Errorf("UpdateWatchlist error: %+v", err)
@@ -153,16 +153,20 @@ func (s *newWatchlistService) UpdateWatchlist(c *fiber.Ctx, id uint, req *reques
 		return nil, fiber.NewError(fiber.StatusInternalServerError, "Failed to update watchlist")
 	}
 
-	return s.GetWatchlistByID(c, id)
+	return s.GetWatchlistByID(c, movie_id)
 }
 
-func (s *newWatchlistService) DeleteWatchlist(c *fiber.Ctx, id uint) error {
-	if _, err := s.Repository.GetWatchlistByID(c.Context(), id); err == gorm.ErrRecordNotFound {
-		return fiber.NewError(fiber.StatusNotFound, "Watchlist not found")
-	}
+func (s *newWatchlistService) DeleteWatchlist(c *fiber.Ctx, movie_id string) error {
 
-	if err := s.Repository.DeleteWatchlist(c.Context(), id); err != nil {
+	log.Printf("Delete watchlist: %s", movie_id)
+
+	if err := s.Repository.DeleteWatchlist(c.Context(), movie_id); err != nil {
 		s.Log.Errorf("DeleteWatchlist error: %+v", err)
+
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return fiber.NewError(fiber.StatusNotFound, "Watchlist not found")
+		}
+
 		return fiber.NewError(fiber.StatusInternalServerError, "Failed to delete watchlist")
 	}
 	return nil

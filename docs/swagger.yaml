@@ -534,6 +534,26 @@ definitions:
       playback_time:
         type: integer
     type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_request.CreateMovieDetails:
+    properties:
+      name:
+        type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_request.UpdateMovieDetails:
+    properties:
+      name:
+        type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_uploader_request.CreateMovieUploader:
+    properties:
+      name:
+        type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_uploader_request.UpdateMovieUploader:
+    properties:
+      name:
+        type: string
+    type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_request.CreateRequestMovie:
     properties:
       description:
@@ -702,6 +722,17 @@ definitions:
       status:
         type: string
     type: object
+  ? github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model_MovieDetails
+  : properties:
+      code:
+        type: integer
+      data:
+        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieDetails'
+      message:
+        type: string
+      status:
+        type: string
+    type: object
   ? github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_response_RequestMovieResponse
   : properties:
       code:
@@ -709,6 +740,27 @@ definitions:
       data:
         items:
           $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_response.RequestMovieResponse'
+        type: array
+      limit:
+        type: integer
+      message:
+        type: string
+      page:
+        type: integer
+      status:
+        type: string
+      total_pages:
+        type: integer
+      total_results:
+        type: integer
+    type: object
+  ? github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model_MovieDetails
+  : properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieDetails'
         type: array
       limit:
         type: integer
@@ -844,6 +896,40 @@ definitions:
       title:
         type: string
       url:
+        type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieDetails:
+    properties:
+      created_at:
+        type: string
+      duration:
+        type: string
+      genres:
+        description: ← PostgreSQL array
+        items:
+          type: string
+        type: array
+      movie_id:
+        type: string
+      producer:
+        type: string
+      rating:
+        type: string
+      release_date:
+        type: string
+      status:
+        type: string
+      studio:
+        type: string
+      synopsis:
+        type: string
+      thumbnail_url:
+        type: string
+      title:
+        type: string
+      total_eps:
+        type: string
+      updated_at:
         type: string
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.SearchResult:
@@ -1290,6 +1376,202 @@ paths:
       summary: Update a history
       tags:
       - history
+  /movie-details:
+    get:
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      - description: Search term
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved data
+          schema:
+            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model_MovieDetails'
+      summary: Get all movie_details
+      tags:
+      - movie_details
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_request.CreateMovieDetails'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Data created successfully
+          schema:
+            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model_MovieDetails'
+      security:
+      - BearerAuth: []
+      summary: Create a new movie_details
+      tags:
+      - movie_details
+  /movie-details/{id}:
+    delete:
+      parameters:
+      - description: MovieDetails ID (uint)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Delete a movie_details
+      tags:
+      - movie_details
+    get:
+      parameters:
+      - description: MovieDetails ID (uint)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Data retrieved successfully
+          schema:
+            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model_MovieDetails'
+      summary: Get a movie_details by ID
+      tags:
+      - movie_details
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: MovieDetails ID (uint)
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_request.UpdateMovieDetails'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Data updated successfully
+          schema:
+            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model_MovieDetails'
+      security:
+      - BearerAuth: []
+      summary: Update a movie_details
+      tags:
+      - movie_details
+  /movie_uploader:
+    get:
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      - description: Search term
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Get all movie_uploader
+      tags:
+      - movie_uploader
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_uploader_request.CreateMovieUploader'
+      produces:
+      - application/json
+      responses: {}
+      summary: Create a new movie_uploader
+      tags:
+      - movie_uploader
+  /movie_uploader/{id}:
+    delete:
+      parameters:
+      - description: MovieUploader ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Delete a movie_uploader
+      tags:
+      - movie_uploader
+    get:
+      parameters:
+      - description: MovieUploader ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Get a movie_uploader by ID
+      tags:
+      - movie_uploader
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: MovieUploader ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_uploader_request.UpdateMovieUploader'
+      produces:
+      - application/json
+      responses: {}
+      summary: Update a movie_uploader
+      tags:
+      - movie_uploader
   /otakudesu/:
     get:
       description: Scrape and get list of anime from Otakudesu homepage.
@@ -1773,15 +2055,15 @@ paths:
       summary: Get all watchlists
       tags:
       - Watchlist
-  /watchlists/{id}:
+  /watchlists/{movie_id}:
     delete:
       description: User Delete watchlist
       parameters:
-      - description: Watchlist id
+      - description: Movie ID
         in: path
-        name: id
+        name: movie_id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses: {}
@@ -1793,11 +2075,11 @@ paths:
     put:
       description: User Update watchlist
       parameters:
-      - description: Watchlist id
+      - description: Movie ID
         in: path
-        name: id
+        name: movie_id
         required: true
-        type: integer
+        type: string
       - description: Request body
         in: body
         name: request

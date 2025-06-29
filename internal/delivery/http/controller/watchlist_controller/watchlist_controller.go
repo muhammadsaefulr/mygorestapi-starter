@@ -2,7 +2,6 @@ package controller
 
 import (
 	"math"
-	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
@@ -70,7 +69,7 @@ func (h *WatchlistController) CreateWatchlist(c *fiber.Ctx) error {
 	watchlist, err := h.WatchlistService.CreateWatchlist(c, req)
 
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Failed to create watchlist")
+		return err
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(response.SuccessWithDetail[model.Watchlist]{
@@ -92,24 +91,19 @@ func (h *WatchlistController) CreateWatchlist(c *fiber.Ctx) error {
 // @Summary      Update watchlist
 // @Description  User Update watchlist
 // @Security BearerAuth
-// @Param        id  path  int  true  "Watchlist id"
+// @Param        movie_id path string true  "Movie ID"
 // @Param        request  body  request.UpdateWatchlist  true  "Request body"
 // @Produce      json
-// @Router       /watchlists/{id} [put]
+// @Router       /watchlists/{movie_id} [put]
 func (h *WatchlistController) UpdateWatchlist(c *fiber.Ctx) error {
 	req := new(request.UpdateWatchlist)
 	id := c.Params("id")
-
-	uId, err := strconv.Atoi(id)
-	if err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, "Invalid id")
-	}
 
 	if err := c.BodyParser(req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid request body")
 	}
 
-	watchlist, err := h.WatchlistService.UpdateWatchlist(c, uint(uId), req)
+	watchlist, err := h.WatchlistService.UpdateWatchlist(c, id, req)
 
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, "Failed to update watchlist")
@@ -132,19 +126,14 @@ func (h *WatchlistController) UpdateWatchlist(c *fiber.Ctx) error {
 // @Tags         Watchlist
 // @Summary      Delete watchlist
 // @Description  User Delete watchlist
-// @Param        id  path  int  true  "Watchlist id"
+// @Param        movie_id path string true  "Movie ID"
 // @Security BearerAuth
 // @Produce      json
-// @Router       /watchlists/{id} [delete]
+// @Router       /watchlists/{movie_id} [delete]
 func (h *WatchlistController) DeleteWatchlist(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	uId, err := strconv.Atoi(id)
-	if err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, "Invalid id")
-	}
-
-	if err := h.WatchlistService.DeleteWatchlist(c, uint(uId)); err != nil {
+	if err := h.WatchlistService.DeleteWatchlist(c, id); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, "Failed to delete watchlist")
 	}
 

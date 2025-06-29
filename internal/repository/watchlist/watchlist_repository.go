@@ -9,8 +9,8 @@ import (
 
 type WatchlistRepo interface {
 	GetAllWatchlist(ctx context.Context, param *request.QueryWatchlist, id_user string) ([]model.Watchlist, int64, error)
-	GetWatchlistByID(ctx context.Context, id uint) (*model.Watchlist, error)
+	GetWatchlistByID(ctx context.Context, movie_id string) (*model.Watchlist, error)
 	CreateWatchlist(ctx context.Context, data *model.Watchlist) error
 	UpdateWatchlist(ctx context.Context, data *model.Watchlist) error
-	DeleteWatchlist(ctx context.Context, id uint) error
+	DeleteWatchlist(ctx context.Context, movie_id string) error
 }
