@@ -661,7 +661,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "movie_details"
+                    "movie"
                 ],
                 "summary": "Get all movie_details",
                 "parameters": [
@@ -683,6 +683,13 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Search term",
                         "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "anime",
+                        "description": "Type of movie",
+                        "name": "type",
                         "in": "query"
                     }
                 ],
@@ -708,7 +715,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "movie_details"
+                    "movie"
                 ],
                 "summary": "Create a new movie_details",
                 "parameters": [
@@ -738,7 +745,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "movie_details"
+                    "movie"
                 ],
                 "summary": "Get a movie_details by ID",
                 "parameters": [
@@ -772,7 +779,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "movie_details"
+                    "movie"
                 ],
                 "summary": "Update a movie_details",
                 "parameters": [
@@ -812,7 +819,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "movie_details"
+                    "movie"
                 ],
                 "summary": "Delete a movie_details",
                 "parameters": [
@@ -827,13 +834,13 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/movie_uploader": {
+        "/movie-uploader": {
             "get": {
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "movie_uploader"
+                    "movie"
                 ],
                 "summary": "Get all movie_uploader",
                 "parameters": [
@@ -861,6 +868,11 @@ const docTemplate = `{
                 "responses": {}
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -868,7 +880,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "movie_uploader"
+                    "movie"
                 ],
                 "summary": "Create a new movie_uploader",
                 "parameters": [
@@ -885,46 +897,32 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/movie_uploader/{id}": {
+        "/movie-uploader/{id}": {
             "get": {
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "movie_uploader"
+                    "movie"
                 ],
                 "summary": "Get a movie_uploader by ID",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "MovieUploader ID (uint)",
-                        "name": "id",
+                        "type": "string",
+                        "description": "MovieUploader ID (string)",
+                        "name": "movie_eps_id",
                         "in": "path",
                         "required": true
                     }
                 ],
                 "responses": {}
             },
-            "delete": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "movie_uploader"
-                ],
-                "summary": "Delete a movie_uploader",
-                "parameters": [
+            "put": {
+                "security": [
                     {
-                        "type": "integer",
-                        "description": "MovieUploader ID (uint)",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
+                        "BearerAuth": []
                     }
                 ],
-                "responses": {}
-            },
-            "patch": {
                 "consumes": [
                     "application/json"
                 ],
@@ -932,13 +930,13 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "movie_uploader"
+                    "movie"
                 ],
                 "summary": "Update a movie_uploader",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "MovieUploader ID (uint)",
+                        "description": "MovieUploader ID (string)",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -951,6 +949,30 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_uploader_request.UpdateMovieUploader"
                         }
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "movie"
+                ],
+                "summary": "Delete a movie_uploader",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "MovieUploader ID (string)",
+                        "name": "movie_eps_id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {}
@@ -2527,24 +2549,143 @@ const docTemplate = `{
         },
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_request.CreateMovieDetails": {
             "type": "object",
+            "required": [
+                "genres",
+                "movie_id",
+                "movie_type",
+                "thumbnail_url",
+                "title"
+            ],
             "properties": {
-                "name": {
-                    "type": "string"
+                "genres": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "demon",
+                        "fantasy",
+                        "supernatural"
+                    ]
+                },
+                "movie_id": {
+                    "type": "string",
+                    "example": "wu-nao-monu"
+                },
+                "movie_type": {
+                    "type": "string",
+                    "example": "anime"
+                },
+                "producer": {
+                    "type": "string",
+                    "example": "Agate"
+                },
+                "rating": {
+                    "type": "string",
+                    "example": "5.9"
+                },
+                "release_date": {
+                    "type": "string",
+                    "example": "2023-05-01"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "complete"
+                },
+                "studio": {
+                    "type": "string",
+                    "example": "Agate"
+                },
+                "synopsis": {
+                    "type": "string",
+                    "example": "Agate is a demon girl cursed with an eternal life. To forget the past, she throws half of her head into a deep valley and runs away. Unexpectedly, the tears flood the valley floor and form into a lake, triggering a flood in hell. Aloys, the Prince of Ghost comes to the Human World to find out the truth and finally finds the demon girl, starting a story of life and love."
+                },
+                "thumbnail_url": {
+                    "type": "string",
+                    "example": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx141914-P1xQHMXN7q6z.png"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Wu Nao Monü"
+                },
+                "total_eps": {
+                    "type": "string",
+                    "example": "15"
                 }
             }
         },
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_request.UpdateMovieDetails": {
             "type": "object",
+            "required": [
+                "genres",
+                "movie_type",
+                "thumbnail_url",
+                "title"
+            ],
             "properties": {
-                "name": {
-                    "type": "string"
+                "genres": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "demon",
+                        "fantasy",
+                        "supernatural"
+                    ]
+                },
+                "movie_type": {
+                    "type": "string",
+                    "example": "anime"
+                },
+                "producer": {
+                    "type": "string",
+                    "example": "Agate"
+                },
+                "rating": {
+                    "type": "string",
+                    "example": "5.9"
+                },
+                "release_date": {
+                    "type": "string",
+                    "example": "2023-05-01"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "complete"
+                },
+                "studio": {
+                    "type": "string",
+                    "example": "Agate"
+                },
+                "synopsis": {
+                    "type": "string",
+                    "example": "Agate is a demon girl cursed with an eternal life. To forget the past, she throws half of her head into a deep valley and runs away. Unexpectedly, the tears flood the valley floor and form into a lake, triggering a flood in hell. Aloys, the Prince of Ghost comes to the Human World to find out the truth and finally finds the demon girl, starting a story of life and love."
+                },
+                "thumbnail_url": {
+                    "type": "string",
+                    "example": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx141914-P1xQHMXN7q6z.png"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Wu Nao Monü"
+                },
+                "total_eps": {
+                    "type": "string",
+                    "example": "15"
                 }
             }
         },
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_uploader_request.CreateMovieUploader": {
             "type": "object",
             "properties": {
-                "name": {
+                "movie_eps_id": {
+                    "type": "string"
+                },
+                "movie_id": {
+                    "type": "string"
+                },
+                "url": {
                     "type": "string"
                 }
             }
@@ -2552,7 +2693,10 @@ const docTemplate = `{
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_uploader_request.UpdateMovieUploader": {
             "type": "object",
             "properties": {
-                "name": {
+                "movie_id": {
+                    "type": "string"
+                },
+                "url": {
                     "type": "string"
                 }
             }
@@ -3064,17 +3208,22 @@ const docTemplate = `{
                 "created_at": {
                     "type": "string"
                 },
-                "duration": {
-                    "type": "string"
+                "episodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieUploader"
+                    }
                 },
                 "genres": {
-                    "description": "← PostgreSQL array",
                     "type": "array",
                     "items": {
                         "type": "string"
                     }
                 },
                 "movie_id": {
+                    "type": "string"
+                },
+                "movie_type": {
                     "type": "string"
                 },
                 "producer": {
@@ -3105,6 +3254,32 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieUploader": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "movieEpsID": {
+                    "type": "string"
+                },
+                "movieId": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "uploadedBy": {
+                    "type": "string"
+                },
+                "url": {
                     "type": "string"
                 }
             }

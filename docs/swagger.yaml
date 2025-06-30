@@ -536,22 +536,124 @@ definitions:
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_request.CreateMovieDetails:
     properties:
-      name:
+      genres:
+        example:
+        - demon
+        - fantasy
+        - supernatural
+        items:
+          type: string
+        type: array
+      movie_id:
+        example: wu-nao-monu
         type: string
+      movie_type:
+        example: anime
+        type: string
+      producer:
+        example: Agate
+        type: string
+      rating:
+        example: "5.9"
+        type: string
+      release_date:
+        example: "2023-05-01"
+        type: string
+      status:
+        example: complete
+        type: string
+      studio:
+        example: Agate
+        type: string
+      synopsis:
+        example: Agate is a demon girl cursed with an eternal life. To forget the
+          past, she throws half of her head into a deep valley and runs away. Unexpectedly,
+          the tears flood the valley floor and form into a lake, triggering a flood
+          in hell. Aloys, the Prince of Ghost comes to the Human World to find out
+          the truth and finally finds the demon girl, starting a story of life and
+          love.
+        type: string
+      thumbnail_url:
+        example: https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx141914-P1xQHMXN7q6z.png
+        type: string
+      title:
+        example: Wu Nao Monü
+        type: string
+      total_eps:
+        example: "15"
+        type: string
+    required:
+    - genres
+    - movie_id
+    - movie_type
+    - thumbnail_url
+    - title
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_request.UpdateMovieDetails:
     properties:
-      name:
+      genres:
+        example:
+        - demon
+        - fantasy
+        - supernatural
+        items:
+          type: string
+        type: array
+      movie_type:
+        example: anime
         type: string
+      producer:
+        example: Agate
+        type: string
+      rating:
+        example: "5.9"
+        type: string
+      release_date:
+        example: "2023-05-01"
+        type: string
+      status:
+        example: complete
+        type: string
+      studio:
+        example: Agate
+        type: string
+      synopsis:
+        example: Agate is a demon girl cursed with an eternal life. To forget the
+          past, she throws half of her head into a deep valley and runs away. Unexpectedly,
+          the tears flood the valley floor and form into a lake, triggering a flood
+          in hell. Aloys, the Prince of Ghost comes to the Human World to find out
+          the truth and finally finds the demon girl, starting a story of life and
+          love.
+        type: string
+      thumbnail_url:
+        example: https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx141914-P1xQHMXN7q6z.png
+        type: string
+      title:
+        example: Wu Nao Monü
+        type: string
+      total_eps:
+        example: "15"
+        type: string
+    required:
+    - genres
+    - movie_type
+    - thumbnail_url
+    - title
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_uploader_request.CreateMovieUploader:
     properties:
-      name:
+      movie_eps_id:
+        type: string
+      movie_id:
+        type: string
+      url:
         type: string
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_uploader_request.UpdateMovieUploader:
     properties:
-      name:
+      movie_id:
+        type: string
+      url:
         type: string
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_request.CreateRequestMovie:
@@ -902,14 +1004,17 @@ definitions:
     properties:
       created_at:
         type: string
-      duration:
-        type: string
+      episodes:
+        items:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieUploader'
+        type: array
       genres:
-        description: ← PostgreSQL array
         items:
           type: string
         type: array
       movie_id:
+        type: string
+      movie_type:
         type: string
       producer:
         type: string
@@ -930,6 +1035,23 @@ definitions:
       total_eps:
         type: string
       updated_at:
+        type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieUploader:
+    properties:
+      createdAt:
+        type: string
+      movieEpsID:
+        type: string
+      movieId:
+        type: string
+      title:
+        type: string
+      updatedAt:
+        type: string
+      uploadedBy:
+        type: string
+      url:
         type: string
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.SearchResult:
@@ -1393,6 +1515,11 @@ paths:
         in: query
         name: search
         type: string
+      - default: anime
+        description: Type of movie
+        in: query
+        name: type
+        type: string
       produces:
       - application/json
       responses:
@@ -1402,7 +1529,7 @@ paths:
             $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model_MovieDetails'
       summary: Get all movie_details
       tags:
-      - movie_details
+      - movie
     post:
       consumes:
       - application/json
@@ -1424,7 +1551,7 @@ paths:
       - BearerAuth: []
       summary: Create a new movie_details
       tags:
-      - movie_details
+      - movie
   /movie-details/{id}:
     delete:
       parameters:
@@ -1440,7 +1567,7 @@ paths:
       - BearerAuth: []
       summary: Delete a movie_details
       tags:
-      - movie_details
+      - movie
     get:
       parameters:
       - description: MovieDetails ID (uint)
@@ -1457,7 +1584,7 @@ paths:
             $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model_MovieDetails'
       summary: Get a movie_details by ID
       tags:
-      - movie_details
+      - movie
     put:
       consumes:
       - application/json
@@ -1484,8 +1611,8 @@ paths:
       - BearerAuth: []
       summary: Update a movie_details
       tags:
-      - movie_details
-  /movie_uploader:
+      - movie
+  /movie-uploader:
     get:
       parameters:
       - default: 1
@@ -1507,7 +1634,7 @@ paths:
       responses: {}
       summary: Get all movie_uploader
       tags:
-      - movie_uploader
+      - movie
     post:
       consumes:
       - application/json
@@ -1521,41 +1648,45 @@ paths:
       produces:
       - application/json
       responses: {}
+      security:
+      - BearerAuth: []
       summary: Create a new movie_uploader
       tags:
-      - movie_uploader
-  /movie_uploader/{id}:
+      - movie
+  /movie-uploader/{id}:
     delete:
       parameters:
-      - description: MovieUploader ID (uint)
+      - description: MovieUploader ID (string)
         in: path
-        name: id
+        name: movie_eps_id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses: {}
+      security:
+      - BearerAuth: []
       summary: Delete a movie_uploader
       tags:
-      - movie_uploader
+      - movie
     get:
       parameters:
-      - description: MovieUploader ID (uint)
+      - description: MovieUploader ID (string)
         in: path
-        name: id
+        name: movie_eps_id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses: {}
       summary: Get a movie_uploader by ID
       tags:
-      - movie_uploader
-    patch:
+      - movie
+    put:
       consumes:
       - application/json
       parameters:
-      - description: MovieUploader ID (uint)
+      - description: MovieUploader ID (string)
         in: path
         name: id
         required: true
@@ -1569,9 +1700,11 @@ paths:
       produces:
       - application/json
       responses: {}
+      security:
+      - BearerAuth: []
       summary: Update a movie_uploader
       tags:
-      - movie_uploader
+      - movie
   /otakudesu/:
     get:
       description: Scrape and get list of anime from Otakudesu homepage.

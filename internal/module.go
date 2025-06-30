@@ -21,6 +21,12 @@ import (
 	requestMovieRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/request_movie"
 	requestMovieService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/request_movie_service"
 
+	movieDetailRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/movie_details"
+	movieDetailService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/movie_details_service"
+
+	movieUploaderRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/movie_uploader"
+	movieUploaderSvc "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/movie_uploader_service"
+
 	authService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/auth_service"
 	odService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/otakudesu_scrape"
 	systemService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/system_service"
@@ -56,6 +62,14 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	emailSvc := systemService.NewEmailService()
 	healthSvc := systemService.NewHealthCheckService(db)
 
+	// Native Upload Data Manual
+
+	movieDetailRepo := movieDetailRepo.NewMovieDetailsRepositoryImpl(db)
+	movieDetailSvc := movieDetailService.NewMovieDetailsService(movieDetailRepo, validate)
+
+	movieUploaderRepo := movieUploaderRepo.NewMovieUploaderRepositoryImpl(db)
+	movieUploaderSvc := movieUploaderSvc.NewMovieUploaderService(movieUploaderRepo, validate)
+
 	middleware.InitAuthMiddleware(userSvc)
 
 	v1 := app.Group("/api/v1")
@@ -69,6 +83,11 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	router.CommentsRoutes(v1, commentSvc)
 	router.HistoryRoutes(v1, historySvc)
 	router.RequestMovieRoutes(v1, requestMovieSvc)
+
+	// Native Upload Data Manual
+
+	router.MovieDetailsRoutes(v1, movieDetailSvc)
+	router.MovieUploaderRoutes(v1, movieUploaderSvc)
 
 	if !config.IsProd {
 		v1.Get("/docs", func(c *fiber.Ctx) error {
