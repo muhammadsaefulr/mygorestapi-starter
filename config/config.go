@@ -66,7 +66,7 @@ func init() {
 
 func loadConfig() {
 	configPaths := []string{
-		"./",     // For app
+		"../",    // For app
 		"../../", // For test folder
 	}
 
