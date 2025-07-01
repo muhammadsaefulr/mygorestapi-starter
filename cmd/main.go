@@ -57,6 +57,7 @@ func setupFiberApp() *fiber.App {
 
 	baseConfig := config.FiberConfig()
 	baseConfig.BodyLimit = 4 * 1024 * 1024 * 1024
+	baseConfig.Prefork = false
 
 	app := fiber.New(baseConfig)
 
@@ -83,11 +84,12 @@ func setupModule(app *fiber.App, db *gorm.DB) {
 }
 
 func startServer(app *fiber.App, address string, errs chan<- error) {
+	utils.Log.Infof("Starting server at %s", address)
 	if err := app.Listen(address); err != nil {
+		utils.Log.Errorf("Fiber Listen failed: %v", err)
 		errs <- fmt.Errorf("error starting server: %w", err)
 	}
 }
-
 func closeDatabase(db *gorm.DB) {
 	sqlDB, errDB := db.DB()
 	if errDB != nil {

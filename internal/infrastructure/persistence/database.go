@@ -6,7 +6,7 @@ import (
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
+	// "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 
@@ -38,17 +38,17 @@ func Connect(dbHost, dbName string) *gorm.DB {
 
 	//auto migrations
 	// db.Migrator().DropTable(&model.User{}, &model.Token{}, &model.Watchlist{}, &model.TrackEpisodeView{}, model.Comment{})
-	db.AutoMigrate(
-		&model.User{},
-		&model.Token{},
-		&model.Watchlist{},
-		&model.TrackEpisodeView{},
-		&model.Comment{},
-		&model.History{},
-		&model.RequestMovie{},
-		&model.MovieDetails{},
-		&model.MovieEpisode{},
-	)
+	// db.AutoMigrate(
+	// 	&model.User{},
+	// 	&model.Token{},
+	// 	&model.Watchlist{},
+	// 	&model.TrackEpisodeView{},
+	// 	&model.Comment{},
+	// 	&model.History{},
+	// 	&model.RequestMovie{},
+	// 	&model.MovieDetails{},
+	// 	&model.MovieEpisode{},
+	// )
 
 	// Config connection pooling
 	sqlDB.SetMaxIdleConns(10)
