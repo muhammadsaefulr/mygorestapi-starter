@@ -10,7 +10,7 @@ import (
 func MovieDetailsRoutes(v1 fiber.Router, c service.MovieDetailsService) {
 	movie_detailsController := controller.NewMovieDetailsController(c)
 
-	group := v1.Group("/movie-details")
+	group := v1.Group("/movie/details")
 
 	group.Get("/", movie_detailsController.GetAllMovieDetails)
 	group.Post("/", m.Auth("createMovieDetails"), movie_detailsController.CreateMovieDetails)

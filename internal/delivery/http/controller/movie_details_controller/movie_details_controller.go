@@ -27,7 +27,7 @@ func NewMovieDetailsController(service service.MovieDetailsService) *MovieDetail
 // @Param        search query     string  false  "Search term"
 // @Param        type   query     string  false  "Type of movie" default(anime)
 // @success      200    {object}  response.SuccessWithPaginate[model.MovieDetails]  "Successfully retrieved data"
-// @Router       /movie-details [get]
+// @Router       /movie/details [get]
 func (h *MovieDetailsController) GetAllMovieDetails(c *fiber.Ctx) error {
 	query := &request.QueryMovieDetails{
 		Page:   c.QueryInt("page", 1),
@@ -58,7 +58,7 @@ func (h *MovieDetailsController) GetAllMovieDetails(c *fiber.Ctx) error {
 // @Produce      json
 // @Param        id  path  string  true  "MovieDetails ID (uint)"
 // @success      200    {object}  response.SuccessWithDetail[model.MovieDetails]  "Data retrieved successfully"
-// @Router       /movie-details/{id} [get]
+// @Router       /movie/details/{id} [get]
 func (h *MovieDetailsController) GetMovieDetailsByID(c *fiber.Ctx) error {
 	idStr := c.Params("id")
 
@@ -82,7 +82,7 @@ func (h *MovieDetailsController) GetMovieDetailsByID(c *fiber.Ctx) error {
 // @Security     BearerAuth
 // @Param        request  body  request.CreateMovieDetails  true  "Request body"
 // @success      201    {object}  response.SuccessWithDetail[model.MovieDetails]  "Data created successfully"
-// @Router       /movie-details [post]
+// @Router       /movie/details [post]
 func (h *MovieDetailsController) CreateMovieDetails(c *fiber.Ctx) error {
 	req := new(request.CreateMovieDetails)
 	if err := c.BodyParser(req); err != nil {
@@ -110,7 +110,7 @@ func (h *MovieDetailsController) CreateMovieDetails(c *fiber.Ctx) error {
 // @Param        id       path  string  true  "MovieDetails ID (uint)"
 // @Param        request  body  request.UpdateMovieDetails  true  "Request body"
 // @success      200    {object}  response.SuccessWithDetail[model.MovieDetails]  "Data updated successfully"
-// @Router       /movie-details/{id} [put]
+// @Router       /movie/details/{id} [put]
 func (h *MovieDetailsController) UpdateMovieDetails(c *fiber.Ctx) error {
 	idStr := c.Params("id")
 
@@ -137,7 +137,7 @@ func (h *MovieDetailsController) UpdateMovieDetails(c *fiber.Ctx) error {
 // @Security     BearerAuth
 // @Produce      json
 // @Param        id  path  string  true  "MovieDetails ID (uint)"
-// @Router       /movie-details/{id} [delete]
+// @Router       /movie/details/{id} [delete]
 func (h *MovieDetailsController) DeleteMovieDetails(c *fiber.Ctx) error {
 	idStr := c.Params("id")
 
