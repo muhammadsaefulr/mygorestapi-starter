@@ -54,9 +54,11 @@ func main() {
 }
 
 func setupFiberApp() *fiber.App {
-	app := fiber.New(config.FiberConfig(), fiber.Config{
-		BodyLimit: 4 * 1024 * 1024 * 1024,
-	})
+
+	baseConfig := config.FiberConfig()
+	baseConfig.BodyLimit = 4 * 1024 * 1024 * 1024
+
+	app := fiber.New(baseConfig)
 
 	// Middleware setup
 	app.Use("/v1/auth", middleware.LimiterConfig())
