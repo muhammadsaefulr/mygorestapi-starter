@@ -31,7 +31,7 @@ func NewS3Uploader(endpoint, accessKey, secretKey, publicURL string) (*S3Uploade
 		})),
 	)
 
-	Log.Printf("data client: %v", cfg)
+	// Log.Printf("data client: %v", cfg)
 
 	if err != nil {
 		return nil, err
