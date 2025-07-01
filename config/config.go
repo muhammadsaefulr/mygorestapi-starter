@@ -65,21 +65,10 @@ func init() {
 }
 
 func loadConfig() {
-	configPaths := []string{
-		"../",    // For app
-		"../../", // For test folder
-	}
+	viper.SetConfigFile(".env")
 
-	for _, path := range configPaths {
-		viper.SetConfigFile(path + ".env")
-
-		if err := viper.ReadInConfig(); err == nil {
-			utils.Log.Infof("Config file loaded from %s", path)
-			return
-		}
-	}
-
+	_ = viper.ReadInConfig()
 	viper.AutomaticEnv()
 
-	utils.Log.Error("Failed to load any config file")
+	utils.Log.Info("Config loaded from environment variables")
 }
