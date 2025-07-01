@@ -37,7 +37,10 @@ func NewS3Uploader(endpoint, accessKey, secretKey, publicURL string) (*S3Uploade
 		return nil, err
 	}
 
-	client := s3.NewFromConfig(cfg)
+	client := s3.NewFromConfig(cfg, func(o *s3.Options) {
+		o.UsePathStyle = true
+	})
+
 	return &S3Uploader{Client: client, PublicURL: publicURL}, nil
 }
 

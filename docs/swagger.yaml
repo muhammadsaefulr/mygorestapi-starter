@@ -1521,7 +1521,7 @@ paths:
       summary: Update a history
       tags:
       - history
-  /movie-details:
+  /movie/details:
     get:
       parameters:
       - default: 1
@@ -1575,7 +1575,7 @@ paths:
       summary: Create a new movie_details
       tags:
       - movie
-  /movie-details/{id}:
+  /movie/details/{id}:
     delete:
       parameters:
       - description: MovieDetails ID (uint)

@@ -655,7 +655,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/movie-details": {
+        "/movie/details": {
             "get": {
                 "produces": [
                     "application/json"
@@ -739,7 +739,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/movie-details/{id}": {
+        "/movie/details/{id}": {
             "get": {
                 "produces": [
                     "application/json"
