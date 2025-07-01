@@ -40,8 +40,8 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	validate := validation.Validator()
 
 	uploader, err := utils.NewS3Uploader(
-		"https://minio.msaepul.my.id/", // Endpoint (MinIO or AWS)
-		"admin", "4dm1n3rs",            // Access key
+		"http://minio:9000", // Endpoint (MinIO or AWS)
+		"admin", "4dm1n3rs", // Access key
 		"https://dev.msaepul.my.id/minio", // Endpoint (MinIO or AWS)
 	)
 
