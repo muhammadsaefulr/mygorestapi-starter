@@ -7,7 +7,7 @@ import (
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/movie_details/request"
 	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/movie_details"
+	repository "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/movie_details"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/convert_types"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 	"github.com/sirupsen/logrus"
@@ -59,6 +59,11 @@ func (s *MovieDetailsService) Create(c *fiber.Ctx, req *request.CreateMovieDetai
 	data := convert_types.CreateMovieDetailsToModel(req)
 	if err := s.Repo.Create(c.Context(), data); err != nil {
 		s.Log.Errorf("Create error: %+v", err)
+
+		if err == gorm.ErrDuplicatedKey {
+			return nil, fiber.NewError(fiber.StatusBadRequest, "MovieDetails With this ID already exists")
+		}
+
 		return nil, fiber.NewError(fiber.StatusInternalServerError, "Create movie_details failed")
 	}
 	return data, nil

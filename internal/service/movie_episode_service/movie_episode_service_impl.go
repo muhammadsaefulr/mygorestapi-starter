@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"path/filepath"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -114,7 +115,8 @@ func (s *MovieEpisodeService) CreateUpload(c *fiber.Ctx, req *request.CreateMovi
 	}
 	defer file.Close()
 
-	key := fmt.Sprintf("episodes/%s_%s_%s", req.MovieId, req.MovieEpsID, req.ContentUploads.Filename)
+	ext := filepath.Ext(req.ContentUploads.Filename)
+	key := fmt.Sprintf("%s/episodes/%s%s", req.MovieId, req.MovieEpsID, ext)
 	_, url, err := s.S3.UploadFile(movieDtl.MovieType, file, key, req.ContentUploads.Header.Get("Content-Type"))
 	if err != nil {
 		s.Log.Errorf("S3 upload error: %v", err)
