@@ -834,7 +834,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/movie-uploader": {
+        "/movie/episodes": {
             "get": {
                 "produces": [
                     "application/json"
@@ -842,7 +842,7 @@ const docTemplate = `{
                 "tags": [
                     "movie"
                 ],
-                "summary": "Get all movie_uploader",
+                "summary": "Get all movie episodes",
                 "parameters": [
                     {
                         "type": "integer",
@@ -874,7 +874,7 @@ const docTemplate = `{
                     }
                 ],
                 "consumes": [
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -882,7 +882,7 @@ const docTemplate = `{
                 "tags": [
                     "movie"
                 ],
-                "summary": "Create a new movie_uploader",
+                "summary": "Create a new movie episodes",
                 "parameters": [
                     {
                         "description": "Request body",
@@ -890,14 +890,85 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_uploader_request.CreateMovieUploader"
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_request.CreateMovieEpisodes"
                         }
                     }
                 ],
-                "responses": {}
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model_MovieEpisode"
+                        }
+                    }
+                }
             }
         },
-        "/movie-uploader/{id}": {
+        "/movie/episodes/upload": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "movie"
+                ],
+                "summary": "Upload new movie episode (with file)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Episode ID",
+                        "name": "movie_eps_id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Movie ID",
+                        "name": "movie_id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Title",
+                        "name": "title",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Resolution",
+                        "name": "resolution",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Video File",
+                        "name": "file_video",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model_MovieEpisode"
+                        }
+                    }
+                }
+            }
+        },
+        "/movie/episodes/{id}": {
             "get": {
                 "produces": [
                     "application/json"
@@ -905,11 +976,11 @@ const docTemplate = `{
                 "tags": [
                     "movie"
                 ],
-                "summary": "Get a movie_uploader by ID",
+                "summary": "Get a movie episodes by ID",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "MovieUploader ID (string)",
+                        "description": "MovieEps ID (string)",
                         "name": "movie_eps_id",
                         "in": "path",
                         "required": true
@@ -932,11 +1003,11 @@ const docTemplate = `{
                 "tags": [
                     "movie"
                 ],
-                "summary": "Update a movie_uploader",
+                "summary": "Update a movie episodes",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "MovieUploader ID (string)",
+                        "description": "MovieEps ID (string)",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -947,7 +1018,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_uploader_request.UpdateMovieUploader"
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_request.UpdateMovieEpisodes"
                         }
                     }
                 ],
@@ -965,11 +1036,11 @@ const docTemplate = `{
                 "tags": [
                     "movie"
                 ],
-                "summary": "Delete a movie_uploader",
+                "summary": "Delete a movie episodes",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "MovieUploader ID (string)",
+                        "description": "MovieEps ID (string)",
                         "name": "movie_eps_id",
                         "in": "path",
                         "required": true
@@ -2676,24 +2747,38 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_uploader_request.CreateMovieUploader": {
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_request.CreateMovieEpisodes": {
             "type": "object",
             "properties": {
                 "movie_eps_id": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "wu-nao-monu-eps-1"
                 },
                 "movie_id": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "wu-nao-monu"
                 },
-                "url": {
-                    "type": "string"
+                "resolution": {
+                    "type": "string",
+                    "example": "720p"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "upload"
+                },
+                "video_url": {
+                    "type": "string",
+                    "example": "youtube"
                 }
             }
         },
-        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_uploader_request.UpdateMovieUploader": {
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_request.UpdateMovieEpisodes": {
             "type": "object",
             "properties": {
                 "movie_id": {
+                    "type": "string"
+                },
+                "title": {
                     "type": "string"
                 },
                 "url": {
@@ -2940,6 +3025,23 @@ const docTemplate = `{
                 },
                 "data": {
                     "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieDetails"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model_MovieEpisode": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieEpisode"
                 },
                 "message": {
                     "type": "string"
@@ -3211,7 +3313,7 @@ const docTemplate = `{
                 "episodes": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieUploader"
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieEpisode"
                     }
                 },
                 "genres": {
@@ -3258,7 +3360,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieUploader": {
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieEpisode": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -3270,6 +3372,9 @@ const docTemplate = `{
                 "movieId": {
                     "type": "string"
                 },
+                "resolution": {
+                    "type": "string"
+                },
                 "title": {
                     "type": "string"
                 },
@@ -3279,7 +3384,7 @@ const docTemplate = `{
                 "uploadedBy": {
                     "type": "string"
                 },
-                "url": {
+                "videoURL": {
                     "type": "string"
                 }
             }
@@ -3338,7 +3443,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0.0",
-	Host:             "dev.msaepul.my.id",
+	Host:             "",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
 	Title:            "NimeStream API documentation",

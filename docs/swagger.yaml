@@ -640,18 +640,29 @@ definitions:
     - thumbnail_url
     - title
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_uploader_request.CreateMovieUploader:
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_request.CreateMovieEpisodes:
     properties:
       movie_eps_id:
+        example: wu-nao-monu-eps-1
         type: string
       movie_id:
+        example: wu-nao-monu
         type: string
-      url:
+      resolution:
+        example: 720p
+        type: string
+      title:
+        example: upload
+        type: string
+      video_url:
+        example: youtube
         type: string
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_uploader_request.UpdateMovieUploader:
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_request.UpdateMovieEpisodes:
     properties:
       movie_id:
+        type: string
+      title:
         type: string
       url:
         type: string
@@ -835,6 +846,17 @@ definitions:
       status:
         type: string
     type: object
+  ? github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model_MovieEpisode
+  : properties:
+      code:
+        type: integer
+      data:
+        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieEpisode'
+      message:
+        type: string
+      status:
+        type: string
+    type: object
   ? github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_response_RequestMovieResponse
   : properties:
       code:
@@ -1006,7 +1028,7 @@ definitions:
         type: string
       episodes:
         items:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieUploader'
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieEpisode'
         type: array
       genres:
         items:
@@ -1037,7 +1059,7 @@ definitions:
       updated_at:
         type: string
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieUploader:
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieEpisode:
     properties:
       createdAt:
         type: string
@@ -1045,13 +1067,15 @@ definitions:
         type: string
       movieId:
         type: string
+      resolution:
+        type: string
       title:
         type: string
       updatedAt:
         type: string
       uploadedBy:
         type: string
-      url:
+      videoURL:
         type: string
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.SearchResult:
@@ -1080,7 +1104,6 @@ definitions:
       res:
         type: string
     type: object
-host: dev.msaepul.my.id
 info:
   contact: {}
   title: NimeStream API documentation
@@ -1612,7 +1635,7 @@ paths:
       summary: Update a movie_details
       tags:
       - movie
-  /movie-uploader:
+  /movie/episodes:
     get:
       parameters:
       - default: 1
@@ -1632,31 +1655,35 @@ paths:
       produces:
       - application/json
       responses: {}
-      summary: Get all movie_uploader
+      summary: Get all movie episodes
       tags:
       - movie
     post:
       consumes:
-      - application/json
+      - multipart/form-data
       parameters:
       - description: Request body
         in: body
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_uploader_request.CreateMovieUploader'
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_request.CreateMovieEpisodes'
       produces:
       - application/json
-      responses: {}
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model_MovieEpisode'
       security:
       - BearerAuth: []
-      summary: Create a new movie_uploader
+      summary: Create a new movie episodes
       tags:
       - movie
-  /movie-uploader/{id}:
+  /movie/episodes/{id}:
     delete:
       parameters:
-      - description: MovieUploader ID (string)
+      - description: MovieEps ID (string)
         in: path
         name: movie_eps_id
         required: true
@@ -1666,12 +1693,12 @@ paths:
       responses: {}
       security:
       - BearerAuth: []
-      summary: Delete a movie_uploader
+      summary: Delete a movie episodes
       tags:
       - movie
     get:
       parameters:
-      - description: MovieUploader ID (string)
+      - description: MovieEps ID (string)
         in: path
         name: movie_eps_id
         required: true
@@ -1679,14 +1706,14 @@ paths:
       produces:
       - application/json
       responses: {}
-      summary: Get a movie_uploader by ID
+      summary: Get a movie episodes by ID
       tags:
       - movie
     put:
       consumes:
       - application/json
       parameters:
-      - description: MovieUploader ID (string)
+      - description: MovieEps ID (string)
         in: path
         name: id
         required: true
@@ -1696,13 +1723,55 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_uploader_request.UpdateMovieUploader'
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_request.UpdateMovieEpisodes'
       produces:
       - application/json
       responses: {}
       security:
       - BearerAuth: []
-      summary: Update a movie_uploader
+      summary: Update a movie episodes
+      tags:
+      - movie
+  /movie/episodes/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Episode ID
+        in: formData
+        name: movie_eps_id
+        required: true
+        type: string
+      - description: Movie ID
+        in: formData
+        name: movie_id
+        required: true
+        type: string
+      - description: Title
+        in: formData
+        name: title
+        required: true
+        type: string
+      - description: Resolution
+        in: formData
+        name: resolution
+        required: true
+        type: string
+      - description: Video File
+        in: formData
+        name: file_video
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model_MovieEpisode'
+      security:
+      - BearerAuth: []
+      summary: Upload new movie episode (with file)
       tags:
       - movie
   /otakudesu/:

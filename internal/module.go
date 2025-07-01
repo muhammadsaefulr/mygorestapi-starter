@@ -24,12 +24,13 @@ import (
 	movieDetailRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/movie_details"
 	movieDetailService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/movie_details_service"
 
-	movieUploaderRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/movie_uploader"
-	movieUploaderSvc "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/movie_uploader_service"
+	movieUploaderRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/movie_episode"
+	movieUploaderSvc "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/movie_episode_service"
 
 	authService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/auth_service"
 	odService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/otakudesu_scrape"
 	systemService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/system_service"
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/validation"
 
 	"gorm.io/gorm"
@@ -38,6 +39,16 @@ import (
 func InitModule(app *fiber.App, db *gorm.DB) {
 	validate := validation.Validator()
 
+	uploader, err := utils.NewS3Uploader(
+		"http://localhost:9000", // Endpoint (MinIO or AWS)
+		"admin", "4dm1n3rs",     // Access key
+		"https://dev.msaepul.my.id/minio", // Endpoint (MinIO or AWS)
+	)
+
+	if err != nil {
+		utils.Log.Errorf("Failed to create S3 uploader: %v", err)
+		return
+	}
 	// Init services
 	userRepo := userRepo.NewUserRepositryImpl(db)
 	userSvc := userService.NewUserService(userRepo, validate)
@@ -67,8 +78,8 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	movieDetailRepo := movieDetailRepo.NewMovieDetailsRepositoryImpl(db)
 	movieDetailSvc := movieDetailService.NewMovieDetailsService(movieDetailRepo, validate)
 
-	movieUploaderRepo := movieUploaderRepo.NewMovieUploaderRepositoryImpl(db)
-	movieUploaderSvc := movieUploaderSvc.NewMovieUploaderService(movieUploaderRepo, validate)
+	movieUploaderRepo := movieUploaderRepo.NewMovieEpisodeRepositoryImpl(db)
+	movieUploaderSvc := movieUploaderSvc.NewMovieEpisodeService(movieUploaderRepo, validate, uploader, &movieDetailSvc)
 
 	middleware.InitAuthMiddleware(userSvc)
 
@@ -87,7 +98,7 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	// Native Upload Data Manual
 
 	router.MovieDetailsRoutes(v1, movieDetailSvc)
-	router.MovieUploaderRoutes(v1, movieUploaderSvc)
+	router.MovieEpisodeRoutes(v1, movieUploaderSvc)
 
 	if !config.IsProd {
 		v1.Get("/docs", func(c *fiber.Ctx) error {

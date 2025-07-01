@@ -47,7 +47,7 @@ func Connect(dbHost, dbName string) *gorm.DB {
 		&model.History{},
 		&model.RequestMovie{},
 		&model.MovieDetails{},
-		&model.MovieUploader{},
+		&model.MovieEpisode{},
 	)
 
 	// Config connection pooling

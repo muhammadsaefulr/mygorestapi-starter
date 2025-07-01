@@ -8,6 +8,7 @@ import (
 	"syscall"
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/config"
+	"github.com/muhammadsaefulr/NimeStreamAPI/docs"
 	module "github.com/muhammadsaefulr/NimeStreamAPI/internal"
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/delivery/middleware"
@@ -24,7 +25,6 @@ import (
 // ketika mau upload ganti ke dev.msaepul.my.id
 // @title						NimeStream API documentation
 // @version						1.0.0
-// @host						dev.msaepul.my.id
 // @BasePath					/api/v1
 // @securityDefinitions.apikey	BearerAuth
 // @in							header
@@ -41,6 +41,12 @@ func main() {
 
 	address := fmt.Sprintf("%s:%d", config.AppHost, config.AppPort)
 
+	if config.IsProd {
+		docs.SwaggerInfo.Host = "dev.msaepul.my.id"
+	} else {
+		docs.SwaggerInfo.Host = "localhost:8080"
+	}
+
 	// Start server and handle graceful shutdown
 	serverErrors := make(chan error, 1)
 	go startServer(app, address, serverErrors)
@@ -48,8 +54,9 @@ func main() {
 }
 
 func setupFiberApp() *fiber.App {
-	app := fiber.New(config.FiberConfig())
-
+	app := fiber.New(fiber.Config{
+		BodyLimit: 4 * 1024 * 1024 * 1024,
+	})
 	// Middleware setup
 	app.Use("/v1/auth", middleware.LimiterConfig())
 	app.Use(middleware.LoggerConfig())

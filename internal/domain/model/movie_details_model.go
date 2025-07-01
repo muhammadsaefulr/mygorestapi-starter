@@ -20,7 +20,7 @@ type MovieDetails struct {
 	Synopsis     string         `gorm:"type:text" json:"synopsis"`
 	Genres       pq.StringArray `gorm:"type:text[]" json:"genres"`
 
-	Episodes []MovieUploader `gorm:"foreignKey:MovieId;references:MovieID" json:"episodes,omitempty"`
+	Episodes []MovieEpisode `gorm:"foreignKey:MovieId;references:MovieID" json:"episodes,omitempty"`
 
 	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime" json:"created_at"`
 	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime" json:"updated_at"`
