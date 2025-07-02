@@ -969,25 +969,6 @@ const docTemplate = `{
             }
         },
         "/movie/episodes/{id}": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "movie"
-                ],
-                "summary": "Get a movie episodes by ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "MovieEps ID (string)",
-                        "name": "movie_eps_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {}
-            },
             "put": {
                 "security": [
                     {
@@ -1006,9 +987,9 @@ const docTemplate = `{
                 "summary": "Update a movie episodes",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "MovieEps ID (string)",
-                        "name": "id",
+                        "name": "movie_eps_id",
                         "in": "path",
                         "required": true
                     },
@@ -1020,6 +1001,27 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_request.UpdateMovieEpisodes"
                         }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/movie/episodes/{movie_eps_id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "movie"
+                ],
+                "summary": "Get a movie episodes by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "MovieEps ID (string)",
+                        "name": "movie_eps_id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {}

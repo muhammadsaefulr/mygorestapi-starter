@@ -1681,6 +1681,30 @@ paths:
       tags:
       - movie
   /movie/episodes/{id}:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: MovieEps ID (string)
+        in: path
+        name: movie_eps_id
+        required: true
+        type: string
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_request.UpdateMovieEpisodes'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update a movie episodes
+      tags:
+      - movie
+  /movie/episodes/{movie_eps_id}:
     delete:
       parameters:
       - description: MovieEps ID (string)
@@ -1707,29 +1731,6 @@ paths:
       - application/json
       responses: {}
       summary: Get a movie episodes by ID
-      tags:
-      - movie
-    put:
-      consumes:
-      - application/json
-      parameters:
-      - description: MovieEps ID (string)
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Request body
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_request.UpdateMovieEpisodes'
-      produces:
-      - application/json
-      responses: {}
-      security:
-      - BearerAuth: []
-      summary: Update a movie episodes
       tags:
       - movie
   /movie/episodes/upload:
