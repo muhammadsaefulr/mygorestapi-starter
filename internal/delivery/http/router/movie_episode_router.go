@@ -12,9 +12,10 @@ func MovieEpisodeRoutes(v1 fiber.Router, c service.MovieEpisodeServiceInterface)
 
 	group := v1.Group("/movie/episodes")
 
-	group.Get("/", movie_episodeController.GetAllMovieEpisode)
+	// group.Get("/", movie_episodeController.GetAllMovieEpisode)
 	group.Post("/", m.Auth("addMovieEps"), movie_episodeController.CreateMovieEpisodes)
 	group.Post("/upload", m.Auth("addMovieEps"), movie_episodeController.CreateUpload)
+	group.Get("/:movie_id/:movie_eps_id", movie_episodeController.GetMovieEpisodeByMovieID)
 	group.Get("/:id", movie_episodeController.GetMovieEpisodeByID)
 	group.Put("/:id", m.Auth("updateMovieEps"), movie_episodeController.UpdateMovieEpisodes)
 	group.Delete("/:id", m.Auth("deleteMovieEps"), movie_episodeController.DeleteMovieEpisode)

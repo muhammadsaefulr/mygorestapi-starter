@@ -1,11 +1,12 @@
 package controller
 
 import (
-	"math"
+	// "math"
 
 	"github.com/gofiber/fiber/v2"
 
 	request "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/movie_episode/request"
+	responses "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/movie_episode/response"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/movie_episode_service"
@@ -19,35 +20,35 @@ func NewMovieEpisodeController(service service.MovieEpisodeServiceInterface) *Mo
 	return &MovieEpisodeController{Service: service}
 }
 
-// @Tags         movie
-// @Summary      Get all movie episodes
-// @Produce      json
-// @Param        page   query     int     false  "Page number"  default(1)
-// @Param        limit  query     int     false  "Items per page"  default(10)
-// @Param        search query     string  false  "Search term"
-// @Router       /movie/episodes [get]
-func (h *MovieEpisodeController) GetAllMovieEpisode(c *fiber.Ctx) error {
-	query := &request.QueryMovieEpisode{
-		Page:  c.QueryInt("page", 1),
-		Limit: c.QueryInt("limit", 10),
-	}
+// // @Tags         movie
+// // @Summary      Get all movie episodes
+// // @Produce      json
+// // @Param        page   query     int     false  "Page number"  default(1)
+// // @Param        limit  query     int     false  "Items per page"  default(10)
+// // @Param        search query     string  false  "Search term"
+// // @Router       /movie/episodes [get]
+// func (h *MovieEpisodeController) GetAllMovieEpisode(c *fiber.Ctx) error {
+// 	query := &request.QueryMovieEpisode{
+// 		Page:  c.QueryInt("page", 1),
+// 		Limit: c.QueryInt("limit", 10),
+// 	}
 
-	data, total, err := h.Service.GetAll(c, query)
-	if err != nil {
-		return err
-	}
+// 	data, total, err := h.Service.GetAll(c, query)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	return c.Status(fiber.StatusOK).JSON(response.SuccessWithPaginate[model.MovieEpisode]{
-		Code:         fiber.StatusOK,
-		Status:       "success",
-		Message:      "Successfully retrieved data",
-		Results:      data,
-		Page:         query.Page,
-		Limit:        query.Limit,
-		TotalPages:   int64(math.Ceil(float64(total) / float64(query.Limit))),
-		TotalResults: total,
-	})
-}
+// 	return c.Status(fiber.StatusOK).JSON(response.SuccessWithPaginate[model.MovieEpisode]{
+// 		Code:         fiber.StatusOK,
+// 		Status:       "success",
+// 		Message:      "Successfully retrieved data",
+// 		Results:      data,
+// 		Page:         query.Page,
+// 		Limit:        query.Limit,
+// 		TotalPages:   int64(math.Ceil(float64(total) / float64(query.Limit))),
+// 		TotalResults: total,
+// 	})
+// }
 
 // @Tags         movie
 // @Summary      Get a movie episodes by ID
@@ -71,8 +72,31 @@ func (h *MovieEpisodeController) GetMovieEpisodeByID(c *fiber.Ctx) error {
 }
 
 // @Tags         movie
+// @Summary      Get all movie episodes by movie ID
+// @Produce      json
+// @Param        movie_id  path  string  true  "Movie ID"
+// @Param        movie_eps_id  path  string  true  "Movie Eps ID"
+// @Router       /movie/episodes/{movie_id}/{movie_eps_id} [get]
+func (h *MovieEpisodeController) GetMovieEpisodeByMovieID(c *fiber.Ctx) error {
+	idStr := c.Params("movie_id")
+	movEpsId := c.Params("movie_eps_id")
+
+	result, err := h.Service.GetByMovieID(c, movEpsId, idStr)
+	if err != nil {
+		return err
+	}
+
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithDetail[responses.MovieEpisodeResponses]{
+		Code:    fiber.StatusOK,
+		Status:  "success",
+		Message: "Data retrieved successfully",
+		Data:    *result,
+	})
+}
+
+// @Tags         movie
 // @Summary      Create a new movie episodes
-// @Accept       multipart/form-data
+// @Accept       application/json
 // @Produce      json
 // @Security     BearerAuth
 // @Param        request  body  request.CreateMovieEpisodes  true  "Request body"

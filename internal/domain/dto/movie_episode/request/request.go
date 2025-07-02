@@ -8,13 +8,14 @@ type CreateMovieEpisodes struct {
 	Title          string `json:"title" example:"upload"`
 	Resolution     string `json:"resolution" example:"720p"`
 	ContentUploads string `json:"video_url" example:"youtube"`
-	UploadedBy     string `json:"-"`
+	SourceBy       string `json:"-"`
 }
 
 type UpdateMovieEpisodes struct {
 	MovieEpsID     string `json:"-"`
 	MovieId        string `json:"movie_id"`
 	Title          string `json:"title"`
+	Resolution     string `json:"resolution"`
 	ContentUploads string `json:"url"`
 }
 
@@ -24,7 +25,7 @@ type CreateMovieEpisodesUpload struct {
 	Title          string                `form:"title" validate:"required" example:"upload"`
 	Resolution     string                `form:"resolution" validate:"required" example:"720p"`
 	ContentUploads *multipart.FileHeader `form:"file_video" validate:"required"`
-	UploadedBy     string                `form:"-"` // tetap diisi dari backend
+	SourceBy       string                `form:"-"` // tetap diisi dari backend
 }
 
 type UpdateMovieEpisodesUpload struct {
@@ -33,7 +34,7 @@ type UpdateMovieEpisodesUpload struct {
 	Title          string                `form:"title"  example:"upload"`
 	Resolution     string                `form:"resolution"  example:"720p"`
 	ContentUploads *multipart.FileHeader `form:"file_video" validate:"required"`
-	UploadedBy     string                `form:"-"` // tetap diisi dari backend
+	SourceBy       string                `form:"-"` // tetap diisi dari backend
 }
 
 type QueryMovieEpisode struct {

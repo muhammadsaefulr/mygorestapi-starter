@@ -44,12 +44,22 @@ func (r *MovieEpisodeRepositoryImpl) GetByID(ctx context.Context, movie_eps_id s
 	return &data, nil
 }
 
+func (r *MovieEpisodeRepositoryImpl) GetByMovieID(ctx context.Context, movie_id string) ([]model.MovieEpisode, error) {
+	var data []model.MovieEpisode
+	if err := r.DB.WithContext(ctx).Where("movie_id = ?", movie_id).Find(&data).Error; err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
 func (r *MovieEpisodeRepositoryImpl) Create(ctx context.Context, data *model.MovieEpisode) error {
 	return r.DB.WithContext(ctx).Create(data).Error
 }
 
 func (r *MovieEpisodeRepositoryImpl) Update(ctx context.Context, data *model.MovieEpisode) error {
-	return r.DB.WithContext(ctx).Where("movie_eps_id = ?", data.MovieEpsID).Updates(data).Error
+
+	return r.DB.WithContext(ctx).Model(&model.MovieEpisode{}).Where("movie_eps_id = ?", data.MovieEpsID).Updates(data).Error
+
 }
 
 func (r *MovieEpisodeRepositoryImpl) Delete(ctx context.Context, movie_eps_id string) error {
