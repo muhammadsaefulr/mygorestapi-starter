@@ -461,6 +461,16 @@ definitions:
         example: success
         type: string
     type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_anilist_request.CreateAnilist:
+    properties:
+      name:
+        type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_anilist_request.UpdateAnilist:
+    properties:
+      name:
+        type: string
+    type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_auth_request.ForgotPassword:
     properties:
       email:
@@ -521,6 +531,16 @@ definitions:
         type: string
     required:
     - content
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_discover_request.CreateDiscover:
+    properties:
+      name:
+        type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_discover_request.UpdateDiscover:
+    properties:
+      name:
+        type: string
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_history_request.CreateHistory:
     properties:
@@ -1026,10 +1046,6 @@ definitions:
     properties:
       created_at:
         type: string
-      episodes:
-        items:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieEpisode'
-        type: array
       genres:
         items:
           type: string
@@ -1069,11 +1085,12 @@ definitions:
         type: string
       resolution:
         type: string
+      sourceBy:
+        type: string
       title:
+        description: title untuk penentu source nya misal pixeldrain atau uploads
         type: string
       updatedAt:
-        type: string
-      uploadedBy:
         type: string
       videoURL:
         type: string
@@ -1109,6 +1126,93 @@ info:
   title: NimeStream API documentation
   version: 1.0.0
 paths:
+  /anilist:
+    get:
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      - description: Search term
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Get all anilist
+      tags:
+      - anilist
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_anilist_request.CreateAnilist'
+      produces:
+      - application/json
+      responses: {}
+      summary: Create a new anilist
+      tags:
+      - anilist
+  /anilist/{id}:
+    delete:
+      parameters:
+      - description: Anilist ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Delete a anilist
+      tags:
+      - anilist
+    get:
+      parameters:
+      - description: Anilist ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Get a anilist by ID
+      tags:
+      - anilist
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Anilist ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_anilist_request.UpdateAnilist'
+      produces:
+      - application/json
+      responses: {}
+      summary: Update a anilist
+      tags:
+      - anilist
   /auth/forgot-password:
     post:
       consumes:
@@ -1405,6 +1509,93 @@ paths:
       summary: Get comments by movie ID
       tags:
       - Comments
+  /discover:
+    get:
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      - description: Search term
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Get all discover
+      tags:
+      - discover
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_discover_request.CreateDiscover'
+      produces:
+      - application/json
+      responses: {}
+      summary: Create a new discover
+      tags:
+      - discover
+  /discover/{id}:
+    delete:
+      parameters:
+      - description: Discover ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Delete a discover
+      tags:
+      - discover
+    get:
+      parameters:
+      - description: Discover ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Get a discover by ID
+      tags:
+      - discover
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Discover ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_discover_request.UpdateDiscover'
+      produces:
+      - application/json
+      responses: {}
+      summary: Update a discover
+      tags:
+      - discover
   /health-check:
     get:
       consumes:
@@ -1636,31 +1827,9 @@ paths:
       tags:
       - movie
   /movie/episodes:
-    get:
-      parameters:
-      - default: 1
-        description: Page number
-        in: query
-        name: page
-        type: integer
-      - default: 10
-        description: Items per page
-        in: query
-        name: limit
-        type: integer
-      - description: Search term
-        in: query
-        name: search
-        type: string
-      produces:
-      - application/json
-      responses: {}
-      summary: Get all movie episodes
-      tags:
-      - movie
     post:
       consumes:
-      - multipart/form-data
+      - application/json
       parameters:
       - description: Request body
         in: body
@@ -1731,6 +1900,25 @@ paths:
       - application/json
       responses: {}
       summary: Get a movie episodes by ID
+      tags:
+      - movie
+  /movie/episodes/{movie_id}/{movie_eps_id}:
+    get:
+      parameters:
+      - description: Movie ID
+        in: path
+        name: movie_id
+        required: true
+        type: string
+      - description: Movie Eps ID
+        in: path
+        name: movie_eps_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Get all movie episodes by movie ID
       tags:
       - movie
   /movie/episodes/upload:

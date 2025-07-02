@@ -7,6 +7,135 @@
     },
     "basePath": "/api/v1",
     "paths": {
+        "/anilist": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "anilist"
+                ],
+                "summary": "Get all anilist",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search term",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {}
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "anilist"
+                ],
+                "summary": "Create a new anilist",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_anilist_request.CreateAnilist"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/anilist/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "anilist"
+                ],
+                "summary": "Get a anilist by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Anilist ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "anilist"
+                ],
+                "summary": "Delete a anilist",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Anilist ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "anilist"
+                ],
+                "summary": "Update a anilist",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Anilist ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_anilist_request.UpdateAnilist"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/auth/forgot-password": {
             "post": {
                 "description": "An email will be sent to reset password.",
@@ -464,6 +593,135 @@
                 "responses": {}
             }
         },
+        "/discover": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "discover"
+                ],
+                "summary": "Get all discover",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search term",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {}
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "discover"
+                ],
+                "summary": "Create a new discover",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_discover_request.CreateDiscover"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/discover/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "discover"
+                ],
+                "summary": "Get a discover by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Discover ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "discover"
+                ],
+                "summary": "Delete a discover",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Discover ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "discover"
+                ],
+                "summary": "Update a discover",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Discover ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_discover_request.UpdateDiscover"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/health-check": {
             "get": {
                 "description": "Check the status of services and database connections",
@@ -827,38 +1085,6 @@
             }
         },
         "/movie/episodes": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "movie"
-                ],
-                "summary": "Get all movie episodes",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "default": 1,
-                        "description": "Page number",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "default": 10,
-                        "description": "Items per page",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Search term",
-                        "name": "search",
-                        "in": "query"
-                    }
-                ],
-                "responses": {}
-            },
             "post": {
                 "security": [
                     {
@@ -866,7 +1092,7 @@
                     }
                 ],
                 "consumes": [
-                    "multipart/form-data"
+                    "application/json"
                 ],
                 "produces": [
                     "application/json"
@@ -1035,6 +1261,34 @@
                     {
                         "type": "string",
                         "description": "MovieEps ID (string)",
+                        "name": "movie_eps_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/movie/episodes/{movie_id}/{movie_eps_id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "movie"
+                ],
+                "summary": "Get all movie episodes by movie ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Movie ID",
+                        "name": "movie_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Movie Eps ID",
                         "name": "movie_eps_id",
                         "in": "path",
                         "required": true
@@ -2508,6 +2762,22 @@
                 }
             }
         },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_anilist_request.CreateAnilist": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_anilist_request.UpdateAnilist": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_auth_request.ForgotPassword": {
             "type": "object",
             "required": [
@@ -2589,6 +2859,22 @@
             ],
             "properties": {
                 "content": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_discover_request.CreateDiscover": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_discover_request.UpdateDiscover": {
+            "type": "object",
+            "properties": {
+                "name": {
                     "type": "string"
                 }
             }
@@ -3304,12 +3590,6 @@
                 "created_at": {
                     "type": "string"
                 },
-                "episodes": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieEpisode"
-                    }
-                },
                 "genres": {
                     "type": "array",
                     "items": {
@@ -3369,13 +3649,14 @@
                 "resolution": {
                     "type": "string"
                 },
+                "sourceBy": {
+                    "type": "string"
+                },
                 "title": {
+                    "description": "title untuk penentu source nya misal pixeldrain atau uploads",
                     "type": "string"
                 },
                 "updatedAt": {
-                    "type": "string"
-                },
-                "uploadedBy": {
                     "type": "string"
                 },
                 "videoURL": {
