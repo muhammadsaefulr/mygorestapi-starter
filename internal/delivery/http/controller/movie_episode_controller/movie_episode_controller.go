@@ -53,7 +53,7 @@ func (h *MovieEpisodeController) GetAllMovieEpisode(c *fiber.Ctx) error {
 // @Summary      Get a movie episodes by ID
 // @Produce      json
 // @Param        movie_eps_id  path  string  true  "MovieEps ID (string)"
-// @Router       /movie/episodes/{id} [get]
+// @Router       /movie/episodes/{movie_eps_id} [get]
 func (h *MovieEpisodeController) GetMovieEpisodeByID(c *fiber.Ctx) error {
 	idStr := c.Params("id")
 
@@ -136,7 +136,7 @@ func (h *MovieEpisodeController) CreateUpload(c *fiber.Ctx) error {
 // @Accept       json
 // @Produce      json
 // @Security     BearerAuth
-// @Param        id       path  int  true  "MovieEps ID (string)"
+// @Param        movie_eps_id  path  string  true  "MovieEps ID (string)"
 // @Param        request  body  request.UpdateMovieEpisodes  true  "Request body"
 // @Router       /movie/episodes/{id} [put]
 func (h *MovieEpisodeController) UpdateMovieEpisodes(c *fiber.Ctx) error {
@@ -165,7 +165,7 @@ func (h *MovieEpisodeController) UpdateMovieEpisodes(c *fiber.Ctx) error {
 // @Produce      json
 // @Security     BearerAuth
 // @Param        movie_eps_id  path  string  true  "MovieEps ID (string)"
-// @Router       /movie/episodes/{id} [delete]
+// @Router       /movie/episodes/{movie_eps_id} [delete]
 func (h *MovieEpisodeController) DeleteMovieEpisode(c *fiber.Ctx) error {
 	idStr := c.Params("id")
 
