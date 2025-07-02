@@ -7,7 +7,7 @@ import (
 	service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/movie_details_service"
 )
 
-func MovieDetailsRoutes(v1 fiber.Router, c service.MovieDetailsService) {
+func MovieDetailsRoutes(v1 fiber.Router, c service.MovieDetailsServiceInterface) {
 	movie_detailsController := controller.NewMovieDetailsController(c)
 
 	group := v1.Group("/movie/details")

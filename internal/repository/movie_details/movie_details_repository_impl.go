@@ -47,8 +47,19 @@ func (r *MovieDetailsRepositoryImpl) GetAll(ctx context.Context, param *request.
 }
 
 func (r *MovieDetailsRepositoryImpl) GetByID(ctx context.Context, id string) (*model.MovieDetails, error) {
+	movie := &model.MovieDetails{}
+	if err := r.DB.WithContext(ctx).First(movie, "movie_id = ?", id).Error; err != nil {
+		return nil, err
+	}
+
+	return movie, nil
+}
+
+func (r *MovieDetailsRepositoryImpl) GetByIDPreEps(ctx context.Context, id string) (*model.MovieDetails, error) {
 	var data model.MovieDetails
-	if err := r.DB.WithContext(ctx).First(&data, "movie_id = ?", id).Error; err != nil {
+	if err := r.DB.WithContext(ctx).
+		Preload("Episodes").
+		First(&data, "movie_id = ?", id).Error; err != nil {
 		return nil, err
 	}
 	return &data, nil
@@ -58,8 +69,23 @@ func (r *MovieDetailsRepositoryImpl) Create(ctx context.Context, data *model.Mov
 	return r.DB.WithContext(ctx).Create(data).Error
 }
 
-func (r *MovieDetailsRepositoryImpl) Update(ctx context.Context, data *model.MovieDetails) error {
-	return r.DB.WithContext(ctx).Where("movie_id = ?", data.MovieID).Updates(data).Error
+func (r *MovieDetailsRepositoryImpl) Update(ctx context.Context, data *model.MovieDetails) (*model.MovieDetails, error) {
+	if err := r.DB.WithContext(ctx).
+		Model(&model.MovieDetails{}).
+		Where("movie_id = ?", data.MovieID).
+		Updates(data).
+		Error; err != nil {
+		return nil, err
+	}
+
+	var updated model.MovieDetails
+	if err := r.DB.WithContext(ctx).
+		First(&updated, "movie_id = ?", data.MovieID).
+		Error; err != nil {
+		return nil, err
+	}
+
+	return &updated, nil
 }
 
 func (r *MovieDetailsRepositoryImpl) Delete(ctx context.Context, id string) error {

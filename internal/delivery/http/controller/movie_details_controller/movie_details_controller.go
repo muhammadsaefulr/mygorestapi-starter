@@ -6,16 +6,17 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	request "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/movie_details/request"
+	responses "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/movie_details/response"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/movie_details_service"
 )
 
 type MovieDetailsController struct {
-	Service service.MovieDetailsService
+	Service service.MovieDetailsServiceInterface
 }
 
-func NewMovieDetailsController(service service.MovieDetailsService) *MovieDetailsController {
+func NewMovieDetailsController(service service.MovieDetailsServiceInterface) *MovieDetailsController {
 	return &MovieDetailsController{Service: service}
 }
 
@@ -62,12 +63,12 @@ func (h *MovieDetailsController) GetAllMovieDetails(c *fiber.Ctx) error {
 func (h *MovieDetailsController) GetMovieDetailsByID(c *fiber.Ctx) error {
 	idStr := c.Params("id")
 
-	result, err := h.Service.GetByID(c, idStr)
+	result, err := h.Service.GetByIDPreEps(c, idStr)
 	if err != nil {
 		return err
 	}
 
-	return c.Status(fiber.StatusOK).JSON(response.SuccessWithDetail[model.MovieDetails]{
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithDetail[responses.MovieDetailsResponse]{
 		Code:    fiber.StatusOK,
 		Status:  "success",
 		Message: "Data retrieved successfully",
