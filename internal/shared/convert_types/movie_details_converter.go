@@ -8,6 +8,7 @@ import (
 func CreateMovieDetailsToModel(req *request.CreateMovieDetails) *model.MovieDetails {
 	return &model.MovieDetails{
 		MovieID:      req.MovieID,
+		MovieType:    req.MovieType,
 		ThumbnailURL: req.ThumbnailURL,
 		Title:        req.Title,
 		Rating:       req.Rating,
@@ -24,6 +25,7 @@ func CreateMovieDetailsToModel(req *request.CreateMovieDetails) *model.MovieDeta
 func UpdateMovieDetailsToModel(req *request.UpdateMovieDetails) *model.MovieDetails {
 	return &model.MovieDetails{
 		MovieID:      req.MovieID,
+		MovieType:    req.MovieType,
 		ThumbnailURL: req.ThumbnailURL,
 		Title:        req.Title,
 		Rating:       req.Rating,
