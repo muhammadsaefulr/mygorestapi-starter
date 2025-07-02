@@ -79,7 +79,7 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	movieDetailSvc := movieDetailService.NewMovieDetailsService(movieDetailRepo, validate)
 
 	movieUploaderRepo := movieUploaderRepo.NewMovieEpisodeRepositoryImpl(db)
-	movieUploaderSvc := movieUploaderSvc.NewMovieEpisodeService(movieUploaderRepo, validate, uploader, &movieDetailSvc)
+	movieUploaderSvc := movieUploaderSvc.NewMovieEpisodeService(movieUploaderRepo, validate, uploader, movieDetailSvc)
 
 	middleware.InitAuthMiddleware(userSvc)
 
