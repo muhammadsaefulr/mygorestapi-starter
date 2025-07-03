@@ -2,6 +2,7 @@ package request
 
 type CreateHistory struct {
 	UserId       string `json:"-"`
+	MovieId      string `json:"movie_id"`
 	MovieEpsId   string `json:"movie_eps_id"`
 	PlaybackTime int    `json:"playback_time"`
 }

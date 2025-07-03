@@ -9,6 +9,7 @@ import (
 func CreateHistoryToModel(req *request.CreateHistory) *model.History {
 	return &model.History{
 		UserId:       uuid.MustParse(req.UserId),
+		MovieId:      req.MovieId,
 		MovieEpsId:   req.MovieEpsId,
 		PlaybackTime: req.PlaybackTime,
 	}
@@ -17,8 +18,6 @@ func CreateHistoryToModel(req *request.CreateHistory) *model.History {
 func UpdateHistoryToModel(req *request.UpdateHistory) *model.History {
 	return &model.History{
 		ID:           req.ID,
-		UserId:       uuid.MustParse(req.UserId),
-		MovieEpsId:   req.MovieEpsId,
 		PlaybackTime: req.PlaybackTime,
 	}
 }
