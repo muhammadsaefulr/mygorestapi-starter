@@ -190,7 +190,7 @@ func ScrapeAnimeDetail(url string) (model.AnimeDetail, []model.AnimeEpisode, []m
 		if !strings.Contains(strings.ToLower(href), "batch") && !strings.Contains(strings.ToLower(href), "lengkap") {
 			episodes = append(episodes, model.AnimeEpisode{
 				Title:    title,
-				VideoURL: "/play/" + path.Base(strings.TrimSuffix(href, "/")),
+				VideoURL: "/otakudsu/play/" + path.Base(strings.TrimSuffix(href, "/")),
 			})
 		}
 	})
@@ -250,7 +250,7 @@ func ScrapeAnimeSourceData(url string) model.AnimeSourceData {
 	c.OnHTML(".keyingpost li", func(e *colly.HTMLElement) {
 		epsList = append(epsList, model.AnimeEpisode{
 			Title:    e.ChildText("a"),
-			VideoURL: "/play/" + path.Base(strings.TrimSuffix(e.ChildAttr("a", "href"), "/")),
+			VideoURL: "/otakudesu/play/" + path.Base(strings.TrimSuffix(e.ChildAttr("a", "href"), "/")),
 		})
 	})
 
