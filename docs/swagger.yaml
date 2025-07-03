@@ -461,16 +461,6 @@ definitions:
         example: success
         type: string
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_anilist_request.CreateAnilist:
-    properties:
-      name:
-        type: string
-    type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_anilist_request.UpdateAnilist:
-    properties:
-      name:
-        type: string
-    type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_auth_request.ForgotPassword:
     properties:
       email:
@@ -660,6 +650,39 @@ definitions:
     - thumbnail_url
     - title
     type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response.MovieDetailOnlyResponse:
+    properties:
+      created_at:
+        type: string
+      genres:
+        items:
+          type: string
+        type: array
+      movie_id:
+        type: string
+      movie_type:
+        type: string
+      producer:
+        type: string
+      rating:
+        type: string
+      release_date:
+        type: string
+      status:
+        type: string
+      studio:
+        type: string
+      synopsis:
+        type: string
+      thumbnail_url:
+        type: string
+      title:
+        type: string
+      total_eps:
+        type: string
+      updated_at:
+        type: string
+    type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_request.CreateMovieEpisodes:
     properties:
       movie_eps_id:
@@ -681,6 +704,8 @@ definitions:
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_request.UpdateMovieEpisodes:
     properties:
       movie_id:
+        type: string
+      resolution:
         type: string
       title:
         type: string
@@ -877,6 +902,27 @@ definitions:
       status:
         type: string
     type: object
+  ? github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response_MovieDetailOnlyResponse
+  : properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response.MovieDetailOnlyResponse'
+        type: array
+      limit:
+        type: integer
+      message:
+        type: string
+      page:
+        type: integer
+      status:
+        type: string
+      total_pages:
+        type: integer
+      total_results:
+        type: integer
+    type: object
   ? github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_response_RequestMovieResponse
   : properties:
       code:
@@ -900,6 +946,27 @@ definitions:
     type: object
   ? github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model_MovieDetails
   : properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieDetails'
+        type: array
+      limit:
+        type: integer
+      message:
+        type: string
+      page:
+        type: integer
+      status:
+        type: string
+      total_pages:
+        type: integer
+      total_results:
+        type: integer
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-model_MovieDetails:
+    properties:
       code:
         type: integer
       data:
@@ -1077,8 +1144,10 @@ definitions:
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieEpisode:
     properties:
-      createdAt:
+      created_at:
         type: string
+      id:
+        type: integer
       movieEpsID:
         type: string
       movieId:
@@ -1090,7 +1159,7 @@ definitions:
       title:
         description: title untuk penentu source nya misal pixeldrain atau uploads
         type: string
-      updatedAt:
+      updated_at:
         type: string
       videoURL:
         type: string
@@ -1126,93 +1195,49 @@ info:
   title: NimeStream API documentation
   version: 1.0.0
 paths:
-  /anilist:
+  /anilists:
     get:
+      description: Retrieve anime from AniList API based on category. When using category=rekom,
+        'search' is required to perform a title-based recommendation.
       parameters:
       - default: 1
         description: Page number
         in: query
+        minimum: 1
         name: page
         type: integer
       - default: 10
         description: Items per page
         in: query
+        maximum: 50
+        minimum: 1
         name: limit
         type: integer
-      - description: Search term
+      - default: popular
+        description: Discovery category
+        enum:
+        - popular
+        - trending
+        - ongoing
+        - rekom
+        in: query
+        name: category
+        type: string
+      - default: one piece
+        description: Search term. Required if category is 'rekom'
         in: query
         name: search
         type: string
       produces:
       - application/json
-      responses: {}
-      summary: Get all anilist
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-model_MovieDetails'
+      summary: Get anime discovery list (popular, trending, ongoing, rekomendasi)
       tags:
-      - anilist
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: Request body
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_anilist_request.CreateAnilist'
-      produces:
-      - application/json
-      responses: {}
-      summary: Create a new anilist
-      tags:
-      - anilist
-  /anilist/{id}:
-    delete:
-      parameters:
-      - description: Anilist ID (uint)
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses: {}
-      summary: Delete a anilist
-      tags:
-      - anilist
-    get:
-      parameters:
-      - description: Anilist ID (uint)
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses: {}
-      summary: Get a anilist by ID
-      tags:
-      - anilist
-    patch:
-      consumes:
-      - application/json
-      parameters:
-      - description: Anilist ID (uint)
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Request body
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_anilist_request.UpdateAnilist'
-      produces:
-      - application/json
-      responses: {}
-      summary: Update a anilist
-      tags:
-      - anilist
+      - Anilist
   /auth/forgot-password:
     post:
       consumes:
@@ -1725,7 +1750,7 @@ paths:
         in: query
         name: limit
         type: integer
-      - description: Search term
+      - description: Search term like title or studio
         in: query
         name: search
         type: string
@@ -2236,6 +2261,53 @@ paths:
       summary: Update a request_movie
       tags:
       - RequestMovie
+  /tmdb:
+    get:
+      description: Retrieve TMDb-based data (movie or K-Drama) by category (popular,
+        trending, etc).
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      - default: movie
+        description: Media type
+        enum:
+        - tv
+        - movie
+        in: query
+        name: type
+        type: string
+      - description: Media category
+        enum:
+        - popular
+        - trending
+        - ongoing
+        - rekom
+        in: query
+        name: category
+        required: true
+        type: string
+      - description: Search keyword (for rekom category need this param)
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response_MovieDetailOnlyResponse'
+      summary: Get list of TMDb media (movie or K-Drama)
+      tags:
+      - Tmdb
   /users:
     get:
       description: Only admins can retrieve all users.

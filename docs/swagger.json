@@ -7,17 +7,19 @@
     },
     "basePath": "/api/v1",
     "paths": {
-        "/anilist": {
+        "/anilists": {
             "get": {
+                "description": "Retrieve anime from AniList API based on category. When using category=rekom, 'search' is required to perform a title-based recommendation.",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "anilist"
+                    "Anilist"
                 ],
-                "summary": "Get all anilist",
+                "summary": "Get anime discovery list (popular, trending, ongoing, rekomendasi)",
                 "parameters": [
                     {
+                        "minimum": 1,
                         "type": "integer",
                         "default": 1,
                         "description": "Page number",
@@ -25,6 +27,8 @@
                         "in": "query"
                     },
                     {
+                        "maximum": 50,
+                        "minimum": 1,
                         "type": "integer",
                         "default": 10,
                         "description": "Items per page",
@@ -32,108 +36,34 @@
                         "in": "query"
                     },
                     {
+                        "enum": [
+                            "popular",
+                            "trending",
+                            "ongoing",
+                            "rekom"
+                        ],
                         "type": "string",
-                        "description": "Search term",
+                        "default": "popular",
+                        "description": "Discovery category",
+                        "name": "category",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "one piece",
+                        "description": "Search term. Required if category is 'rekom'",
                         "name": "search",
                         "in": "query"
                     }
                 ],
-                "responses": {}
-            },
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "anilist"
-                ],
-                "summary": "Create a new anilist",
-                "parameters": [
-                    {
-                        "description": "Request body",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
+                "responses": {
+                    "200": {
+                        "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_anilist_request.CreateAnilist"
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-model_MovieDetails"
                         }
                     }
-                ],
-                "responses": {}
-            }
-        },
-        "/anilist/{id}": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "anilist"
-                ],
-                "summary": "Get a anilist by ID",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Anilist ID (uint)",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {}
-            },
-            "delete": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "anilist"
-                ],
-                "summary": "Delete a anilist",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Anilist ID (uint)",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {}
-            },
-            "patch": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "anilist"
-                ],
-                "summary": "Update a anilist",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Anilist ID (uint)",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Request body",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_anilist_request.UpdateAnilist"
-                        }
-                    }
-                ],
-                "responses": {}
+                }
             }
         },
         "/auth/forgot-password": {
@@ -931,7 +861,7 @@
                     },
                     {
                         "type": "string",
-                        "description": "Search term",
+                        "description": "Search term like title or studio",
                         "name": "search",
                         "in": "query"
                     },
@@ -1715,6 +1645,72 @@
                     }
                 ],
                 "responses": {}
+            }
+        },
+        "/tmdb": {
+            "get": {
+                "description": "Retrieve TMDb-based data (movie or K-Drama) by category (popular, trending, etc).",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Tmdb"
+                ],
+                "summary": "Get list of TMDb media (movie or K-Drama)",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "tv",
+                            "movie"
+                        ],
+                        "type": "string",
+                        "default": "movie",
+                        "description": "Media type",
+                        "name": "type",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "popular",
+                            "trending",
+                            "ongoing",
+                            "rekom"
+                        ],
+                        "type": "string",
+                        "description": "Media category",
+                        "name": "category",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search keyword (for rekom category need this param)",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response_MovieDetailOnlyResponse"
+                        }
+                    }
+                }
             }
         },
         "/users": {
@@ -2762,22 +2758,6 @@
                 }
             }
         },
-        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_anilist_request.CreateAnilist": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_anilist_request.UpdateAnilist": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_auth_request.ForgotPassword": {
             "type": "object",
             "required": [
@@ -3027,6 +3007,56 @@
                 }
             }
         },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response.MovieDetailOnlyResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "genres": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "movie_id": {
+                    "type": "string"
+                },
+                "movie_type": {
+                    "type": "string"
+                },
+                "producer": {
+                    "type": "string"
+                },
+                "rating": {
+                    "type": "string"
+                },
+                "release_date": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "studio": {
+                    "type": "string"
+                },
+                "synopsis": {
+                    "type": "string"
+                },
+                "thumbnail_url": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "total_eps": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_request.CreateMovieEpisodes": {
             "type": "object",
             "properties": {
@@ -3056,6 +3086,9 @@
             "type": "object",
             "properties": {
                 "movie_id": {
+                    "type": "string"
+                },
+                "resolution": {
                     "type": "string"
                 },
                 "title": {
@@ -3331,6 +3364,38 @@
                 }
             }
         },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response_MovieDetailOnlyResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response.MovieDetailOnlyResponse"
+                    }
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "total_pages": {
+                    "type": "integer"
+                },
+                "total_results": {
+                    "type": "integer"
+                }
+            }
+        },
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_response_RequestMovieResponse": {
             "type": "object",
             "properties": {
@@ -3364,6 +3429,38 @@
             }
         },
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model_MovieDetails": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieDetails"
+                    }
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "total_pages": {
+                    "type": "integer"
+                },
+                "total_results": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-model_MovieDetails": {
             "type": "object",
             "properties": {
                 "code": {
@@ -3637,8 +3734,11 @@
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieEpisode": {
             "type": "object",
             "properties": {
-                "createdAt": {
+                "created_at": {
                     "type": "string"
+                },
+                "id": {
+                    "type": "integer"
                 },
                 "movieEpsID": {
                     "type": "string"
@@ -3656,7 +3756,7 @@
                     "description": "title untuk penentu source nya misal pixeldrain atau uploads",
                     "type": "string"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "type": "string"
                 },
                 "videoURL": {
