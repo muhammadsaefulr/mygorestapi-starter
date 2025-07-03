@@ -531,135 +531,6 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/discover": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "discover"
-                ],
-                "summary": "Get all discover",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "default": 1,
-                        "description": "Page number",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "default": 10,
-                        "description": "Items per page",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Search term",
-                        "name": "search",
-                        "in": "query"
-                    }
-                ],
-                "responses": {}
-            },
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "discover"
-                ],
-                "summary": "Create a new discover",
-                "parameters": [
-                    {
-                        "description": "Request body",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_discover_request.CreateDiscover"
-                        }
-                    }
-                ],
-                "responses": {}
-            }
-        },
-        "/discover/{id}": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "discover"
-                ],
-                "summary": "Get a discover by ID",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Discover ID (uint)",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {}
-            },
-            "delete": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "discover"
-                ],
-                "summary": "Delete a discover",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Discover ID (uint)",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {}
-            },
-            "patch": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "discover"
-                ],
-                "summary": "Update a discover",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Discover ID (uint)",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Request body",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_discover_request.UpdateDiscover"
-                        }
-                    }
-                ],
-                "responses": {}
-            }
-        },
         "/health-check": {
             "get": {
                 "description": "Check the status of services and database connections",
@@ -1657,14 +1528,14 @@ const docTemplate = `{
         },
         "/tmdb": {
             "get": {
-                "description": "Retrieve TMDb-based data (movie or K-Drama) by category (popular, trending, etc).",
+                "description": "Retrieve TMDb-based data (movie) by category (popular, trending, etc).",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Tmdb"
                 ],
-                "summary": "Get list of TMDb media (movie or K-Drama)",
+                "summary": "Get list of TMDb media (movie)",
                 "parameters": [
                     {
                         "type": "integer",
@@ -2851,26 +2722,13 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_discover_request.CreateDiscover": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_discover_request.UpdateDiscover": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_history_request.CreateHistory": {
             "type": "object",
             "properties": {
                 "movie_eps_id": {
+                    "type": "string"
+                },
+                "movie_id": {
                     "type": "string"
                 },
                 "playback_time": {

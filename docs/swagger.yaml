@@ -522,19 +522,11 @@ definitions:
     required:
     - content
     type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_discover_request.CreateDiscover:
-    properties:
-      name:
-        type: string
-    type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_discover_request.UpdateDiscover:
-    properties:
-      name:
-        type: string
-    type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_history_request.CreateHistory:
     properties:
       movie_eps_id:
+        type: string
+      movie_id:
         type: string
       playback_time:
         type: integer
@@ -1534,93 +1526,6 @@ paths:
       summary: Get comments by movie ID
       tags:
       - Comments
-  /discover:
-    get:
-      parameters:
-      - default: 1
-        description: Page number
-        in: query
-        name: page
-        type: integer
-      - default: 10
-        description: Items per page
-        in: query
-        name: limit
-        type: integer
-      - description: Search term
-        in: query
-        name: search
-        type: string
-      produces:
-      - application/json
-      responses: {}
-      summary: Get all discover
-      tags:
-      - discover
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: Request body
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_discover_request.CreateDiscover'
-      produces:
-      - application/json
-      responses: {}
-      summary: Create a new discover
-      tags:
-      - discover
-  /discover/{id}:
-    delete:
-      parameters:
-      - description: Discover ID (uint)
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses: {}
-      summary: Delete a discover
-      tags:
-      - discover
-    get:
-      parameters:
-      - description: Discover ID (uint)
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses: {}
-      summary: Get a discover by ID
-      tags:
-      - discover
-    patch:
-      consumes:
-      - application/json
-      parameters:
-      - description: Discover ID (uint)
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Request body
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_discover_request.UpdateDiscover'
-      produces:
-      - application/json
-      responses: {}
-      summary: Update a discover
-      tags:
-      - discover
   /health-check:
     get:
       consumes:
@@ -2263,8 +2168,8 @@ paths:
       - RequestMovie
   /tmdb:
     get:
-      description: Retrieve TMDb-based data (movie or K-Drama) by category (popular,
-        trending, etc).
+      description: Retrieve TMDb-based data (movie) by category (popular, trending,
+        etc).
       parameters:
       - default: 1
         description: Page number
@@ -2305,7 +2210,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response_MovieDetailOnlyResponse'
-      summary: Get list of TMDb media (movie or K-Drama)
+      summary: Get list of TMDb media (movie)
       tags:
       - Tmdb
   /users:
