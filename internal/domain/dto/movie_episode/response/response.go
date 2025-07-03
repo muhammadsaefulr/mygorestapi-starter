@@ -1,12 +1,12 @@
 package response
 
-import "time"
-
 type MovieEpisodesDetails struct {
-	ID        uint      `json:"id"`
-	Name      string    `json:"name"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID         uint   `json:"id,omitemty"`
+	MovieEpsID string `json:"movie_eps_id"`
+	MovieId    string `json:"movie_id"`
+	Resolution string `json:"resolution"`
+	VideoURL   string `json:"video_url"`
+	Title      string `json:"title"`
 }
 
 type Sources struct {

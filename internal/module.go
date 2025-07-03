@@ -30,6 +30,9 @@ import (
 	authService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/auth_service"
 	odService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/otakudesu_scrape"
 	systemService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/system_service"
+
+	AnilistService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/anilist_service"
+	tmdbService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/tmdb_service"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/validation"
 
@@ -73,6 +76,11 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	emailSvc := systemService.NewEmailService()
 	healthSvc := systemService.NewHealthCheckService(db)
 
+	// Other Sources Services
+
+	anilistSvc := AnilistService.NewAnilistService(validate)
+	tmdbSvc := tmdbService.NewTMDbService(validate)
+
 	// Native Upload Data Manual
 
 	movieDetailRepo := movieDetailRepo.NewMovieDetailsRepositoryImpl(db)
@@ -94,6 +102,11 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	router.CommentsRoutes(v1, commentSvc)
 	router.HistoryRoutes(v1, historySvc)
 	router.RequestMovieRoutes(v1, requestMovieSvc)
+
+	// Other Sources
+
+	router.TmdbRoutes(v1, tmdbSvc)
+	router.AnilistRoutes(v1, anilistSvc)
 
 	// Native Upload Data Manual
 

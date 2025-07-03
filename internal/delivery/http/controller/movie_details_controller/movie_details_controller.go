@@ -25,7 +25,7 @@ func NewMovieDetailsController(service service.MovieDetailsServiceInterface) *Mo
 // @Produce      json
 // @Param        page   query     int     false  "Page number"  default(1)
 // @Param        limit  query     int     false  "Items per page"  default(10)
-// @Param        search query     string  false  "Search term"
+// @Param        search query     string  false  "Search term like title or studio"
 // @Param        type   query     string  false  "Type of movie" default(anime)
 // @success      200    {object}  response.SuccessWithPaginate[model.MovieDetails]  "Successfully retrieved data"
 // @Router       /movie/details [get]

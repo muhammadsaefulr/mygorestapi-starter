@@ -13,6 +13,6 @@ type MovieEpisode struct {
 	Title      string `gorm:"not null"` // title untuk penentu source nya misal pixeldrain atau uploads
 
 	SourceBy  string    `gorm:"not null"`
-	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime"`
-	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime"`
+	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime" json:"created_at,omitempty"`
+	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime" json:"updated_at,omitempty"`
 }

@@ -78,8 +78,8 @@ func MovieDetailsModelToResp(
 			ReleaseDate:  m.ReleaseDate,
 			Synopsis:     m.Synopsis,
 			Genres:       m.Genres,
-			CreatedAt:    m.CreatedAt,
-			UpdatedAt:    m.UpdatedAt,
+			CreatedAt:    &m.CreatedAt,
+			UpdatedAt:    &m.UpdatedAt,
 		}
 	}
 

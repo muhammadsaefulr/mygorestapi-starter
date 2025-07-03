@@ -24,7 +24,9 @@ func (r *MovieDetailsRepositoryImpl) GetAll(ctx context.Context, param *request.
 	query := r.DB.WithContext(ctx).Model(&model.MovieDetails{})
 
 	if param.Search != "" {
-		query = query.Where("LOWER(title) LIKE LOWER(?) ", "%"+param.Search+"%")
+		searchPattern := "%" + param.Search + "%"
+		query = query.Where("LOWER(title) LIKE LOWER(?)", searchPattern).
+			Or("LOWER(studio) LIKE LOWER(?)", searchPattern)
 	}
 
 	if param.Type != "" {
