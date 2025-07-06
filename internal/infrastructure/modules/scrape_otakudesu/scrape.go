@@ -190,7 +190,7 @@ func ScrapeAnimeDetail(url string) (model.AnimeDetail, []model.AnimeEpisode, []m
 		if !strings.Contains(strings.ToLower(href), "batch") && !strings.Contains(strings.ToLower(href), "lengkap") {
 			episodes = append(episodes, model.AnimeEpisode{
 				Title:    title,
-				VideoURL: "/otakudsu/play/" + path.Base(strings.TrimSuffix(href, "/")),
+				VideoURL: "/otakudesu/play/" + path.Base(strings.TrimSuffix(href, "/")),
 			})
 		}
 	})
