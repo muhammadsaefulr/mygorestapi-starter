@@ -155,11 +155,7 @@ func (a *OdAnimeController) GetAnimeDetails(c *fiber.Ctx) error {
 	}
 
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorDetails{
-			Code:    fiber.StatusInternalServerError,
-			Status:  "error",
-			Message: "Internal Server Error",
-		})
+		return err
 	}
 
 	return c.Status(fiber.StatusOK).JSON(response.SuccessWithDetail[model.EpisodePageResult]{
@@ -183,11 +179,7 @@ func (a *OdAnimeController) GetAnimeSourceVid(c *fiber.Ctx) error {
 	animSource, err := a.AnimeService.GetAnimeSourceVid(c, judul_eps)
 
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(response.ErrorDetails{
-			Code:    fiber.StatusInternalServerError,
-			Status:  "error",
-			Message: "Internal Server Error",
-		})
+		return err
 	}
 
 	return c.Status(fiber.StatusOK).JSON(response.SuccessWithDetail[model.AnimeSourceData]{

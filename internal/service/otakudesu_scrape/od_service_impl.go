@@ -196,6 +196,10 @@ func (s *animeService) GetAnimeDetails(judul string) (model.AnimeDetail, []model
 
 	detail, eps, rekomend := modules.ScrapeAnimeDetail(mainUrl + ("/anime/" + judul))
 
+	if detail.Title == "" {
+		return model.AnimeDetail{}, nil, nil, fiber.NewError(fiber.StatusNotFound, "Data Not Found Or Invalid Param !")
+	}
+
 	return detail, eps, rekomend, nil
 }
 
@@ -214,6 +218,10 @@ func (s *animeService) GetAnimeSourceVid(ctx *fiber.Ctx, judul_eps string) (mode
 	}
 
 	animSource := modules.ScrapeAnimeSourceData(mainUrl + ("/episode/" + judul_eps))
+
+	if animSource.Title == "" {
+		return model.AnimeSourceData{}, fiber.NewError(fiber.StatusNotFound, "Data Not Found Or Invalid Param !")
+	}
 
 	s.TrackEpisodeViewRepo.Create(context.Background(), model.TrackEpisodeView{
 		UserId:         userUUID,
