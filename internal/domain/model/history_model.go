@@ -13,5 +13,6 @@ type History struct {
 	MovieEpsId   string    `gorm:"uniqueIndex:idx_history_movie_eps_id" json:"movie_eps_id"`
 	PlaybackTime int       `gorm:"not null" json:"playback_time"`
 	CreatedAt    time.Time `gorm:"autoCreateTime" json:"created_at"`
+	DetailMovie  AnimeDetail
 	UpdatedAt    time.Time
 }

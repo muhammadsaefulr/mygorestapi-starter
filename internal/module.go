@@ -66,7 +66,7 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	commentSvc := commetService.NewCommentService(commentRepo)
 
 	historyRepo := historyRepo.NewHistoryRepositoryImpl(db)
-	historySvc := HistoryService.NewHistoryService(historyRepo, validate)
+	historySvc := HistoryService.NewHistoryService(historyRepo, validate, animeSvc)
 
 	requestMovieRepo := requestMovieRepo.NewRequestMovieRepositoryImpl(db)
 	requestMovieSvc := requestMovieService.NewRequestMovieService(requestMovieRepo, validate)

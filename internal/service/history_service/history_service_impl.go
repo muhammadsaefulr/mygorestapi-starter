@@ -10,8 +10,12 @@ import (
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/history/request"
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/history/response"
+	responses "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/movie_details/response"
+
 	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	repository "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/history"
+	od_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/otakudesu_scrape"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/convert_types"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 	"github.com/sirupsen/logrus"
@@ -21,17 +25,20 @@ type HistoryService struct {
 	Log      *logrus.Logger
 	Validate *validator.Validate
 	Repo     repository.HistoryRepo
+	Anim     od_service.AnimeService
 }
 
-func NewHistoryService(repo repository.HistoryRepo, validate *validator.Validate) HistoryService {
+func NewHistoryService(repo repository.HistoryRepo, validate *validator.Validate, od_service od_service.AnimeService) HistoryService {
 	return HistoryService{
 		Log:      utils.Log,
 		Validate: validate,
 		Repo:     repo,
+		Anim:     od_service,
 	}
 }
 
-func (s *HistoryService) GetAllByUserId(c *fiber.Ctx, params *request.QueryHistory) ([]model.History, int64, error) {
+func (s *HistoryService) GetAllByUserId(c *fiber.Ctx, params *request.QueryHistory) ([]response.HistoryResponse, int64, error) {
+
 	if err := s.Validate.Struct(params); err != nil {
 		return nil, 0, err
 	}
@@ -50,7 +57,43 @@ func (s *HistoryService) GetAllByUserId(c *fiber.Ctx, params *request.QueryHisto
 		return nil, 0, fiber.NewError(fiber.StatusUnauthorized, fmt.Sprintf("Error verifying token: %s", err.Error()))
 	}
 
-	return s.Repo.GetAllByUserId(c.Context(), IdUsr, params)
+	histories, total, err := s.Repo.GetAllByUserId(c.Context(), IdUsr, params)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	var result []response.HistoryResponse
+	for _, h := range histories {
+		animeDetail, _, _, err := s.Anim.GetAnimeDetails(h.MovieId)
+		if err != nil {
+			s.Log.WithError(err).Warnf("Gagal ambil detail anime untuk MovieId %s", h.MovieId)
+			continue // skip yang gagal
+		}
+
+		res := convert_types.HistoryToResponse(&h, &responses.MovieDetailOnlyResponse{
+			MovieID:      h.MovieId,
+			MovieType:    "anime",
+			ThumbnailURL: animeDetail.ThumbnailURL,
+			Title:        animeDetail.Title,
+			Rating:       animeDetail.Rating,
+			Producer:     animeDetail.Producer,
+			Status:       animeDetail.Status,
+			TotalEps:     animeDetail.TotalEps,
+			Studio:       animeDetail.Studio,
+			ReleaseDate:  animeDetail.ReleaseDate,
+			Synopsis:     animeDetail.Synopsis,
+			Genres: func() []string {
+				titles := make([]string, len(animeDetail.Genres))
+				for i, g := range animeDetail.Genres {
+					titles[i] = g.Title
+				}
+				return titles
+			}(),
+		})
+		result = append(result, res)
+	}
+
+	return result, total, nil
 }
 
 func (s *HistoryService) GetByID(c *fiber.Ctx, id uint) (*model.History, error) {

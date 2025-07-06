@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	request "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/history/request"
+	responses "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/history/response"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/history_service"
@@ -39,7 +40,7 @@ func (h *HistoryController) GetAllHistoryByUserId(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.Status(fiber.StatusOK).JSON(response.SuccessWithPaginate[model.History]{
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithPaginate[responses.HistoryResponse]{
 		Code:         fiber.StatusOK,
 		Status:       "success",
 		Message:      "Successfully retrieved data",
