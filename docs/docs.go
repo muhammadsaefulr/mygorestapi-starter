@@ -714,6 +714,53 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/mdl": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "mdl"
+                ],
+                "summary": "Get all mdl",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search term",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "popular",
+                            "trending",
+                            "ongoing",
+                            "rekom"
+                        ],
+                        "type": "string",
+                        "default": "popular",
+                        "description": "Discovery category",
+                        "name": "category",
+                        "in": "query"
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/movie/details": {
             "get": {
                 "produces": [
@@ -1547,7 +1594,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "default": 10,
-                        "description": "Items per page",
+                        "description": "Items per page, max limit 20",
                         "name": "limit",
                         "in": "query"
                     },

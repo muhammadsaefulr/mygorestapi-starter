@@ -32,6 +32,7 @@ import (
 	systemService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/system_service"
 
 	AnilistService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/anilist_service"
+	mdlService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/mdl_service"
 	tmdbService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/tmdb_service"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/validation"
@@ -80,6 +81,7 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 
 	anilistSvc := AnilistService.NewAnilistService(validate)
 	tmdbSvc := tmdbService.NewTMDbService(validate)
+	mdlSvc := mdlService.NewMdlService(validate)
 
 	// Native Upload Data Manual
 
@@ -107,6 +109,7 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 
 	router.TmdbRoutes(v1, tmdbSvc)
 	router.AnilistRoutes(v1, anilistSvc)
+	router.MdlRoutes(v1, mdlSvc)
 
 	// Native Upload Data Manual
 

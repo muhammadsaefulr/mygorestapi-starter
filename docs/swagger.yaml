@@ -1642,6 +1642,39 @@ paths:
       summary: Update a history
       tags:
       - history
+  /mdl:
+    get:
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      - description: Search term
+        in: query
+        name: search
+        type: string
+      - default: popular
+        description: Discovery category
+        enum:
+        - popular
+        - trending
+        - ongoing
+        - rekom
+        in: query
+        name: category
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Get all mdl
+      tags:
+      - mdl
   /movie/details:
     get:
       parameters:
@@ -2177,7 +2210,7 @@ paths:
         name: page
         type: integer
       - default: 10
-        description: Items per page
+        description: Items per page, max limit 20
         in: query
         name: limit
         type: integer
