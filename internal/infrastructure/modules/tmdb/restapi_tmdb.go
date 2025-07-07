@@ -19,6 +19,11 @@ func FetchTMDbMedia(category, queryTitle, mediaType string, param *request.Query
 	baseURL := "https://api.themoviedb.org/3"
 	var endpoint string
 
+	limit := param.Limit
+	if limit == 0 {
+		limit = 20
+	}
+
 	switch category {
 	case "popular":
 		endpoint = fmt.Sprintf("%s/%s/popular", baseURL, mediaType)
@@ -58,6 +63,10 @@ func FetchTMDbMedia(category, queryTitle, mediaType string, param *request.Query
 	if len(result.Results) == 0 {
 		fmt.Println(">>> [WARNING] Empty result from TMDb")
 		return nil, nil
+	}
+
+	if len(result.Results) > limit {
+		result.Results = result.Results[:limit]
 	}
 
 	var (

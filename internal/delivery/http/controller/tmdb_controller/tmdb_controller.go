@@ -24,7 +24,7 @@ func NewTmdbController(service service.TmdbServiceInterface) *TmdbController {
 // @Description  Retrieve TMDb-based data (movie) by category (popular, trending, etc).
 // @Produce      json
 // @Param        page     query     int     false  "Page number"       default(1)
-// @Param        limit    query     int     false  "Items per page"    default(10)
+// @Param        limit    query     int     false  "Items per page, max limit 20"    default(10)
 // @Param        type     query     string  false  "Media type"        Enums(tv, movie) default(movie)
 // @Param        category query     string  true   "Media category"    Enums(popular, trending, ongoing, rekom)
 // @Param        search   query     string  false  "Search keyword (for rekom category need this param)"
