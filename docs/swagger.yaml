@@ -1526,6 +1526,53 @@ paths:
       summary: Get comments by movie ID
       tags:
       - Comments
+  /discovery/popular:
+    get:
+      consumes:
+      - application/json
+      description: Get popular discover
+      parameters:
+      - description: Page
+        in: query
+        name: page
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Sort
+        in: query
+        name: sort
+        type: string
+      - description: Search
+        in: query
+        name: search
+        type: string
+      - default: anime
+        description: Movie Type
+        enum:
+        - anime
+        - kdrama
+        - tv
+        - movie
+        in: query
+        name: type
+        type: string
+      - default: popular
+        description: Discovery Category
+        enum:
+        - popular
+        - trending
+        - ongoing
+        in: query
+        name: category
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Get popular discover
+      tags:
+      - discovery
   /health-check:
     get:
       consumes:

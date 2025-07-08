@@ -531,6 +531,73 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/discovery/popular": {
+            "get": {
+                "description": "Get popular discover",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "discovery"
+                ],
+                "summary": "Get popular discover",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort",
+                        "name": "sort",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "anime",
+                            "kdrama",
+                            "tv",
+                            "movie"
+                        ],
+                        "type": "string",
+                        "default": "anime",
+                        "description": "Movie Type",
+                        "name": "type",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "popular",
+                            "trending",
+                            "ongoing"
+                        ],
+                        "type": "string",
+                        "default": "popular",
+                        "description": "Discovery Category",
+                        "name": "category",
+                        "in": "query"
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/health-check": {
             "get": {
                 "description": "Check the status of services and database connections",
