@@ -11,6 +11,7 @@ type UpdateMdl struct {
 
 type QueryMdl struct {
 	Page     int    `query:"page"`
+	Search   string `query:"search"`
 	Limit    int    `query:"limit"`
 	Category string `query:"category"`
 	Sort     string `query:"sort"`

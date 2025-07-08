@@ -531,7 +531,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/discovery/popular": {
+        "/discovery": {
             "get": {
                 "description": "Get popular discover",
                 "consumes": [
@@ -558,18 +558,6 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
-                        "type": "string",
-                        "description": "Sort",
-                        "name": "sort",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Search",
-                        "name": "search",
-                        "in": "query"
-                    },
-                    {
                         "enum": [
                             "anime",
                             "kdrama",
@@ -586,12 +574,19 @@ const docTemplate = `{
                         "enum": [
                             "popular",
                             "trending",
-                            "ongoing"
+                            "ongoing",
+                            "search"
                         ],
                         "type": "string",
                         "default": "popular",
                         "description": "Discovery Category",
                         "name": "category",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search term (Only used when category=search)",
+                        "name": "search",
                         "in": "query"
                     }
                 ],
@@ -1469,6 +1464,135 @@ const docTemplate = `{
                     "Otakudesu"
                 ],
                 "summary": "Get trending anime",
+                "responses": {}
+            }
+        },
+        "/report_error": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "report_error"
+                ],
+                "summary": "Get all report_error",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search term",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {}
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "report_error"
+                ],
+                "summary": "Create a new report_error",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_report_error_request.CreateReportError"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/report_error/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "report_error"
+                ],
+                "summary": "Get a report_error by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ReportError ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "report_error"
+                ],
+                "summary": "Delete a report_error",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ReportError ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "report_error"
+                ],
+                "summary": "Update a report_error",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ReportError ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_report_error_request.UpdateReportError"
+                        }
+                    }
+                ],
                 "responses": {}
             }
         },
@@ -2918,10 +3042,6 @@ const docTemplate = `{
                 "title": {
                     "type": "string",
                     "example": "Wu Nao Monü"
-                },
-                "total_eps": {
-                    "type": "string",
-                    "example": "15"
                 }
             }
         },
@@ -2980,10 +3100,6 @@ const docTemplate = `{
                 "title": {
                     "type": "string",
                     "example": "Wu Nao Monü"
-                },
-                "total_eps": {
-                    "type": "string",
-                    "example": "15"
                 }
             }
         },
@@ -3003,6 +3119,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "movie_type": {
+                    "type": "string"
+                },
+                "path_url": {
                     "type": "string"
                 },
                 "producer": {
@@ -3075,6 +3194,22 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_report_error_request.CreateReportError": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_report_error_request.UpdateReportError": {
+            "type": "object",
+            "properties": {
+                "name": {
                     "type": "string"
                 }
             }
@@ -3701,9 +3836,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "title": {
-                    "type": "string"
-                },
-                "total_eps": {
+                    "description": "Di title harus sama seperti source anilist atau sebgainya, karena title ini akan digunakan sebagai key finding",
                     "type": "string"
                 },
                 "updated_at": {

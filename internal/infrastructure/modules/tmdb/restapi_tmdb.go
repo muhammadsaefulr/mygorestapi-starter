@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"strconv"
 	"sync"
 
@@ -34,8 +35,11 @@ func FetchTMDbMedia(category, queryTitle, mediaType string, param *request.Query
 			return nil, fmt.Errorf("ongoing hanya tersedia untuk tv show (kdrama)")
 		}
 		endpoint = fmt.Sprintf("%s/tv/on_the_air", baseURL)
-	case "rekom":
-		endpoint = fmt.Sprintf("%s/search/%s?query=%s", baseURL, mediaType, queryTitle)
+	case "search":
+		if queryTitle == "" {
+			return nil, fmt.Errorf("query title tidak boleh kosong untuk pencarian")
+		}
+		endpoint = fmt.Sprintf("%s/search/%s?query=%s", baseURL, mediaType, url.QueryEscape(queryTitle))
 	default:
 		return nil, fmt.Errorf("invalid category")
 	}
@@ -72,7 +76,7 @@ func FetchTMDbMedia(category, queryTitle, mediaType string, param *request.Query
 	var (
 		movies    = make([]response.MovieDetailOnlyResponse, len(result.Results))
 		wg        sync.WaitGroup
-		semaphore = make(chan struct{}, 8)
+		semaphore = make(chan struct{}, 10)
 	)
 
 	for i, item := range result.Results {
@@ -141,7 +145,7 @@ func MapTMDbToMovieDetailsWithDetail(item model.TMDbResult, mediaType string, de
 		MovieType:    mediaType,
 		ThumbnailURL: "https://image.tmdb.org/t/p/w500" + item.PosterPath,
 		Title:        title,
-		Rating:       fmt.Sprintf("%.1f", item.VoteAverage*10),
+		Rating:       fmt.Sprintf("%.1f", item.VoteAverage),
 		Status:       detail.Status,
 		TotalEps:     totalEps,
 		Studio:       studio,

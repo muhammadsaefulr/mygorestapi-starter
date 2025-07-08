@@ -135,7 +135,7 @@ func GetDramaDetail(parentCtx context.Context, urlstr string) (response.MovieDet
 	}, nil
 }
 
-func FetchMDLMedia(ctx context.Context, category string, page, limit int) ([]response.MovieDetailOnlyResponse, int, int, error) {
+func FetchMDLMedia(ctx context.Context, category string, search string, page, limit int) ([]response.MovieDetailOnlyResponse, int, int, error) {
 	var html string
 
 	base := "https://mydramalist.com/search?adv=titles&ty=68&co=3"
@@ -146,6 +146,8 @@ func FetchMDLMedia(ctx context.Context, category string, page, limit int) ([]res
 		base += "&so=popular"
 	case "ongoing":
 		base += "&st=1"
+	case "search":
+		base += "&st=1&q=" + url.QueryEscape(search)
 	default:
 		return nil, 0, 0, fmt.Errorf("kategori tidak dikenali: %s", category)
 	}

@@ -581,9 +581,6 @@ definitions:
       title:
         example: Wu Nao Monü
         type: string
-      total_eps:
-        example: "15"
-        type: string
     required:
     - genres
     - movie_id
@@ -633,9 +630,6 @@ definitions:
       title:
         example: Wu Nao Monü
         type: string
-      total_eps:
-        example: "15"
-        type: string
     required:
     - genres
     - movie_type
@@ -653,6 +647,8 @@ definitions:
       movie_id:
         type: string
       movie_type:
+        type: string
+      path_url:
         type: string
       producer:
         type: string
@@ -702,6 +698,16 @@ definitions:
       title:
         type: string
       url:
+        type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_report_error_request.CreateReportError:
+    properties:
+      name:
+        type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_report_error_request.UpdateReportError:
+    properties:
+      name:
         type: string
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_request.CreateRequestMovie:
@@ -1128,8 +1134,8 @@ definitions:
       thumbnail_url:
         type: string
       title:
-        type: string
-      total_eps:
+        description: Di title harus sama seperti source anilist atau sebgainya, karena
+          title ini akan digunakan sebagai key finding
         type: string
       updated_at:
         type: string
@@ -1526,7 +1532,7 @@ paths:
       summary: Get comments by movie ID
       tags:
       - Comments
-  /discovery/popular:
+  /discovery:
     get:
       consumes:
       - application/json
@@ -1540,14 +1546,6 @@ paths:
         in: query
         name: limit
         type: integer
-      - description: Sort
-        in: query
-        name: sort
-        type: string
-      - description: Search
-        in: query
-        name: search
-        type: string
       - default: anime
         description: Movie Type
         enum:
@@ -1564,8 +1562,13 @@ paths:
         - popular
         - trending
         - ongoing
+        - search
         in: query
         name: category
+        type: string
+      - description: Search term (Only used when category=search)
+        in: query
+        name: search
         type: string
       produces:
       - application/json
@@ -2141,6 +2144,93 @@ paths:
       summary: Get trending anime
       tags:
       - Otakudesu
+  /report_error:
+    get:
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      - description: Search term
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Get all report_error
+      tags:
+      - report_error
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_report_error_request.CreateReportError'
+      produces:
+      - application/json
+      responses: {}
+      summary: Create a new report_error
+      tags:
+      - report_error
+  /report_error/{id}:
+    delete:
+      parameters:
+      - description: ReportError ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Delete a report_error
+      tags:
+      - report_error
+    get:
+      parameters:
+      - description: ReportError ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Get a report_error by ID
+      tags:
+      - report_error
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: ReportError ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_report_error_request.UpdateReportError'
+      produces:
+      - application/json
+      responses: {}
+      summary: Update a report_error
+      tags:
+      - report_error
   /request-movie:
     get:
       parameters:

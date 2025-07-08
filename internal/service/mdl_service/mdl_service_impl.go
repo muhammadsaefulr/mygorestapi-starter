@@ -37,7 +37,7 @@ func (s *MdlService) GetAll(c *fiber.Ctx, params *request.QueryMdl) ([]response.
 	chromeCtx, cancel := modules.NewChromeContext()
 	defer cancel()
 
-	result, total, totalPages, err := modules.FetchMDLMedia(chromeCtx, params.Category, params.Page, params.Limit)
+	result, total, totalPages, err := modules.FetchMDLMedia(chromeCtx, params.Category, params.Search, params.Page, params.Limit)
 
 	if err != nil {
 		return nil, 0, 0, fiber.NewError(fiber.StatusInternalServerError, "Internal server error: "+err.Error())

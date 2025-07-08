@@ -96,7 +96,7 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 
 	// Dynamic Orchestrator Source
 
-	discoverySvc := discoverySvc.NewDiscoveryService(validate, anilistSvc, tmdbSvc, mdlSvc)
+	discoverySvc := discoverySvc.NewDiscoveryService(validate, anilistSvc, tmdbSvc, mdlSvc, animeSvc, movieDetailSvc)
 
 	middleware.InitAuthMiddleware(userSvc)
 

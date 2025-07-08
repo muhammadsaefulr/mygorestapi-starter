@@ -30,7 +30,8 @@ func NewMovieDetailsService(repo repository.MovieDetailsRepo, validate *validato
 
 func (s *MovieDetailsService) GetAll(c *fiber.Ctx, params *request.QueryMovieDetails) ([]model.MovieDetails, int64, error) {
 	if err := s.Validate.Struct(params); err != nil {
-		return nil, 0, err
+		return nil, 0, err // Jika MovieID dari MovieDetailService kosong, coba cari di OdService
+
 	}
 	if params.Page < 1 {
 		params.Page = 1

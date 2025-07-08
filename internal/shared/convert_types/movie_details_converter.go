@@ -2,6 +2,7 @@ package convert_types
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/movie_details/request"
@@ -18,7 +19,6 @@ func CreateMovieDetailsToModel(req *request.CreateMovieDetails) *model.MovieDeta
 		Rating:       req.Rating,
 		Producer:     req.Producer,
 		Status:       req.Status,
-		TotalEps:     req.TotalEps,
 		Studio:       req.Studio,
 		ReleaseDate:  req.ReleaseDate,
 		Synopsis:     req.Synopsis,
@@ -35,7 +35,6 @@ func UpdateMovieDetailsToModel(req *request.UpdateMovieDetails) *model.MovieDeta
 		Rating:       req.Rating,
 		Producer:     req.Producer,
 		Status:       req.Status,
-		TotalEps:     req.TotalEps,
 		Studio:       req.Studio,
 		ReleaseDate:  req.ReleaseDate,
 		Synopsis:     req.Synopsis,
@@ -73,7 +72,7 @@ func MovieDetailsModelToResp(
 			Rating:       m.Rating,
 			Producer:     m.Producer,
 			Status:       m.Status,
-			TotalEps:     m.TotalEps,
+			TotalEps:     strconv.Itoa(len(episodesResp)),
 			Studio:       m.Studio,
 			ReleaseDate:  m.ReleaseDate,
 			Synopsis:     m.Synopsis,

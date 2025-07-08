@@ -12,5 +12,5 @@ func DiscoveryRoutes(v1 fiber.Router, c service.DiscoveryServiceInterface) {
 
 	group := v1.Group("/discovery")
 
-	group.Get("/popular", discoveryController.GetDiscover)
+	group.Get("/", discoveryController.GetDiscover)
 }

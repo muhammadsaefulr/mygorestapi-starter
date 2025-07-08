@@ -28,10 +28,17 @@ func NewDiscoveryController(service service.DiscoveryServiceInterface) *Discover
 // @Param        page query     int     false "Page"
 // @Param        limit query    int     false "Limit"
 // @Param        type query     string  false  "Movie Type"  Enums(anime, kdrama, tv, movie)  default(anime)
-// @Param        category query string  false  "Discovery Category"  Enums(popular, trending, ongoing)  default(popular)
-// @Router       /discovery/popular [get]
+// @Param        category query string  false  "Discovery Category"  Enums(popular, trending, ongoing, search)  default(popular)
+// @Param        search query string false "Search term (Only used when category=search)"
+// @Router       /discovery [get]
 func (c *DiscoveryController) GetDiscover(ctx *fiber.Ctx) error {
-	params := &request.QueryDiscovery{}
+	params := &request.QueryDiscovery{
+		Page:     ctx.QueryInt("page", 1),
+		Limit:    ctx.QueryInt("limit", 10),
+		Category: ctx.Query("category"),
+		Search:   ctx.Query("search"),
+		Type:     ctx.Query("type"),
+	}
 
 	if err := ctx.QueryParser(params); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid query params")
@@ -46,7 +53,7 @@ func (c *DiscoveryController) GetDiscover(ctx *fiber.Ctx) error {
 
 	data, total, err := c.Service.GetDiscover(ctx, params)
 	if err != nil {
-		log.Printf("GetPopularDiscover error: %v", err) // ✅ Tambah ini
+		log.Printf("GetPopularDiscover error: %v", err)
 		return err
 	}
 

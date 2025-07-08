@@ -13,7 +13,6 @@ type QueryDiscovery struct {
 	Page     int    `query:"page"`
 	Limit    int    `query:"limit"`
 	Category string `query:"category"`
-	Sort     string `query:"sort"`
 	Search   string `query:"search"`
 	Type     string `query:"type"`
 }

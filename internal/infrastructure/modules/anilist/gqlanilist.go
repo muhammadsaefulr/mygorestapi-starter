@@ -30,6 +30,8 @@ func FetchAniListMedia(category, queryTitle string, param *request.QueryAnilist)
 		variables["status"] = "RELEASING"
 	case "rekom":
 		variables["search"] = queryTitle
+	case "search":
+		variables["search"] = param.Search
 	default:
 		return nil, fmt.Errorf("invalid category")
 	}

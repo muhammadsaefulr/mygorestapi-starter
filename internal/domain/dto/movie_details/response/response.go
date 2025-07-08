@@ -13,15 +13,16 @@ type EpisodesResponse struct {
 type MovieDetailOnlyResponse struct {
 	MovieID      string     `json:"movie_id,omitempty"`
 	MovieType    string     `json:"movie_type"`
+	PathURL      string     `json:"path_url,omitempty"`
 	ThumbnailURL string     `json:"thumbnail_url"`
 	Title        string     `json:"title"`
-	Rating       string     `json:"rating"`
+	Rating       string     `json:"rating,omitempty"`
 	Producer     string     `json:"producer,omitempty"`
-	Status       string     `json:"status"`
+	Status       string     `json:"status,omitempty"`
 	TotalEps     string     `json:"total_eps,omitempty"`
-	Studio       string     `json:"studio"`
-	ReleaseDate  string     `json:"release_date"`
-	Synopsis     string     `json:"synopsis"`
+	Studio       string     `json:"studio,omitempty"`
+	ReleaseDate  string     `json:"release_date,omitempty"`
+	Synopsis     string     `json:"synopsis,omitempty"`
 	Genres       []string   `json:"genres"`
 	CreatedAt    *time.Time `json:"created_at,omitempty"`
 	UpdatedAt    *time.Time `json:"updated_at,omitempty"`

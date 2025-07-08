@@ -8,7 +8,6 @@ type CreateMovieDetails struct {
 	Rating       string   `json:"rating" example:"5.9"`
 	Producer     string   `json:"producer" example:"Agate"`
 	Status       string   `json:"status" example:"complete"`
-	TotalEps     string   `json:"total_eps" example:"15"`
 	Studio       string   `json:"studio" example:"Agate"`
 	ReleaseDate  string   `json:"release_date" example:"2023-05-01"`
 	Synopsis     string   `json:"synopsis" example:"Agate is a demon girl cursed with an eternal life. To forget the past, she throws half of her head into a deep valley and runs away. Unexpectedly, the tears flood the valley floor and form into a lake, triggering a flood in hell. Aloys, the Prince of Ghost comes to the Human World to find out the truth and finally finds the demon girl, starting a story of life and love."`
@@ -23,7 +22,6 @@ type UpdateMovieDetails struct {
 	Rating       string   `json:"rating" example:"5.9"`
 	Producer     string   `json:"producer" example:"Agate"`
 	Status       string   `json:"status" example:"complete"`
-	TotalEps     string   `json:"total_eps" example:"15"`
 	Studio       string   `json:"studio" example:"Agate"`
 	ReleaseDate  string   `json:"release_date" example:"2023-05-01"`
 	Synopsis     string   `json:"synopsis" example:"Agate is a demon girl cursed with an eternal life. To forget the past, she throws half of her head into a deep valley and runs away. Unexpectedly, the tears flood the valley floor and form into a lake, triggering a flood in hell. Aloys, the Prince of Ghost comes to the Human World to find out the truth and finally finds the demon girl, starting a story of life and love."`
