@@ -5,7 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/movie_details/response"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/tmdb/request"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/infrastructure/modules/tmdb"
+	modules "github.com/muhammadsaefulr/NimeStreamAPI/internal/infrastructure/modules/tmdb"
 )
 
 type TMDbService struct {
@@ -31,6 +31,10 @@ func (s *TMDbService) GetAll(c *fiber.Ctx, params *request.QueryTmdb) ([]respons
 	mediaType := params.Type
 	if mediaType != "tv" && mediaType != "movie" {
 		mediaType = "movie"
+	}
+
+	if mediaType == "movie" && params.Category == "ongoing" {
+		return nil, 0, fiber.NewError(fiber.StatusBadRequest, "Ongoing Only available for tv show, drama or anime !")
 	}
 
 	result, err := modules.FetchTMDbMedia(params.Category, params.Search, mediaType, params)

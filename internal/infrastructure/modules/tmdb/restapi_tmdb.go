@@ -47,7 +47,7 @@ func FetchTMDbMedia(category, queryTitle, mediaType string, param *request.Query
 
 	resp, err := http.Get(endpoint)
 	if err != nil {
-		fmt.Println(">>> [ERROR] Failed fetch main list:", err)
+		// fmt.Println(">>> [ERROR] Failed fetch main list:", err)
 		return nil, err
 	}
 	defer resp.Body.Close()
@@ -72,7 +72,7 @@ func FetchTMDbMedia(category, queryTitle, mediaType string, param *request.Query
 	var (
 		movies    = make([]response.MovieDetailOnlyResponse, len(result.Results))
 		wg        sync.WaitGroup
-		semaphore = make(chan struct{}, 5)
+		semaphore = make(chan struct{}, 8)
 	)
 
 	for i, item := range result.Results {
@@ -84,7 +84,7 @@ func FetchTMDbMedia(category, queryTitle, mediaType string, param *request.Query
 			defer func() { <-semaphore }()
 
 			detailURL := fmt.Sprintf("%s/%s/%d?api_key=%s", baseURL, mediaType, item.ID, tmdbApiKey)
-			fmt.Println(">>> [DEBUG] Fetching detail:", detailURL)
+			// fmt.Println(">>> [DEBUG] Fetching detail:", detailURL)
 
 			detailResp, err := http.Get(detailURL)
 			if err != nil {
