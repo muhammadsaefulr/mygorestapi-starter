@@ -34,6 +34,9 @@ import (
 	AnilistService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/anilist_service"
 	mdlService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/mdl_service"
 	tmdbService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/tmdb_service"
+
+	discoverySvc "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/discovery_service"
+
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/validation"
 
@@ -91,6 +94,10 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	movieUploaderRepo := movieUploaderRepo.NewMovieEpisodeRepositoryImpl(db)
 	movieUploaderSvc := movieUploaderSvc.NewMovieEpisodeService(movieUploaderRepo, validate, uploader, movieDetailSvc)
 
+	// Dynamic Orchestrator Source
+
+	discoverySvc := discoverySvc.NewDiscoveryService(validate, anilistSvc, tmdbSvc, mdlSvc)
+
 	middleware.InitAuthMiddleware(userSvc)
 
 	v1 := app.Group("/api/v1")
@@ -110,6 +117,10 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	router.TmdbRoutes(v1, tmdbSvc)
 	router.AnilistRoutes(v1, anilistSvc)
 	router.MdlRoutes(v1, mdlSvc)
+
+	// Dynamic Orchestrator Source
+
+	router.DiscoveryRoutes(v1, discoverySvc)
 
 	// Native Upload Data Manual
 
