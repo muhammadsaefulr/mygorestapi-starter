@@ -15,5 +15,4 @@ type QueryAnilist struct {
 	Sort     string `query:"sort"`
 	Search   string `query:"search"`
 	Category string `query:"category"` // contoh: "popular", "ongoing", "trending"
-	Rekom    string `query:"rekom"`    // optional, contoh: "one piece"
 }
