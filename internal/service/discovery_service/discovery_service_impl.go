@@ -231,7 +231,7 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 						for _, od := range odResults {
 							if od.URL != "" {
 								d.MovieID = od.URL
-								d.PathURL = "/otakudesu/detail/ " + od.URL
+								d.PathURL = "/otakudesu/detail/" + od.URL
 								filtered = append(filtered, d)
 								break
 							}
