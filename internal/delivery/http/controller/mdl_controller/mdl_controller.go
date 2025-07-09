@@ -17,7 +17,7 @@ func NewMdlController(service service.MdlServiceInterface) *MdlController {
 	return &MdlController{Service: service}
 }
 
-// @Tags         mdl
+// @Tags         Mdl
 // @Summary      Get all mdl
 // @Produce      json
 // @Param        page   query     int     false  "Page number"  default(1)
@@ -46,5 +46,27 @@ func (h *MdlController) GetAllMdl(c *fiber.Ctx) error {
 		Limit:        query.Limit,
 		TotalPages:   totalPages,
 		TotalResults: total,
+	})
+}
+
+// @Tags         Mdl
+// @Summary      Get a movie_details by ID
+// @Produce      json
+// @Param        id  path  string  true  "MovieDetails ID (uint)"
+// @success      200    {object}  response.SuccessWithDetail[responses.MovieDetailOnlyResponse]  "Data retrieved successfully"
+// @Router       /mdl/{id} [get]
+func (h *MdlController) GetMdlByID(c *fiber.Ctx) error {
+	idStr := c.Params("id")
+
+	result, err := h.Service.GetDetailByID(c, idStr)
+	if err != nil {
+		return err
+	}
+
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithDetail[responses.MovieDetailOnlyResponse]{
+		Code:    fiber.StatusOK,
+		Status:  "success",
+		Message: "Data retrieved successfully",
+		Data:    *result,
 	})
 }

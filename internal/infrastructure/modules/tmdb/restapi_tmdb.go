@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -114,6 +115,55 @@ func FetchTMDbMedia(category, queryTitle, mediaType string, param *request.Query
 	return movies, nil
 }
 
+func FetchTMDbDetail(id int, mediaType string, withRekom bool) (response.MovieDetailOnlyResponse, error) {
+	baseURL := "https://api.themoviedb.org/3"
+	apiKey := tmdbApiKey
+
+	detailURL := fmt.Sprintf("%s/%s/%d?api_key=%s&language=en-US", baseURL, mediaType, id, apiKey)
+	detailResp, err := http.Get(detailURL)
+	if err != nil {
+		return response.MovieDetailOnlyResponse{}, fmt.Errorf("failed to fetch detail: %w", err)
+	}
+	defer detailResp.Body.Close()
+
+	var detail model.TMDbDetailResponse
+	if err := json.NewDecoder(detailResp.Body).Decode(&detail); err != nil {
+		return response.MovieDetailOnlyResponse{}, fmt.Errorf("decode detail failed: %w", err)
+	}
+	main := MapTMDbToMovieDetailsWithDetail(model.TMDbResult{ID: id}, mediaType, detail)
+
+	rekomURL := fmt.Sprintf("%s/%s/%d/recommendations?api_key=%s&language=en-US&page=1", baseURL, mediaType, id, apiKey)
+	rekomResp, err := http.Get(rekomURL)
+	if err != nil {
+		log.Printf("⚠️ TMDb recommendation fetch error: %v", err)
+		return main, nil
+	}
+	defer rekomResp.Body.Close()
+
+	var rekomResult model.TMDbResponse
+	if err := json.NewDecoder(rekomResp.Body).Decode(&rekomResult); err != nil {
+		log.Printf("⚠️ TMDb recommendation decode error: %v", err)
+		return main, nil
+	}
+
+	if len(rekomResult.Results) > 0 {
+		rekomID := rekomResult.Results[0].ID
+
+		rekomDetailURL := fmt.Sprintf("%s/%s/%d?api_key=%s", baseURL, mediaType, rekomID, apiKey)
+		rekomDetailResp, err := http.Get(rekomDetailURL)
+		if err == nil {
+			defer rekomDetailResp.Body.Close()
+			var rekomDetail model.TMDbDetailResponse
+			if err := json.NewDecoder(rekomDetailResp.Body).Decode(&rekomDetail); err == nil {
+				rekom := MapTMDbToMovieDetailsWithDetail(rekomResult.Results[0], mediaType, rekomDetail)
+				main.Rekomend = &[]response.MovieDetailOnlyResponse{rekom}
+			}
+		}
+	}
+
+	return main, nil
+}
+
 func MapTMDbToMovieDetailsWithDetail(item model.TMDbResult, mediaType string, detail model.TMDbDetailResponse) response.MovieDetailOnlyResponse {
 	title := item.Title
 	if mediaType == "tv" {
@@ -140,7 +190,12 @@ func MapTMDbToMovieDetailsWithDetail(item model.TMDbResult, mediaType string, de
 		totalEps = strconv.Itoa(detail.NumberOfEpisodes)
 	}
 
+	// log.Println(item.ID)
+
+	// strconv.Itoa(item.ID)
+
 	res := response.MovieDetailOnlyResponse{
+		IDSource:     strconv.Itoa(item.ID),
 		MovieID:      "",
 		MovieType:    mediaType,
 		ThumbnailURL: "https://image.tmdb.org/t/p/w500" + item.PosterPath,

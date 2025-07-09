@@ -1,6 +1,8 @@
 package service
 
 import (
+	"log"
+	"net/url"
 	"strings"
 	"sync"
 
@@ -67,88 +69,124 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 	)
 
 	if strings.ToLower(params.Category) == "search" {
+		log.Println(params.Type)
 		switch strings.ToLower(params.Type) {
 		case "anime":
 			wg.Add(1)
 			go func() {
 				defer wg.Done()
-
 				tmp := *params
-				movieData, page, err := s.MovieSvc.GetAll(c, convert_types.MapToMovieDtQuery(&tmp))
+
+				movieData, _, err := s.MovieSvc.GetAll(c, convert_types.MapToMovieDtQuery(&tmp))
 				if err != nil {
-					s.Log.Errorf("MovieSvc.GetAll error: %v", err)
-					mu.Lock()
-					if firstErr == nil {
-						firstErr = err
-					}
-					mu.Unlock()
-					return
+					s.Log.Errorf("MovieSvc.GetAll error (anime): %v", err)
 				}
 
-				var filtered []response.MovieDetailOnlyResponse
+				anilistResults, _, err := s.AnilistSvc.GetAll(c, convert_types.MapToAnilistQuery(&tmp))
+				if err != nil || len(anilistResults) == 0 {
+					s.Log.Errorf("Anilist fetch error: %v", err)
+					return
+				}
+				main := anilistResults[0]
 
 				if len(movieData) > 0 {
-					converted := convert_types.ConvertMvDetailToOnlyResp(movieData)
-					for _, d := range converted {
-						if d.MovieID != "" {
-							filtered = append(filtered, d)
-						}
-					}
+					main.MovieID = movieData[0].MovieID
+					main.PathURL = "/movie/details/" + movieData[0].MovieID
 				} else {
 					odResults, err := s.OdService.GetAnimeByTitle(tmp.Search)
 					if err == nil && len(odResults) > 0 {
-						for _, od := range odResults {
-							if od.Title != "" && od.URL != "" {
-								filtered = append(filtered, response.MovieDetailOnlyResponse{
-									Title:        od.Title,
-									MovieID:      od.URL,
-									MovieType:    "anime",
-									PathURL:      "/otakudesu/detail/" + od.URL,
-									ThumbnailURL: od.ThumbnailURL,
-									Genres: func() (r []string) {
-										for _, g := range od.Genres {
-											r = append(r, g.Title)
-										}
-										return
-									}()})
-							}
-						}
+						main.MovieID = odResults[0].URL
+						main.PathURL = "/otakudesu/detail/" + odResults[0].URL
 					}
 				}
 
-				mu.Lock()
-				results = append(results, filtered...)
-				pageRes = page
-				mu.Unlock()
-			}()
-
-		default:
-			wg.Add(1)
-			go func() {
-				defer wg.Done()
-
-				movieData, page, err := s.MovieSvc.GetAll(c, convert_types.MapToMovieDtQuery(params))
-				if err != nil {
-					s.Log.Errorf("MovieSvc.GetAll error: %v", err)
+				if main.PathURL == "" {
 					mu.Lock()
-					if firstErr == nil {
-						firstErr = err
-					}
+					firstErr = fiber.NewError(fiber.StatusNotFound, "Tidak ditemukan di MovieDetails maupun OD")
 					mu.Unlock()
 					return
 				}
 
-				movDataRes := convert_types.ConvertMvDetailToOnlyResp(movieData)
+				mu.Lock()
+				results = append(results, main)
+				pageRes = 1
+				mu.Unlock()
+			}()
+
+		case "movie", "tv":
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				tmp := *params
+
+				movieData, _, err := s.MovieSvc.GetAll(c, convert_types.MapToMovieDtQuery(&tmp))
+				if err != nil {
+					s.Log.Errorf("MovieSvc.GetAll error (%s): %v", tmp.Type, err)
+				}
+
+				tmdbResults, _, err := s.TmdbSvc.GetAll(c, convert_types.MapToTmdbQuery(&tmp))
+				if err != nil || len(tmdbResults) == 0 {
+					s.Log.Errorf("TMDb fetch error: %v", err)
+					return
+				}
+				main := tmdbResults[0]
+
+				if len(movieData) > 0 {
+					main.MovieID = movieData[0].MovieID
+					main.PathURL = "/movie/details/" + movieData[0].MovieID
+				}
+
+				if main.PathURL == "" {
+					mu.Lock()
+					firstErr = fiber.NewError(fiber.StatusNotFound, "Tidak ditemukan di MovieDetails")
+					mu.Unlock()
+					return
+				}
 
 				mu.Lock()
-				results = append(results, movDataRes...)
-				pageRes = page
+				results = append(results, main)
+				pageRes = 1
+				mu.Unlock()
+			}()
+
+		case "kdrama":
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				tmp := *params
+
+				movieData, _, err := s.MovieSvc.GetAll(c, convert_types.MapToMovieDtQuery(&tmp))
+				if err != nil {
+					s.Log.Errorf("MovieSvc.GetAll error (kdrama): %v", err)
+				}
+
+				mdlResults, _, _, err := s.MdlSvc.GetAll(c, convert_types.MapToMdlQuery(&tmp))
+				if err != nil || len(mdlResults) == 0 {
+					s.Log.Errorf("MDL fetch error: %v", err)
+					return
+				}
+				main := mdlResults[0]
+
+				if len(movieData) > 0 {
+					main.MovieID = movieData[0].MovieID
+					main.PathURL = "/movie/details/" + movieData[0].MovieID
+				}
+
+				if main.PathURL == "" {
+					mu.Lock()
+					firstErr = fiber.NewError(fiber.StatusNotFound, "Tidak ditemukan di MovieDetails")
+					mu.Unlock()
+					return
+				}
+
+				mu.Lock()
+				results = append(results, main)
+				pageRes = 1
 				mu.Unlock()
 			}()
 		}
 
 		wg.Wait()
-
 		if firstErr != nil && len(results) == 0 {
 			return nil, 0, firstErr
 		}
@@ -284,4 +322,96 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 	}
 
 	return results, pageRes, nil
+}
+
+func (s *DiscoveryService) GetDiscoverDetailByTitle(c *fiber.Ctx, mediaType string, slug string) (*response.MovieDetailOnlyResponse, error) {
+	title := url.QueryEscape(strings.ReplaceAll(slug, "-", " "))
+	log.Println(mediaType)
+
+	params := &request.QueryDiscovery{
+		Search:   title,
+		Category: "search",
+		Type:     mediaType,
+		Page:     1,
+		Limit:    1,
+	}
+
+	results, _, err := s.GetDiscover(c, params)
+	if err != nil {
+		return nil, fiber.NewError(fiber.StatusBadGateway, "Failed to search discovery: "+err.Error())
+	}
+	if len(results) == 0 {
+		return nil, fiber.NewError(fiber.StatusNotFound, "No result found for title: "+title)
+	}
+
+	first := results[0]
+	id := first.IDSource
+	media := first.MovieType
+
+	var detail *response.MovieDetailOnlyResponse
+
+	switch strings.ToLower(mediaType) {
+	case "anime":
+		detail, err = s.AnilistSvc.GetMovieDetailsByID(c, id)
+	case "movie", "tv":
+		detail, err = s.TmdbSvc.GetDetailByID(c, id, media)
+	case "kdrama":
+		detail, err = s.MdlSvc.GetDetailByID(c, id)
+	default:
+		return nil, fiber.NewError(fiber.StatusBadRequest, "Unsupported mediaType: "+media)
+	}
+
+	if err != nil {
+		return nil, fiber.NewError(fiber.StatusBadGateway, "Failed to fetch detail: "+err.Error())
+	}
+
+	if detail != nil {
+		searchParam := &request.QueryDiscovery{Search: detail.Title}
+		movieData, _, err := s.MovieSvc.GetAll(c, convert_types.MapToMovieDtQuery(searchParam))
+		if err == nil && len(movieData) > 0 {
+			detail.MovieID = movieData[0].MovieID
+			detail.PathURL = "/movie/details/" + detail.MovieID
+		} else if media == "anime" {
+			odData, err := s.OdService.GetAnimeByTitle(detail.Title)
+			if err == nil && len(odData) > 0 {
+				detail.MovieID = odData[0].URL
+				detail.PathURL = "/otakudesu/detail/" + detail.MovieID
+			}
+		}
+	}
+
+	if detail.Rekomend != nil {
+		var finalRekom []response.MovieDetailOnlyResponse
+
+		for _, r := range *detail.Rekomend {
+			found := false
+
+			searchParam := &request.QueryDiscovery{Search: r.Title}
+			movieData, _, err := s.MovieSvc.GetAll(c, convert_types.MapToMovieDtQuery(searchParam))
+			if err == nil && len(movieData) > 0 {
+				r.MovieID = movieData[0].MovieID
+				r.PathURL = "/movie/details/" + r.MovieID
+				found = true
+			} else if media == "anime" {
+				odData, err := s.OdService.GetAnimeByTitle(r.Title)
+				if err == nil && len(odData) > 0 {
+					r.MovieID = odData[0].URL
+					r.PathURL = "/otakudesu/detail/" + r.MovieID
+					found = true
+				}
+			}
+
+			if found {
+				finalRekom = append(finalRekom, r)
+			}
+		}
+
+		if len(finalRekom) > 0 {
+			detail.Rekomend = &finalRekom
+		} else {
+			detail.Rekomend = nil
+		}
+	}
+
+	return detail, nil
 }

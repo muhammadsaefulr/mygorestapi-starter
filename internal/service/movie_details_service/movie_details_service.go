@@ -9,7 +9,7 @@ import (
 )
 
 type MovieDetailsServiceInterface interface {
-	GetAll(c *fiber.Ctx, params *request.QueryMovieDetails) ([]model.MovieDetails, int64, error)
+	GetAll(c *fiber.Ctx, params *request.QueryMovieDetails) ([]response.MovieDetailOnlyResponse, int64, error)
 	GetByIDPreEps(c *fiber.Ctx, id string) (*response.MovieDetailsResponse, error)
 	GetById(c *fiber.Ctx, id string) (*model.MovieDetails, error)
 	Create(c *fiber.Ctx, req *request.CreateMovieDetails) (*model.MovieDetails, error)

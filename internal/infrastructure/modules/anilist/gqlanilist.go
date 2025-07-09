@@ -21,6 +21,8 @@ func FetchAniListMedia(category, queryTitle string, param *request.QueryAnilist)
 		"type":    "ANIME",
 	}
 
+	// log.Printf("Param: %+v", param)
+
 	switch category {
 	case "popular":
 		variables["sort"] = []string{"POPULARITY_DESC"}
@@ -28,8 +30,6 @@ func FetchAniListMedia(category, queryTitle string, param *request.QueryAnilist)
 		variables["sort"] = []string{"TRENDING_DESC"}
 	case "ongoing":
 		variables["status"] = "RELEASING"
-	case "rekom":
-		variables["search"] = queryTitle
 	case "search":
 		variables["search"] = param.Search
 	default:
@@ -38,7 +38,7 @@ func FetchAniListMedia(category, queryTitle string, param *request.QueryAnilist)
 
 	query := `query ($page: Int, $perPage: Int, $type: MediaType, $sort: [MediaSort], $search: String, $status: MediaStatus) {
 		Page(page: $page, perPage: $perPage) {
-			media(type: $type, sort: $sort, search: $search, status: $status, countryOfOrigin: "JP") {
+			media(type: $type, sort: $sort, search: $search, status: $status) {
 				id
 				title { romaji english native }
 				coverImage { large }
@@ -78,6 +78,85 @@ func FetchAniListMedia(category, queryTitle string, param *request.QueryAnilist)
 	return movies, nil
 }
 
+func FetchAniListDetail(id string) (response.MovieDetailOnlyResponse, error) {
+	query := `
+	query ($id: Int) {
+		Media(id: $id, type: ANIME) {
+			id
+			title { romaji english native }
+			coverImage { large }
+			averageScore
+			genres
+			status
+			episodes
+			studios(isMain: true) { nodes { name } }
+			startDate { year month day }
+			description
+
+			recommendations(sort: RATING_DESC, page: 1, perPage: 4) {
+				nodes {
+					mediaRecommendation {
+						id
+						title { romaji english native }
+						coverImage { large }
+						averageScore
+						genres
+						status
+						episodes
+						studios(isMain: true) { nodes { name } }
+						startDate { year month day }
+						description
+					}
+				}
+			}
+
+		}
+	}`
+
+	reqBody := map[string]interface{}{
+		"query": query,
+		"variables": map[string]interface{}{
+			"id": id,
+		},
+	}
+
+	bodyBytes, _ := json.Marshal(reqBody)
+	resp, err := http.Post("https://graphql.anilist.co", "application/json", bytes.NewBuffer(bodyBytes))
+	if err != nil {
+		return response.MovieDetailOnlyResponse{}, err
+	}
+	defer resp.Body.Close()
+
+	var result struct {
+		Data struct {
+			Media struct {
+				model.AniListMedia
+				Recommendations struct {
+					Nodes []struct {
+						MediaRecommendation model.AniListMedia `json:"mediaRecommendation"`
+					} `json:"nodes"`
+				} `json:"recommendations"`
+			} `json:"Media"`
+		} `json:"data"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return response.MovieDetailOnlyResponse{}, err
+	}
+
+	main := MapAniListToMovieDetails(result.Data.Media.AniListMedia, "anime")
+
+	if len(result.Data.Media.Recommendations.Nodes) > 0 {
+		var rekomendasiList []response.MovieDetailOnlyResponse
+		for _, node := range result.Data.Media.Recommendations.Nodes {
+			rekom := MapAniListToMovieDetails(node.MediaRecommendation, "anime")
+			rekomendasiList = append(rekomendasiList, rekom)
+		}
+		main.Rekomend = &rekomendasiList
+	}
+
+	return main, nil
+}
+
 func MapAniListToMovieDetails(m model.AniListMedia, movieType string) response.MovieDetailOnlyResponse {
 	releaseDate := fmt.Sprintf("%d-%02d-%02d", m.StartDate.Year, m.StartDate.Month, m.StartDate.Day)
 	studio := ""
@@ -85,6 +164,7 @@ func MapAniListToMovieDetails(m model.AniListMedia, movieType string) response.M
 		studio = m.Studios.Nodes[0].Name
 	}
 	return response.MovieDetailOnlyResponse{
+		IDSource:     strconv.Itoa(m.ID),
 		MovieID:      "",
 		MovieType:    movieType,
 		ThumbnailURL: m.CoverImage.Large,

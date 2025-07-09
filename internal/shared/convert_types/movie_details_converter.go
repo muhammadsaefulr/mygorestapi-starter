@@ -42,6 +42,32 @@ func UpdateMovieDetailsToModel(req *request.UpdateMovieDetails) *model.MovieDeta
 	}
 }
 
+func MovieDetailsModelToOnlyRespArr(movies []model.MovieDetails) []response.MovieDetailOnlyResponse {
+	results := make([]response.MovieDetailOnlyResponse, 0, len(movies))
+
+	for _, d := range movies {
+		results = append(results, response.MovieDetailOnlyResponse{
+			MovieID:      d.MovieID,
+			Title:        d.Title,
+			ThumbnailURL: d.ThumbnailURL,
+			PathURL:      fmt.Sprintf("/movie/details/%s", d.MovieID),
+			Genres:       d.Genres,
+			MovieType:    d.MovieType,
+			ReleaseDate:  d.ReleaseDate,
+			Studio:       d.Studio,
+			Status:       d.Status,
+			TotalEps:     strconv.Itoa(len(d.Episodes)),
+			Rating:       d.Rating,
+			Producer:     d.Producer,
+			Synopsis:     d.Synopsis,
+			CreatedAt:    &d.CreatedAt,
+			UpdatedAt:    &d.UpdatedAt,
+		})
+	}
+
+	return results
+}
+
 func MovieDetailsModelToResp(
 	movie *model.MovieDetails,
 	rekomen *model.MovieDetails,
@@ -72,6 +98,7 @@ func MovieDetailsModelToResp(
 			Rating:       m.Rating,
 			Producer:     m.Producer,
 			Status:       m.Status,
+			PathURL:      fmt.Sprintf("/movie/details/%s", m.MovieID),
 			TotalEps:     strconv.Itoa(len(episodesResp)),
 			Studio:       m.Studio,
 			ReleaseDate:  m.ReleaseDate,

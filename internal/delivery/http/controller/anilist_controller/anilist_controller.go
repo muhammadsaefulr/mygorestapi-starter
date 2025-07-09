@@ -27,8 +27,8 @@ func NewAnilistController(service service.AnilistServiceInterface) *AnilistContr
 // @Param        limit     query     int     false  "Items per page"  default(10)    minimum(1)  maximum(50)
 // @Param        category  query     string  false  "Discovery category"  Enums(popular, trending, ongoing, rekom)  default(popular)
 // @Param        search    query     string  false  "Search term. Required if category is 'rekom'"  default(one piece)
-// @Success      200       {object}  response.SuccessWithPaginate[model.MovieDetails]
-// @Router       /anilists [get]
+// @Success      200       {object}  response.SuccessWithPaginate[responses.MovieDetailOnlyResponse]
+// @Router       /anilist [get]
 func (h *AnilistController) GetAllAnilist(c *fiber.Ctx) error {
 	query := new(request.QueryAnilist)
 	if err := c.QueryParser(query); err != nil {
@@ -51,5 +51,27 @@ func (h *AnilistController) GetAllAnilist(c *fiber.Ctx) error {
 		Limit:        query.Limit,
 		TotalPages:   int64(math.Ceil(float64(total) / float64(query.Limit))),
 		TotalResults: total,
+	})
+}
+
+// @Tags         Anilist
+// @Summary      Get a movie_details by ID
+// @Produce      json
+// @Param        id  path  string  true  "MovieDetails ID (uint)"
+// @success      200    {object}  response.SuccessWithDetail[responses.MovieDetailOnlyResponse]  "Data retrieved successfully"
+// @Router       /anilist/{id} [get]
+func (h *AnilistController) GetAnilistByID(c *fiber.Ctx) error {
+	idStr := c.Params("id")
+
+	result, err := h.Service.GetMovieDetailsByID(c, idStr)
+	if err != nil {
+		return err
+	}
+
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithDetail[responses.MovieDetailOnlyResponse]{
+		Code:    fiber.StatusOK,
+		Status:  "success",
+		Message: "Data retrieved successfully",
+		Data:    *result,
 	})
 }

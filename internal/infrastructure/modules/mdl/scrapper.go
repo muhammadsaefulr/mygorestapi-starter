@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"path"
 	"strconv"
 	"strings"
 	"sync"
@@ -38,7 +39,7 @@ func NewChromeContext() (context.Context, context.CancelFunc) {
 	}
 }
 
-func GetDramaDetail(parentCtx context.Context, urlstr string) (response.MovieDetailOnlyResponse, error) {
+func GetDramaDetail(parentCtx context.Context, urlstr string, rekomend bool) (response.MovieDetailOnlyResponse, error) {
 	ctx, cancel := chromedp.NewContext(parentCtx)
 	defer cancel()
 
@@ -46,6 +47,7 @@ func GetDramaDetail(parentCtx context.Context, urlstr string) (response.MovieDet
 	defer cancel()
 
 	var html string
+	var resultDtl response.MovieDetailOnlyResponse
 	err := chromedp.Run(ctx,
 		network.Enable(),
 		network.SetBlockedURLs([]string{"*.png", "*.jpg", "*.jpeg", "*.css", "*.js", "*.woff"}),
@@ -118,8 +120,45 @@ func GetDramaDetail(parentCtx context.Context, urlstr string) (response.MovieDet
 		}
 	})
 
-	return response.MovieDetailOnlyResponse{
+	if rekomend {
+		doc.Find(".details-recommendations .rec-item").Each(func(i int, s *goquery.Selection) {
+			href, ok := s.Find("a").Attr("href")
+			if !ok {
+				return
+			}
+
+			img, _ := s.Find("img").Attr("src")
+			title, _ := s.Find("img").Attr("alt")
+
+			if strings.HasPrefix(href, "/") {
+				href = "https://mydramalist.com" + href
+			}
+
+			// Ambil slug & ID
+			slug := strings.TrimPrefix(href, "https://mydramalist.com/")
+			movieID := strings.Split(slug, "-")[0]
+
+			// Inisialisasi slice jika nil
+			if resultDtl.Rekomend == nil {
+				resultDtl.Rekomend = &[]response.MovieDetailOnlyResponse{}
+			}
+
+			rekom := response.MovieDetailOnlyResponse{
+				MovieID:      movieID,
+				Title:        title,
+				ThumbnailURL: img,
+				MovieType:    "drama",
+				PathURL:      "/drama/detail/" + movieID,
+			}
+
+			*resultDtl.Rekomend = append(*resultDtl.Rekomend, rekom)
+		})
+
+	}
+
+	resultDtl = response.MovieDetailOnlyResponse{
 		MovieType:    "drama",
+		IDSource:     path.Base(urlstr),
 		Title:        title,
 		Rating:       rating,
 		Synopsis:     synopsis,
@@ -132,11 +171,16 @@ func GetDramaDetail(parentCtx context.Context, urlstr string) (response.MovieDet
 		ThumbnailURL: thumbnail,
 		CreatedAt:    &now,
 		UpdatedAt:    &now,
-	}, nil
+	}
+
+	return resultDtl, nil
 }
 
 func FetchMDLMedia(ctx context.Context, category string, search string, page, limit int) ([]response.MovieDetailOnlyResponse, int, int, error) {
 	var html string
+
+	log.Printf("param cat: %+v", category)
+	log.Printf("param search: %+v", search)
 
 	base := "https://mydramalist.com/search?adv=titles&ty=68&co=3"
 	switch category {
@@ -148,11 +192,14 @@ func FetchMDLMedia(ctx context.Context, category string, search string, page, li
 		base += "&st=1"
 	case "search":
 		base += "&st=1&q=" + url.QueryEscape(search)
+	case "detail":
+
 	default:
 		return nil, 0, 0, fmt.Errorf("kategori tidak dikenali: %s", category)
 	}
 
 	urlStr := fmt.Sprintf("%s&page=%d", base, page)
+	log.Printf("URL: %s", urlStr)
 
 	if err := chromedp.Run(ctx,
 		network.Enable(),
@@ -218,14 +265,13 @@ func FetchMDLMedia(ctx context.Context, category string, search string, page, li
 			sem <- struct{}{}
 			defer func() { <-sem }()
 
-			detail, err := GetDramaDetail(ctx, link.URL)
+			detail, err := GetDramaDetail(ctx, link.URL, false)
 			if err != nil {
 				log.Printf("❌ gagal ambil detail %s: %v", link.URL, err)
 				return
 			}
 
 			detail.MovieID = link.MovieID
-			detail.MovieType = "drama"
 
 			mutex.Lock()
 			results = append(results, detail)

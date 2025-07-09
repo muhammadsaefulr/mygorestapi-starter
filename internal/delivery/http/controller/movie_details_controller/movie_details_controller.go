@@ -42,7 +42,7 @@ func (h *MovieDetailsController) GetAllMovieDetails(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.Status(fiber.StatusOK).JSON(response.SuccessWithPaginate[model.MovieDetails]{
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithPaginate[responses.MovieDetailOnlyResponse]{
 		Code:         fiber.StatusOK,
 		Status:       "success",
 		Message:      "Successfully retrieved data",

@@ -55,3 +55,35 @@ func (h *TmdbController) GetAllTmdb(c *fiber.Ctx) error {
 		TotalResults: total,
 	})
 }
+
+// @Tags         Tmdb
+// @Summary      Get a movie_details by ID
+// @Produce      json
+// @Param        id  path  string  true  "MovieDetails ID (uint)"
+// @Param        type  query     string  false  "Type of movie" Enums(tv, movie)  default(movie)
+// @success      200    {object}  response.SuccessWithDetail[responses.MovieDetailOnlyResponse]  "Data retrieved successfully"
+// @Router       /tmdb/{id} [get]
+func (h *TmdbController) GetTmdbByID(c *fiber.Ctx) error {
+	idStr := c.Params("id")
+	param := &request.QueryTmdb{
+		Type: c.Query("type", "movie"),
+	}
+
+	param.Search = idStr
+
+	if err := c.QueryParser(param); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, "Invalid query params")
+	}
+
+	result, err := h.Service.GetDetailByID(c, param.Search, param.Type)
+	if err != nil {
+		return err
+	}
+
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithDetail[responses.MovieDetailOnlyResponse]{
+		Code:    fiber.StatusOK,
+		Status:  "success",
+		Message: "Data retrieved successfully",
+		Data:    *result,
+	})
+}

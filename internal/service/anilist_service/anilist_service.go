@@ -9,4 +9,5 @@ import (
 
 type AnilistServiceInterface interface {
 	GetAll(c *fiber.Ctx, params *request.QueryAnilist) ([]response.MovieDetailOnlyResponse, int64, error)
+	GetMovieDetailsByID(c *fiber.Ctx, id string) (*response.MovieDetailOnlyResponse, error)
 }

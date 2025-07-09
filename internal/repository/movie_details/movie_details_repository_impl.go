@@ -25,12 +25,11 @@ func (r *MovieDetailsRepositoryImpl) GetAll(ctx context.Context, param *request.
 
 	if param.Search != "" {
 		searchPattern := "%" + param.Search + "%"
-		query = query.Where("LOWER(title) LIKE LOWER(?)", searchPattern).
-			Or("LOWER(studio) LIKE LOWER(?)", searchPattern)
+		query = query.Where("LOWER(title) LIKE LOWER(?)", searchPattern)
 	}
 
 	if param.Type != "" {
-		query = query.Where("LOWER(movie_type) LIKE LOWER(?)", "%"+param.Type+"%")
+		query = query.Where("LOWER(movie_type) = LOWER(?)", param.Type)
 	}
 
 	if err := query.Count(&total).Error; err != nil {

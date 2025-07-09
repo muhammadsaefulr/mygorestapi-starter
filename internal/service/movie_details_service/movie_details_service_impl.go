@@ -28,9 +28,9 @@ func NewMovieDetailsService(repo repository.MovieDetailsRepo, validate *validato
 	}
 }
 
-func (s *MovieDetailsService) GetAll(c *fiber.Ctx, params *request.QueryMovieDetails) ([]model.MovieDetails, int64, error) {
+func (s *MovieDetailsService) GetAll(c *fiber.Ctx, params *request.QueryMovieDetails) ([]response.MovieDetailOnlyResponse, int64, error) {
 	if err := s.Validate.Struct(params); err != nil {
-		return nil, 0, err // Jika MovieID dari MovieDetailService kosong, coba cari di OdService
+		return nil, 0, err
 
 	}
 	if params.Page < 1 {
@@ -39,7 +39,10 @@ func (s *MovieDetailsService) GetAll(c *fiber.Ctx, params *request.QueryMovieDet
 	if params.Limit < 1 {
 		params.Limit = 10
 	}
-	return s.Repo.GetAll(c.Context(), params)
+
+	dataRaw, total, err := s.Repo.GetAll(c.Context(), params)
+
+	return convert_types.MovieDetailsModelToOnlyRespArr(dataRaw), int64(total), err
 }
 
 func (s *MovieDetailsService) GetById(c *fiber.Ctx, id string) (*model.MovieDetails, error) {
@@ -47,6 +50,7 @@ func (s *MovieDetailsService) GetById(c *fiber.Ctx, id string) (*model.MovieDeta
 	if err == gorm.ErrRecordNotFound {
 		return nil, fiber.NewError(fiber.StatusNotFound, "MovieDetails not found")
 	}
+
 	if err != nil {
 		s.Log.Errorf("GetByID error: %+v", err)
 		return nil, fiber.NewError(fiber.StatusInternalServerError, "Get movie_details by ID failed")

@@ -1,6 +1,8 @@
 package service
 
 import (
+	"strconv"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/movie_details/response"
@@ -45,6 +47,7 @@ func (s *TMDbService) GetAll(c *fiber.Ctx, params *request.QueryTmdb) ([]respons
 	var responseList []response.MovieDetailOnlyResponse
 	for _, movie := range result {
 		responseList = append(responseList, response.MovieDetailOnlyResponse{
+			IDSource:     movie.IDSource,
 			MovieID:      movie.MovieID,
 			MovieType:    movie.MovieType,
 			ThumbnailURL: movie.ThumbnailURL,
@@ -60,4 +63,18 @@ func (s *TMDbService) GetAll(c *fiber.Ctx, params *request.QueryTmdb) ([]respons
 	}
 
 	return responseList, int64(len(responseList)), nil
+}
+
+func (s *TMDbService) GetDetailByID(c *fiber.Ctx, id string, typeMov string) (*response.MovieDetailOnlyResponse, error) {
+	idstr, errParseInt := strconv.Atoi(id)
+	if errParseInt != nil {
+		return &response.MovieDetailOnlyResponse{}, fiber.NewError(fiber.StatusBadRequest, "Invalid ID")
+	}
+
+	results, err := modules.FetchTMDbDetail(idstr, typeMov, true)
+	if err != nil {
+		return &response.MovieDetailOnlyResponse{}, fiber.NewError(fiber.StatusInternalServerError, "Failed To Parsing ID")
+	}
+
+	return &results, nil
 }

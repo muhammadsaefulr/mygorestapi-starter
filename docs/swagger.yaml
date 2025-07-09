@@ -644,6 +644,8 @@ definitions:
         items:
           type: string
         type: array
+      id_source:
+        type: string
       movie_id:
         type: string
       movie_type:
@@ -654,6 +656,10 @@ definitions:
         type: string
       rating:
         type: string
+      rekomend:
+        items:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response.MovieDetailOnlyResponse'
+        type: array
       release_date:
         type: string
       status:
@@ -867,6 +873,17 @@ definitions:
         maxLength: 50
         type: string
     type: object
+  ? github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response_MovieDetailOnlyResponse
+  : properties:
+      code:
+        type: integer
+      data:
+        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response.MovieDetailOnlyResponse'
+      message:
+        type: string
+      status:
+        type: string
+    type: object
   ? github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_response_RequestMovieResponse
   : properties:
       code:
@@ -944,27 +961,6 @@ definitions:
     type: object
   ? github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model_MovieDetails
   : properties:
-      code:
-        type: integer
-      data:
-        items:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieDetails'
-        type: array
-      limit:
-        type: integer
-      message:
-        type: string
-      page:
-        type: integer
-      status:
-        type: string
-      total_pages:
-        type: integer
-      total_results:
-        type: integer
-    type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-model_MovieDetails:
-    properties:
       code:
         type: integer
       data:
@@ -1193,7 +1189,7 @@ info:
   title: NimeStream API documentation
   version: 1.0.0
 paths:
-  /anilists:
+  /anilist:
     get:
       description: Retrieve anime from AniList API based on category. When using category=rekom,
         'search' is required to perform a title-based recommendation.
@@ -1232,8 +1228,26 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-model_MovieDetails'
+            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response_MovieDetailOnlyResponse'
       summary: Get anime discovery list (popular, trending, ongoing, rekomendasi)
+      tags:
+      - Anilist
+  /anilist/{id}:
+    get:
+      parameters:
+      - description: MovieDetails ID (uint)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Data retrieved successfully
+          schema:
+            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response_MovieDetailOnlyResponse'
+      summary: Get a movie_details by ID
       tags:
       - Anilist
   /auth/forgot-password:
@@ -1576,6 +1590,34 @@ paths:
       summary: Get popular discover
       tags:
       - discovery
+  /discovery/detail/{mediaType}/{title}:
+    get:
+      consumes:
+      - application/json
+      description: Get detail by title
+      parameters:
+      - description: Title
+        in: path
+        name: title
+        required: true
+        type: string
+      - default: anime
+        description: Media Type
+        enum:
+        - anime
+        - kdrama
+        - tv
+        - movie
+        in: path
+        name: mediaType
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Get detail by title
+      tags:
+      - discovery
   /health-check:
     get:
       consumes:
@@ -1724,7 +1766,25 @@ paths:
       responses: {}
       summary: Get all mdl
       tags:
-      - mdl
+      - Mdl
+  /mdl/{id}:
+    get:
+      parameters:
+      - description: MovieDetails ID (uint)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Data retrieved successfully
+          schema:
+            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response_MovieDetailOnlyResponse'
+      summary: Get a movie_details by ID
+      tags:
+      - Mdl
   /movie/details:
     get:
       parameters:
@@ -2381,6 +2441,32 @@ paths:
           schema:
             $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response_MovieDetailOnlyResponse'
       summary: Get list of TMDb media (movie)
+      tags:
+      - Tmdb
+  /tmdb/{id}:
+    get:
+      parameters:
+      - description: MovieDetails ID (uint)
+        in: path
+        name: id
+        required: true
+        type: string
+      - default: movie
+        description: Type of movie
+        enum:
+        - tv
+        - movie
+        in: query
+        name: type
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Data retrieved successfully
+          schema:
+            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response_MovieDetailOnlyResponse'
+      summary: Get a movie_details by ID
       tags:
       - Tmdb
   /users:

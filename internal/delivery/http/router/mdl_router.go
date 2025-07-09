@@ -13,4 +13,5 @@ func MdlRoutes(v1 fiber.Router, c service.MdlServiceInterface) {
 	group := v1.Group("/mdl")
 
 	group.Get("/", mdlController.GetAllMdl)
+	group.Get("/:id", mdlController.GetMdlByID)
 }

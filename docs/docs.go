@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/anilists": {
+        "/anilist": {
             "get": {
                 "description": "Retrieve anime from AniList API based on category. When using category=rekom, 'search' is required to perform a title-based recommendation.",
                 "produces": [
@@ -68,7 +68,35 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-model_MovieDetails"
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response_MovieDetailOnlyResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/anilist/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Anilist"
+                ],
+                "summary": "Get a movie_details by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "MovieDetails ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data retrieved successfully",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response_MovieDetailOnlyResponse"
                         }
                     }
                 }
@@ -593,6 +621,45 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/discovery/detail/{mediaType}/{title}": {
+            "get": {
+                "description": "Get detail by title",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "discovery"
+                ],
+                "summary": "Get detail by title",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Title",
+                        "name": "title",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "anime",
+                            "kdrama",
+                            "tv",
+                            "movie"
+                        ],
+                        "type": "string",
+                        "default": "anime",
+                        "description": "Media Type",
+                        "name": "mediaType",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/health-check": {
             "get": {
                 "description": "Check the status of services and database connections",
@@ -782,7 +849,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "mdl"
+                    "Mdl"
                 ],
                 "summary": "Get all mdl",
                 "parameters": [
@@ -821,6 +888,34 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {}
+            }
+        },
+        "/mdl/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Mdl"
+                ],
+                "summary": "Get a movie_details by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "MovieDetails ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data retrieved successfully",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response_MovieDetailOnlyResponse"
+                        }
+                    }
+                }
             }
         },
         "/movie/details": {
@@ -1825,6 +1920,45 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response_MovieDetailOnlyResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/tmdb/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Tmdb"
+                ],
+                "summary": "Get a movie_details by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "MovieDetails ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "tv",
+                            "movie"
+                        ],
+                        "type": "string",
+                        "default": "movie",
+                        "description": "Type of movie",
+                        "name": "type",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data retrieved successfully",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response_MovieDetailOnlyResponse"
                         }
                     }
                 }
@@ -3115,6 +3249,9 @@ const docTemplate = `{
                         "type": "string"
                     }
                 },
+                "id_source": {
+                    "type": "string"
+                },
                 "movie_id": {
                     "type": "string"
                 },
@@ -3129,6 +3266,12 @@ const docTemplate = `{
                 },
                 "rating": {
                     "type": "string"
+                },
+                "rekomend": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response.MovieDetailOnlyResponse"
+                    }
                 },
                 "release_date": {
                     "type": "string"
@@ -3428,6 +3571,23 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response_MovieDetailOnlyResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response.MovieDetailOnlyResponse"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_response_RequestMovieResponse": {
             "type": "object",
             "properties": {
@@ -3544,38 +3704,6 @@ const docTemplate = `{
             }
         },
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model_MovieDetails": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer"
-                },
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieDetails"
-                    }
-                },
-                "limit": {
-                    "type": "integer"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "page": {
-                    "type": "integer"
-                },
-                "status": {
-                    "type": "string"
-                },
-                "total_pages": {
-                    "type": "integer"
-                },
-                "total_results": {
-                    "type": "integer"
-                }
-            }
-        },
-        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-model_MovieDetails": {
             "type": "object",
             "properties": {
                 "code": {

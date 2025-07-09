@@ -68,3 +68,28 @@ func (c *DiscoveryController) GetDiscover(ctx *fiber.Ctx) error {
 		TotalResults: total,
 	})
 }
+
+// @Tags         discovery
+// @Summary      Get detail by title
+// @Description  Get detail by title
+// @Accept       json
+// @Produce      json
+// @Param        title path     string  true "Title"
+// @Param        mediaType path string  true "Media Type"  Enums(anime, kdrama, tv, movie)  default(anime)
+// @Router       /discovery/detail/{mediaType}/{title} [get]
+func (c *DiscoveryController) GetDiscoverDetailByTitle(ctx *fiber.Ctx) error {
+	mediaType := ctx.Params("mediaType")
+	title := ctx.Params("title")
+
+	result, err := c.Service.GetDiscoverDetailByTitle(ctx, mediaType, title)
+	if err != nil {
+		return err
+	}
+
+	return ctx.JSON(response.SuccessWithDetail[responses.MovieDetailOnlyResponse]{
+		Code:    fiber.StatusOK,
+		Status:  "success",
+		Message: "Data retrieved successfully",
+		Data:    *result,
+	})
+}

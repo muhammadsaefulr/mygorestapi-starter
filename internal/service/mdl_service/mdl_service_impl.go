@@ -45,3 +45,16 @@ func (s *MdlService) GetAll(c *fiber.Ctx, params *request.QueryMdl) ([]response.
 
 	return result, int64(total), int64(totalPages), nil
 }
+
+func (s *MdlService) GetDetailByID(c *fiber.Ctx, id string) (*response.MovieDetailOnlyResponse, error) {
+
+	chromeCtx, cancel := modules.NewChromeContext()
+	defer cancel()
+
+	result, err := modules.GetDramaDetail(chromeCtx, "https://mydramalist.com/"+id, true)
+	if err != nil {
+		return nil, err
+	}
+
+	return &result, nil
+}
