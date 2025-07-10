@@ -24,7 +24,11 @@ type AniListMedia struct {
 	Genres       []string `json:"genres"`
 	Status       string   `json:"status"`
 	Episodes     int      `json:"episodes"`
-	Studios      struct {
+	NextAiring   struct {
+		AiringAt int64 `json:"airingAt"`
+		Episode  int   `json:"episode"`
+	} `json:"nextAiringEpisode"`
+	Studios struct {
 		Nodes []struct {
 			Name string `json:"name"`
 		} `json:"nodes"`

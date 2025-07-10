@@ -4,12 +4,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/anilist/request"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/movie_details/response"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 )
 
 func FetchAniListMedia(category, queryTitle string, param *request.QueryAnilist) ([]response.MovieDetailOnlyResponse, error) {
@@ -48,6 +50,10 @@ func FetchAniListMedia(category, queryTitle string, param *request.QueryAnilist)
 				episodes
 				studios(isMain: true) { nodes { name } }
 				startDate { year month day }
+				nextAiringEpisode {
+					airingAt
+					episode
+				}
 				description
 			}
 		}
@@ -103,6 +109,10 @@ func FetchAniListDetail(id string) (response.MovieDetailOnlyResponse, error) {
 						genres
 						status
 						episodes
+						nextAiringEpisode {
+							airingAt
+							episode
+						}
 						studios(isMain: true) { nodes { name } }
 						startDate { year month day }
 						description
@@ -163,6 +173,9 @@ func MapAniListToMovieDetails(m model.AniListMedia, movieType string) response.M
 	if len(m.Studios.Nodes) > 0 {
 		studio = m.Studios.Nodes[0].Name
 	}
+
+	log.Printf("AiringDate: %+v", m.NextAiring)
+
 	return response.MovieDetailOnlyResponse{
 		IDSource:     strconv.Itoa(m.ID),
 		MovieID:      "",
@@ -174,6 +187,7 @@ func MapAniListToMovieDetails(m model.AniListMedia, movieType string) response.M
 		TotalEps:     strconv.Itoa(m.Episodes),
 		Studio:       studio,
 		ReleaseDate:  releaseDate,
+		UpdateDay:    utils.GetDayByTimestamp(m.NextAiring.AiringAt),
 		Synopsis:     m.Description,
 		Genres:       m.Genres,
 	}
