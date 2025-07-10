@@ -77,6 +77,10 @@ func (s *userService) CreateUser(c *fiber.Ctx, req *request.CreateUser) (*user_m
 	return user, nil
 }
 
+func (s *userService) GetUserSession(c *fiber.Ctx) (*user_model.User, error) {
+	return s.GetUserByID(c, c.Locals("user").(*user_model.User).ID.String())
+}
+
 func (s *userService) CreateGoogleUser(c *fiber.Ctx, req *request.GoogleLogin) (*user_model.User, error) {
 	if err := s.Validate.Struct(req); err != nil {
 		return nil, err
@@ -163,9 +167,15 @@ func (s *userService) UpdateUser(c *fiber.Ctx, id string, req *request.UpdateUse
 		return nil, err
 	}
 
+	userLocal := c.Locals("user").(*user_model.User)
+
 	existedMail, errMail := s.GetUserByEmail(c, req.Email)
 	if errMail != nil && errMail != gorm.ErrRecordNotFound {
 		return nil, fiber.NewError(fiber.StatusInternalServerError, "Error checking email")
+	}
+
+	if userLocal.ID != existedMail.ID || existedMail.Role != "admin" {
+		return nil, fiber.NewError(fiber.StatusUnauthorized, "You Cannot Edit This Data !")
 	}
 
 	if existedMail != nil && existedMail.ID.String() != id {

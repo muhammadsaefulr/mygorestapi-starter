@@ -7,6 +7,7 @@ import (
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
 	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 
+	responses "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/response"
 	system_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/system_service"
 	user_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_service"
 
@@ -61,6 +62,35 @@ func (u *UserController) GetUsers(c *fiber.Ctx) error {
 			TotalPages:   int64(math.Ceil(float64(totalResults) / float64(query.Limit))),
 			TotalResults: totalResults,
 		})
+}
+
+// @Tags         Users
+// @Summary      Get user session
+// @Description  Get user session
+// @Security BearerAuth
+// @Produce      json
+// @Router       /users/session [get]
+// @Success      200  {object}  responses.GetUserSessionResponse
+func (u *UserController) GetUserSession(c *fiber.Ctx) error {
+	user, err := u.UserService.GetUserSession(c)
+	if err != nil {
+		return err
+	}
+
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithDetail[responses.GetUserSessionResponse]{
+		Code:    fiber.StatusOK,
+		Status:  "success",
+		Message: "Get user session successfully",
+		Data: responses.GetUserSessionResponse{
+			UserInfo: responses.GetUsersResponse{
+				ID:              user.ID,
+				Name:            user.Name,
+				Email:           user.Email,
+				Role:            user.Role,
+				IsEmailVerified: user.VerifiedEmail,
+			},
+		},
+	})
 }
 
 // @Tags         Users

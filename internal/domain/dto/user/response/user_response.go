@@ -16,3 +16,7 @@ type GetUsersResponse struct {
 	Role            string    `json:"role"`
 	IsEmailVerified bool      `json:"is_email_verified"`
 }
+
+type GetUserSessionResponse struct {
+	UserInfo GetUsersResponse `json:"user_info"`
+}

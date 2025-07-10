@@ -674,6 +674,8 @@ definitions:
         type: string
       total_eps:
         type: string
+      update_day:
+        type: string
       updated_at:
         type: string
     type: object
@@ -875,6 +877,24 @@ definitions:
         - admin
         example: user
         maxLength: 50
+        type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_response.GetUserSessionResponse:
+    properties:
+      user_info:
+        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_response.GetUsersResponse'
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_response.GetUsersResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      is_email_verified:
+        type: boolean
+      name:
+        type: string
+      role:
         type: string
     type: object
   ? github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response_MovieDetailOnlyResponse
@@ -2666,6 +2686,21 @@ paths:
       security:
       - BearerAuth: []
       summary: Update a user
+      tags:
+      - Users
+  /users/session:
+    get:
+      description: Get user session
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_response.GetUserSessionResponse'
+      security:
+      - BearerAuth: []
+      summary: Get user session
       tags:
       - Users
   /watchlists:
