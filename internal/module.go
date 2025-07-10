@@ -37,6 +37,11 @@ import (
 
 	discoverySvc "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/discovery_service"
 
+	// reporting
+
+	reportErrRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/report_error"
+	reportErrService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/report_error_service"
+
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/validation"
 
@@ -98,6 +103,11 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 
 	discoverySvc := discoverySvc.NewDiscoveryService(validate, anilistSvc, tmdbSvc, mdlSvc, animeSvc, movieDetailSvc)
 
+	// reporting
+
+	reportErrRepo := reportErrRepo.NewReportErrorRepositoryImpl(db)
+	reportErrSvc := reportErrService.NewReportErrorService(reportErrRepo, validate)
+
 	middleware.InitAuthMiddleware(userSvc)
 
 	v1 := app.Group("/api/v1")
@@ -111,6 +121,7 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	router.CommentsRoutes(v1, commentSvc)
 	router.HistoryRoutes(v1, historySvc)
 	router.RequestMovieRoutes(v1, requestMovieSvc)
+	router.ReportErrorRoutes(v1, reportErrSvc)
 
 	// Other Sources
 

@@ -708,12 +708,16 @@ definitions:
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_report_error_request.CreateReportError:
     properties:
-      name:
+      episode_id:
+        type: string
+      problem_desc:
         type: string
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_report_error_request.UpdateReportError:
     properties:
-      name:
+      problem_desc:
+        type: string
+      status_report:
         type: string
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_request.CreateRequestMovie:
@@ -2204,7 +2208,7 @@ paths:
       summary: Get trending anime
       tags:
       - Otakudesu
-  /report_error:
+  /report-episode:
     get:
       parameters:
       - default: 1
@@ -2217,6 +2221,10 @@ paths:
         in: query
         name: limit
         type: integer
+      - description: Sort by field
+        in: query
+        name: sort
+        type: string
       - description: Search term
         in: query
         name: search
@@ -2224,6 +2232,8 @@ paths:
       produces:
       - application/json
       responses: {}
+      security:
+      - BearerAuth: []
       summary: Get all report_error
       tags:
       - report_error
@@ -2240,10 +2250,12 @@ paths:
       produces:
       - application/json
       responses: {}
+      security:
+      - BearerAuth: []
       summary: Create a new report_error
       tags:
       - report_error
-  /report_error/{id}:
+  /report-episode/{id}:
     delete:
       parameters:
       - description: ReportError ID (uint)
@@ -2254,6 +2266,8 @@ paths:
       produces:
       - application/json
       responses: {}
+      security:
+      - BearerAuth: []
       summary: Delete a report_error
       tags:
       - report_error
@@ -2267,6 +2281,8 @@ paths:
       produces:
       - application/json
       responses: {}
+      security:
+      - BearerAuth: []
       summary: Get a report_error by ID
       tags:
       - report_error
@@ -2288,6 +2304,8 @@ paths:
       produces:
       - application/json
       responses: {}
+      security:
+      - BearerAuth: []
       summary: Update a report_error
       tags:
       - report_error

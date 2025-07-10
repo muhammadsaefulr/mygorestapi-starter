@@ -1,9 +1,12 @@
 package config
 
 var allRoles = map[string][]string{
-	"user":  {},
-	"admin": {"getUsers", "manageUsers", "manageAnime", "createMovieDetails", "updateMovieDetails", "deleteMovieDetails", "addMovieEps", "updateMovieEps", "deleteMovieEps"},
-	"vip":   {},
+	"user": {},
+	"admin": {"getUsers", "manageUsers", "manageAnime",
+		"createMovieDetails", "updateMovieDetails", "deleteMovieDetails",
+		"addMovieEps", "updateMovieEps", "deleteMovieEps",
+		"getAllReportError", "postReportError", "getReportErrorByID", "updateReportError", "deleteReportError"},
+	"vip": {},
 }
 
 var Roles = getKeys(allRoles)

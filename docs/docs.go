@@ -1562,8 +1562,13 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/report_error": {
+        "/report-episode": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -1588,6 +1593,12 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
+                        "description": "Sort by field",
+                        "name": "sort",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Search term",
                         "name": "search",
                         "in": "query"
@@ -1596,6 +1607,11 @@ const docTemplate = `{
                 "responses": {}
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -1620,8 +1636,13 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/report_error/{id}": {
+        "/report-episode/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -1641,6 +1662,11 @@ const docTemplate = `{
                 "responses": {}
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -1660,6 +1686,11 @@ const docTemplate = `{
                 "responses": {}
             },
             "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -3344,7 +3375,10 @@ const docTemplate = `{
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_report_error_request.CreateReportError": {
             "type": "object",
             "properties": {
-                "name": {
+                "episode_id": {
+                    "type": "string"
+                },
+                "problem_desc": {
                     "type": "string"
                 }
             }
@@ -3352,7 +3386,10 @@ const docTemplate = `{
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_report_error_request.UpdateReportError": {
             "type": "object",
             "properties": {
-                "name": {
+                "problem_desc": {
+                    "type": "string"
+                },
+                "status_report": {
                     "type": "string"
                 }
             }
