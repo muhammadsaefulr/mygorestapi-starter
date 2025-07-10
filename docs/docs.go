@@ -1995,6 +1995,264 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/role": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_role"
+                ],
+                "summary": "Get all user_role",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search term",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {}
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_role"
+                ],
+                "summary": "Create a new user_role",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_role_request.CreateUserRole"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/user/role/permissions": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "role_permissions"
+                ],
+                "summary": "Get all role_permissions",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search term",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {}
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "role_permissions"
+                ],
+                "summary": "Create a new role_permissions",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_role_permissions_request.CreateRolePermissions"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/user/role/permissions/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "role_permissions"
+                ],
+                "summary": "Get a role_permissions by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "RolePermissions ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "role_permissions"
+                ],
+                "summary": "Delete a role_permissions",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "RolePermissions ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "role_permissions"
+                ],
+                "summary": "Update a role_permissions",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "RolePermissions ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_role_permissions_request.UpdateRolePermissions"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/user/role/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_role"
+                ],
+                "summary": "Get a user_role by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "UserRole ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_role"
+                ],
+                "summary": "Delete a user_role",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "UserRole ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_role"
+                ],
+                "summary": "Update a user_role",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "UserRole ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_role_request.UpdateUserRole"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/users": {
             "get": {
                 "security": [
@@ -3559,6 +3817,22 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_role_permissions_request.CreateRolePermissions": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_role_permissions_request.UpdateRolePermissions": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_request.CreateUser": {
             "type": "object",
             "required": [
@@ -3661,6 +3935,34 @@ const docTemplate = `{
                 },
                 "role": {
                     "type": "string"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_role_request.CreateUserRole": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "permission": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_role_request.UpdateUserRole": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "permission": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },

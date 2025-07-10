@@ -820,6 +820,16 @@ definitions:
         example: user
         type: string
     type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_role_permissions_request.CreateRolePermissions:
+    properties:
+      name:
+        type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_role_permissions_request.UpdateRolePermissions:
+    properties:
+      name:
+        type: string
+    type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_request.CreateUser:
     properties:
       email:
@@ -896,6 +906,24 @@ definitions:
         type: string
       role:
         type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_role_request.CreateUserRole:
+    properties:
+      name:
+        type: string
+      permission:
+        items:
+          type: integer
+        type: array
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_role_request.UpdateUserRole:
+    properties:
+      name:
+        type: string
+      permission:
+        items:
+          type: integer
+        type: array
     type: object
   ? github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response_MovieDetailOnlyResponse
   : properties:
@@ -2507,6 +2535,180 @@ paths:
       summary: Get a movie_details by ID
       tags:
       - Tmdb
+  /user/role:
+    get:
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      - description: Search term
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Get all user_role
+      tags:
+      - user_role
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_role_request.CreateUserRole'
+      produces:
+      - application/json
+      responses: {}
+      summary: Create a new user_role
+      tags:
+      - user_role
+  /user/role/{id}:
+    delete:
+      parameters:
+      - description: UserRole ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Delete a user_role
+      tags:
+      - user_role
+    get:
+      parameters:
+      - description: UserRole ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Get a user_role by ID
+      tags:
+      - user_role
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: UserRole ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_role_request.UpdateUserRole'
+      produces:
+      - application/json
+      responses: {}
+      summary: Update a user_role
+      tags:
+      - user_role
+  /user/role/permissions:
+    get:
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      - description: Search term
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Get all role_permissions
+      tags:
+      - role_permissions
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_role_permissions_request.CreateRolePermissions'
+      produces:
+      - application/json
+      responses: {}
+      summary: Create a new role_permissions
+      tags:
+      - role_permissions
+  /user/role/permissions/{id}:
+    delete:
+      parameters:
+      - description: RolePermissions ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Delete a role_permissions
+      tags:
+      - role_permissions
+    get:
+      parameters:
+      - description: RolePermissions ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Get a role_permissions by ID
+      tags:
+      - role_permissions
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: RolePermissions ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_role_permissions_request.UpdateRolePermissions'
+      produces:
+      - application/json
+      responses: {}
+      summary: Update a role_permissions
+      tags:
+      - role_permissions
   /users:
     get:
       description: Only admins can retrieve all users.

@@ -4,9 +4,12 @@ import (
 	"fmt"
 	"time"
 
+	"log"
+
 	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/infrastructure/persistence/seed"
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 
@@ -49,7 +52,18 @@ func Connect(dbHost, dbName string) *gorm.DB {
 		&model.MovieDetails{},
 		&model.MovieEpisode{},
 		&model.ReportError{},
+		&model.UserRole{},
+		&model.RolePermissions{},
 	)
+
+	// implements seed
+	if err := seed.SeedUserRoles(db); err != nil {
+		log.Fatal("gagal seed user role:", err)
+	}
+
+	if err := seed.SeedRolesAndPermissions(db); err != nil {
+		log.Fatal("gagal seed role permission:", err)
+	}
 
 	// Config connection pooling
 	sqlDB.SetMaxIdleConns(10)

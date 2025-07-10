@@ -37,6 +37,14 @@ import (
 
 	discoverySvc "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/discovery_service"
 
+	// User Auth And Role
+
+	userRoleRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/user_role"
+	userRoleService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_role_service"
+
+	rolePermissionRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/role_permissions"
+	rolePermissionService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/role_permissions_service"
+
 	// reporting
 
 	reportErrRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/report_error"
@@ -64,6 +72,14 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	// Init services
 	userRepo := userRepo.NewUserRepositryImpl(db)
 	userSvc := userService.NewUserService(userRepo, validate)
+
+	// User Auth And Role
+
+	userRoleRepo := userRoleRepo.NewUserRoleRepositoryImpl(db)
+	userRoleSvc := userRoleService.NewUserRoleService(userRoleRepo, validate)
+
+	rolePermissionRepo := rolePermissionRepo.NewRolePermissionsRepositoryImpl(db)
+	rolePermissionSvc := rolePermissionService.NewRolePermissionsService(rolePermissionRepo, validate)
 
 	trackEpsRepo := trackRepo.NewTrackEpisodeViewRepository(db)
 	animeSvc := odService.NewAnimeService(trackEpsRepo)
@@ -122,6 +138,8 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	router.HistoryRoutes(v1, historySvc)
 	router.RequestMovieRoutes(v1, requestMovieSvc)
 	router.ReportErrorRoutes(v1, reportErrSvc)
+	router.UserRoleRoutes(v1, userRoleSvc)
+	router.RolePermissionsRoutes(v1, rolePermissionSvc)
 
 	// Other Sources
 
