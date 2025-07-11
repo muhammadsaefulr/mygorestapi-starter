@@ -15,6 +15,6 @@ func RolePermissionsRoutes(v1 fiber.Router, c service.RolePermissionsService) {
 	group.Get("/", m.Auth("getRolePermissions"), role_permissionsController.GetAllRolePermissions)
 	group.Post("/", m.Auth("createRolePermissions"), role_permissionsController.CreateRolePermissions)
 	group.Get("/:id", m.Auth("getRolePermissions"), role_permissionsController.GetRolePermissionsByID)
-	group.Patch("/:id", m.Auth("updateRolePermissions"), role_permissionsController.UpdateRolePermissions)
+	group.Put("/:id", m.Auth("updateRolePermissions"), role_permissionsController.UpdateRolePermissions)
 	group.Delete("/:id", m.Auth("deleteRolePermissions"), role_permissionsController.DeleteRolePermissions)
 }

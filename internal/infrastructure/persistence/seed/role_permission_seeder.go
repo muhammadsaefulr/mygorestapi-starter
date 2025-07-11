@@ -16,12 +16,13 @@ var allRoles = map[string][]string{
 		"getUserRole", "getRolePermissions",
 		"createMovieDetails", "updateMovieDetails", "deleteMovieDetails",
 		"addMovieEps", "updateMovieEps", "deleteMovieEps",
+		"postSubsPlan", "updateSubsPlan", "deleteSubsPlan",
+		"userSubscriptionGet", "userSubscriptionPost", "userSubscriptionPut", "userSubscriptionDelete",
 		"getAllReportError", "postReportError", "getReportErrorByID",
 		"updateReportError", "deleteReportError",
 	},
 	"owner": {
-		"getUserRole", "createUserRole", "updateUserRole", "deleteUserRole",
-		"getRolePermissions", "createRolePermissions", "updateRolePermissions", "deleteRolePermissions",
+		"allActions",
 	},
 }
 

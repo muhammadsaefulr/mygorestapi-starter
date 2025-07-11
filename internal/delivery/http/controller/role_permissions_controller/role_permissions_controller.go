@@ -9,7 +9,7 @@ import (
 	request "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/role_permissions/request"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/service/role_permissions_service"
+	service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/role_permissions_service"
 )
 
 type RolePermissionsController struct {
@@ -110,7 +110,7 @@ func (h *RolePermissionsController) CreateRolePermissions(c *fiber.Ctx) error {
 // @Produce      json
 // @Param        id       path  int  true  "RolePermissions ID (uint)"
 // @Param        request  body  request.UpdateRolePermissions  true  "Request body"
-// @Router       /user/roles/permissions/{id} [patch]
+// @Router       /user/roles/permissions/{id} [put]
 func (h *RolePermissionsController) UpdateRolePermissions(c *fiber.Ctx) error {
 	idStr := c.Params("id")
 	idVal, err := strconv.ParseUint(idStr, 10, 32)
