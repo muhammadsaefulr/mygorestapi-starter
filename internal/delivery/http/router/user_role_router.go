@@ -15,6 +15,6 @@ func UserRoleRoutes(v1 fiber.Router, c service.UserRoleService) {
 	group.Get("/", m.Auth("getUserRole"), user_roleController.GetAllUserRole)
 	group.Post("/", m.Auth("createUserRole"), user_roleController.CreateUserRole)
 	group.Get("/:id", m.Auth("getUserRole"), user_roleController.GetUserRoleByID)
-	group.Patch("/:id", m.Auth("updateUserRole"), user_roleController.UpdateUserRole)
+	group.Put("/:id", m.Auth("updateUserRole"), user_roleController.UpdateUserRole)
 	group.Delete("/:id", m.Auth("deleteUserRole"), user_roleController.DeleteUserRole)
 }

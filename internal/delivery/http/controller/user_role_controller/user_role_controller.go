@@ -111,7 +111,7 @@ func (h *UserRoleController) CreateUserRole(c *fiber.Ctx) error {
 // @Produce      json
 // @Param        id       path  int  true  "UserRole ID (uint)"
 // @Param        request  body  request.UpdateUserRole  true  "Request body"
-// @Router       /user/role/{id} [patch]
+// @Router       /user/role/{id} [put]
 func (h *UserRoleController) UpdateUserRole(c *fiber.Ctx) error {
 	idStr := c.Params("id")
 	idVal, err := strconv.ParseUint(idStr, 10, 32)
