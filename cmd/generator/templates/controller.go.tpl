@@ -107,7 +107,7 @@ func (h *{{.PascalName}}Controller) Create{{.PascalName}}(c *fiber.Ctx) error {
 // @Produce      json
 // @Param        id       path  int  true  "{{.PascalName}} ID (uint)"
 // @Param        request  body  request.Update{{.PascalName}}  true  "Request body"
-// @Router       /{{.Name}}/{id} [patch]
+// @Router       /{{.Name}}/{id} [put]
 func (h *{{.PascalName}}Controller) Update{{.PascalName}}(c *fiber.Ctx) error {
 	idStr := c.Params("id")
 	idVal, err := strconv.ParseUint(idStr, 10, 32)

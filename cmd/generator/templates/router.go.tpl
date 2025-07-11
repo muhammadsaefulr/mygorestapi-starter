@@ -15,6 +15,6 @@ func {{.PascalName}}Routes(v1 fiber.Router, c service.{{.PascalName}}Service) {
 	group.Get("/", m.Auth(), {{.Name}}Controller.GetAll{{.PascalName}})
 	group.Post("/", m.Auth(), {{.Name}}Controller.Create{{.PascalName}})
 	group.Get("/:id", m.Auth(), {{.Name}}Controller.Get{{.PascalName}}ByID)
-	group.Patch("/:id", m.Auth(), {{.Name}}Controller.Update{{.PascalName}})
+	group.Put("/:id", m.Auth(), {{.Name}}Controller.Update{{.PascalName}})
 	group.Delete("/:id", m.Auth(), {{.Name}}Controller.Delete{{.PascalName}})
 }
