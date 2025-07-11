@@ -1997,6 +1997,11 @@ const docTemplate = `{
         },
         "/user/role": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -2029,6 +2034,11 @@ const docTemplate = `{
                 "responses": {}
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -2053,7 +2063,93 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/user/role/permissions": {
+        "/user/role/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_role"
+                ],
+                "summary": "Get a user_role by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "UserRole ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_role"
+                ],
+                "summary": "Delete a user_role",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "UserRole ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_role"
+                ],
+                "summary": "Update a user_role",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "UserRole ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_role_request.UpdateUserRole"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/user/roles/permissions": {
             "get": {
                 "produces": [
                     "application/json"
@@ -2087,6 +2183,11 @@ const docTemplate = `{
                 "responses": {}
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -2111,8 +2212,13 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/user/role/permissions/{id}": {
+        "/user/roles/permissions/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -2132,6 +2238,11 @@ const docTemplate = `{
                 "responses": {}
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -2151,6 +2262,11 @@ const docTemplate = `{
                 "responses": {}
             },
             "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -2176,77 +2292,6 @@ const docTemplate = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_role_permissions_request.UpdateRolePermissions"
-                        }
-                    }
-                ],
-                "responses": {}
-            }
-        },
-        "/user/role/{id}": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user_role"
-                ],
-                "summary": "Get a user_role by ID",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "UserRole ID (uint)",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {}
-            },
-            "delete": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user_role"
-                ],
-                "summary": "Delete a user_role",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "UserRole ID (uint)",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {}
-            },
-            "patch": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user_role"
-                ],
-                "summary": "Update a user_role",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "UserRole ID (uint)",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Request body",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_role_request.UpdateUserRole"
                         }
                     }
                 ],

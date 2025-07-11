@@ -5,6 +5,8 @@ var allRoles = map[string][]string{
 	"admin": {"getUsers", "manageUsers", "getUserSession", "manageAnime",
 		"createMovieDetails", "updateMovieDetails", "deleteMovieDetails",
 		"addMovieEps", "updateMovieEps", "deleteMovieEps",
+		"getUserRole", "createUserRole", "updateUserRole", "deleteUserRole",
+		"getRolePermissions", "createRolePermissions", "updateRolePermissions", "deleteRolePermissions",
 		"getAllReportError", "postReportError", "getReportErrorByID", "updateReportError", "deleteReportError"},
 	"vip": {},
 }

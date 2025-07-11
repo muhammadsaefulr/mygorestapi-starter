@@ -23,6 +23,7 @@ func NewUserRoleController(service service.UserRoleService) *UserRoleController 
 // @Tags         user_role
 // @Summary      Get all user_role
 // @Produce      json
+// @Security     BearerAuth
 // @Param        page   query     int     false  "Page number"  default(1)
 // @Param        limit  query     int     false  "Items per page"  default(10)
 // @Param        search query     string  false  "Search term"
@@ -53,6 +54,7 @@ func (h *UserRoleController) GetAllUserRole(c *fiber.Ctx) error {
 // @Tags         user_role
 // @Summary      Get a user_role by ID
 // @Produce      json
+// @Security     BearerAuth
 // @Param        id  path  int  true  "UserRole ID (uint)"
 // @Router       /user/role/{id} [get]
 func (h *UserRoleController) GetUserRoleByID(c *fiber.Ctx) error {
@@ -78,6 +80,7 @@ func (h *UserRoleController) GetUserRoleByID(c *fiber.Ctx) error {
 
 // @Tags         user_role
 // @Summary      Create a new user_role
+// @Security     BearerAuth
 // @Accept       json
 // @Produce      json
 // @Param        request  body  request.CreateUserRole  true  "Request body"
@@ -103,6 +106,7 @@ func (h *UserRoleController) CreateUserRole(c *fiber.Ctx) error {
 
 // @Tags         user_role
 // @Summary      Update a user_role
+// @Security     BearerAuth
 // @Accept       json
 // @Produce      json
 // @Param        id       path  int  true  "UserRole ID (uint)"
@@ -136,6 +140,7 @@ func (h *UserRoleController) UpdateUserRole(c *fiber.Ctx) error {
 
 // @Tags         user_role
 // @Summary      Delete a user_role
+// @Security     BearerAuth
 // @Produce      json
 // @Param        id  path  int  true  "UserRole ID (uint)"
 // @Router       /user/role/{id} [delete]

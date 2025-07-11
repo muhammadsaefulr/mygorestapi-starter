@@ -26,7 +26,7 @@ func NewRolePermissionsController(service service.RolePermissionsService) *RoleP
 // @Param        page   query     int     false  "Page number"  default(1)
 // @Param        limit  query     int     false  "Items per page"  default(10)
 // @Param        search query     string  false  "Search term"
-// @Router       /user/role/permissions [get]
+// @Router       /user/roles/permissions [get]
 func (h *RolePermissionsController) GetAllRolePermissions(c *fiber.Ctx) error {
 	query := &request.QueryRolePermissions{
 		Page:  c.QueryInt("page", 1),
@@ -53,8 +53,9 @@ func (h *RolePermissionsController) GetAllRolePermissions(c *fiber.Ctx) error {
 // @Tags         role_permissions
 // @Summary      Get a role_permissions by ID
 // @Produce      json
+// @Security     BearerAuth
 // @Param        id  path  int  true  "RolePermissions ID (uint)"
-// @Router       /user/role/permissions/{id} [get]
+// @Router       /user/roles/permissions/{id} [get]
 func (h *RolePermissionsController) GetRolePermissionsByID(c *fiber.Ctx) error {
 	idStr := c.Params("id")
 	idVal, err := strconv.ParseUint(idStr, 10, 32)
@@ -78,10 +79,11 @@ func (h *RolePermissionsController) GetRolePermissionsByID(c *fiber.Ctx) error {
 
 // @Tags         role_permissions
 // @Summary      Create a new role_permissions
+// @Security     BearerAuth
 // @Accept       json
 // @Produce      json
 // @Param        request  body  request.CreateRolePermissions  true  "Request body"
-// @Router       /user/role/permissions [post]
+// @Router       /user/roles/permissions [post]
 func (h *RolePermissionsController) CreateRolePermissions(c *fiber.Ctx) error {
 	req := new(request.CreateRolePermissions)
 	if err := c.BodyParser(req); err != nil {
@@ -103,11 +105,12 @@ func (h *RolePermissionsController) CreateRolePermissions(c *fiber.Ctx) error {
 
 // @Tags         role_permissions
 // @Summary      Update a role_permissions
+// @Security     BearerAuth
 // @Accept       json
 // @Produce      json
 // @Param        id       path  int  true  "RolePermissions ID (uint)"
 // @Param        request  body  request.UpdateRolePermissions  true  "Request body"
-// @Router       /user/role/permissions/{id} [patch]
+// @Router       /user/roles/permissions/{id} [patch]
 func (h *RolePermissionsController) UpdateRolePermissions(c *fiber.Ctx) error {
 	idStr := c.Params("id")
 	idVal, err := strconv.ParseUint(idStr, 10, 32)
@@ -136,9 +139,10 @@ func (h *RolePermissionsController) UpdateRolePermissions(c *fiber.Ctx) error {
 
 // @Tags         role_permissions
 // @Summary      Delete a role_permissions
+// @Security     BearerAuth
 // @Produce      json
 // @Param        id  path  int  true  "RolePermissions ID (uint)"
-// @Router       /user/role/permissions/{id} [delete]
+// @Router       /user/roles/permissions/{id} [delete]
 func (h *RolePermissionsController) DeleteRolePermissions(c *fiber.Ctx) error {
 	idStr := c.Params("id")
 	idVal, err := strconv.ParseUint(idStr, 10, 32)

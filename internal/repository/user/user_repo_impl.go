@@ -85,7 +85,8 @@ func (n *newUserRepositryImpl) GetUserByEmail(ctx context.Context, email string)
 func (n *newUserRepositryImpl) GetUserByID(ctx context.Context, id string) (*model.User, error) {
 	user := new(model.User)
 
-	result := n.DB.WithContext(ctx).Where("id = ?", id).First(user)
+	result := n.DB.WithContext(ctx).Where("id = ?", id).Preload("UserRole").
+		Preload("UserRole.Permissions").First(user)
 	if result.Error != nil {
 		return nil, result.Error
 	}

@@ -2555,6 +2555,8 @@ paths:
       produces:
       - application/json
       responses: {}
+      security:
+      - BearerAuth: []
       summary: Get all user_role
       tags:
       - user_role
@@ -2571,6 +2573,8 @@ paths:
       produces:
       - application/json
       responses: {}
+      security:
+      - BearerAuth: []
       summary: Create a new user_role
       tags:
       - user_role
@@ -2585,6 +2589,8 @@ paths:
       produces:
       - application/json
       responses: {}
+      security:
+      - BearerAuth: []
       summary: Delete a user_role
       tags:
       - user_role
@@ -2598,6 +2604,8 @@ paths:
       produces:
       - application/json
       responses: {}
+      security:
+      - BearerAuth: []
       summary: Get a user_role by ID
       tags:
       - user_role
@@ -2619,10 +2627,12 @@ paths:
       produces:
       - application/json
       responses: {}
+      security:
+      - BearerAuth: []
       summary: Update a user_role
       tags:
       - user_role
-  /user/role/permissions:
+  /user/roles/permissions:
     get:
       parameters:
       - default: 1
@@ -2658,10 +2668,12 @@ paths:
       produces:
       - application/json
       responses: {}
+      security:
+      - BearerAuth: []
       summary: Create a new role_permissions
       tags:
       - role_permissions
-  /user/role/permissions/{id}:
+  /user/roles/permissions/{id}:
     delete:
       parameters:
       - description: RolePermissions ID (uint)
@@ -2672,6 +2684,8 @@ paths:
       produces:
       - application/json
       responses: {}
+      security:
+      - BearerAuth: []
       summary: Delete a role_permissions
       tags:
       - role_permissions
@@ -2685,6 +2699,8 @@ paths:
       produces:
       - application/json
       responses: {}
+      security:
+      - BearerAuth: []
       summary: Get a role_permissions by ID
       tags:
       - role_permissions
@@ -2706,6 +2722,8 @@ paths:
       produces:
       - application/json
       responses: {}
+      security:
+      - BearerAuth: []
       summary: Update a role_permissions
       tags:
       - role_permissions

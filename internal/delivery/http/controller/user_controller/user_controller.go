@@ -6,6 +6,7 @@ import (
 	request "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/request"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
 	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/convert_types"
 
 	responses "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/response"
 	system_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/system_service"
@@ -77,19 +78,11 @@ func (u *UserController) GetUserSession(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.Status(fiber.StatusOK).JSON(response.SuccessWithDetail[responses.GetUserSessionResponse]{
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithDetail[responses.GetUsersResponse]{
 		Code:    fiber.StatusOK,
 		Status:  "success",
 		Message: "Get user session successfully",
-		Data: responses.GetUserSessionResponse{
-			UserInfo: responses.GetUsersResponse{
-				ID:              user.ID,
-				Name:            user.Name,
-				Email:           user.Email,
-				Role:            user.Role,
-				IsEmailVerified: user.VerifiedEmail,
-			},
-		},
+		Data:    *convert_types.UserModelToUserResponse(user),
 	})
 }
 

@@ -12,8 +12,8 @@ func CreateUserRoleToModel(req *request.CreateUserRole) *model.UserRole {
 	}
 
 	return &model.UserRole{
-		RoleName:   req.Name,
-		Permission: permissions,
+		RoleName:    req.Name,
+		Permissions: permissions,
 	}
 }
 
@@ -25,7 +25,7 @@ func UpdateUserRoleToModel(req *request.UpdateUserRole) *model.UserRole {
 	}
 
 	return &model.UserRole{
-		RoleName:   req.Name,
-		Permission: permissions,
+		RoleName:    req.Name,
+		Permissions: permissions,
 	}
 }
