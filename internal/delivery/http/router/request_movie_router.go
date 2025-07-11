@@ -15,6 +15,6 @@ func RequestMovieRoutes(v1 fiber.Router, c service.RequestMovieService) {
 	group.Get("/", m.Auth(), request_movieController.GetAllRequestMovie)
 	group.Post("/", m.Auth(), request_movieController.CreateRequestMovie)
 	group.Get("/:id", m.Auth(), request_movieController.GetRequestMovieByID)
-	group.Patch("/:id", m.Auth(), request_movieController.UpdateRequestMovie)
+	group.Put("/:id", m.Auth(), request_movieController.UpdateRequestMovie)
 	group.Delete("/:id", m.Auth(), request_movieController.DeleteRequestMovie)
 }

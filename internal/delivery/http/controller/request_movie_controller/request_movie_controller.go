@@ -114,7 +114,7 @@ func (h *RequestMovieController) CreateRequestMovie(c *fiber.Ctx) error {
 // @Param        id       path  int  true  "RequestMovie ID (uint)"
 // @Security     BearerAuth
 // @Param        request  body  request.UpdateRequestMovie  true  "Request body"
-// @Router       /request-movie/{id} [patch]
+// @Router       /request-movie/{id} [put]
 func (h *RequestMovieController) UpdateRequestMovie(c *fiber.Ctx) error {
 	idStr := c.Params("id")
 	idVal, err := strconv.ParseUint(idStr, 10, 32)
