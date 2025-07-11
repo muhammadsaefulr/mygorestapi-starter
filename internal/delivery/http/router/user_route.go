@@ -19,6 +19,6 @@ func UserRoutes(v1 fiber.Router, u user_service.UserService, t system_service.To
 	user.Get("/session", m.Auth("getUserSession"), userController.GetUserSession)
 	user.Post("/", m.Auth("manageUsers"), userController.CreateUser)
 	user.Get("/:userId", m.Auth("getUsers"), userController.GetUserByID)
-	user.Patch("/:userId", m.Auth("manageAcc"), userController.UpdateUser)
+	user.Put("/:userId", m.Auth("manageAcc"), userController.UpdateUser)
 	user.Delete("/:userId", m.Auth("manageUsers"), userController.DeleteUser)
 }

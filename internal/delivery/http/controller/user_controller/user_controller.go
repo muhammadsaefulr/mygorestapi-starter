@@ -71,7 +71,7 @@ func (u *UserController) GetUsers(c *fiber.Ctx) error {
 // @Security BearerAuth
 // @Produce      json
 // @Router       /users/session [get]
-// @Success      200  {object}  responses.GetUserSessionResponse
+// @Success      200  {object}  responses.GetUsersResponse
 func (u *UserController) GetUserSession(c *fiber.Ctx) error {
 	user, err := u.UserService.GetUserSession(c)
 	if err != nil {
@@ -157,7 +157,7 @@ func (u *UserController) CreateUser(c *fiber.Ctx) error {
 // @Produce      json
 // @Param        id  path  string  true  "User id"
 // @Param        request  body  request.UpdateUser  true  "Request body"
-// @Router       /users/{id} [patch]
+// @Router       /users/{id} [put]
 // @Success      200  {object}  example.UpdateUserResponse
 // @Failure      401  {object}  example.Unauthorized  "Unauthorized"
 // @Failure      403  {object}  example.Forbidden  "Forbidden"
