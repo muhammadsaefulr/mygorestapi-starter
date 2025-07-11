@@ -108,7 +108,7 @@ func (h *ReportErrorController) CreateReportError(c *fiber.Ctx) error {
 // @Produce      json
 // @Param        id       path  int  true  "ReportError ID (uint)"
 // @Param        request  body  request.UpdateReportError  true  "Request body"
-// @Router       /report-episode/{id} [patch]
+// @Router       /report-episode/{id} [put]
 func (h *ReportErrorController) UpdateReportError(c *fiber.Ctx) error {
 	idStr := c.Params("id")
 

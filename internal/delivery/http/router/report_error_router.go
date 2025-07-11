@@ -15,6 +15,6 @@ func ReportErrorRoutes(v1 fiber.Router, c service.ReportErrorServiceInterface) {
 	group.Get("/", m.Auth("getAllReportError"), report_errorController.GetAllReportError)
 	group.Post("/", m.Auth("postReportError"), report_errorController.CreateReportError)
 	group.Get("/:id", m.Auth("getReportErrorByID"), report_errorController.GetReportErrorByID)
-	group.Patch("/:id", m.Auth("updateReportError"), report_errorController.UpdateReportError)
+	group.Put("/:id", m.Auth("updateReportError"), report_errorController.UpdateReportError)
 	group.Delete("/:id", m.Auth("deleteReportError"), report_errorController.DeleteReportError)
 }
