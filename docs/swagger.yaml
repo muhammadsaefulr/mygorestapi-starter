@@ -830,6 +830,32 @@ definitions:
       name:
         type: string
     type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_subscription_plan_request.CreateSubscriptionPlan:
+    properties:
+      benefits:
+        items:
+          type: string
+        type: array
+      duration:
+        type: integer
+      plan_name:
+        type: string
+      price:
+        type: integer
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_subscription_plan_request.UpdateSubscriptionPlan:
+    properties:
+      benefits:
+        items:
+          type: string
+        type: array
+      duration:
+        type: integer
+      plan_name:
+        type: string
+      price:
+        type: integer
+    type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_request.CreateUser:
     properties:
       email:
@@ -852,11 +878,16 @@ definitions:
         example: user
         maxLength: 50
         type: string
+      role_id:
+        example: 1
+        maximum: 50
+        type: integer
     required:
     - email
     - name
     - password
     - role
+    - role_id
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_request.UpdatePassOrVerify:
     properties:
@@ -888,11 +919,10 @@ definitions:
         example: user
         maxLength: 50
         type: string
-    type: object
-  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_response.GetUserSessionResponse:
-    properties:
-      user_info:
-        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_response.GetUsersResponse'
+      role_id:
+        example: 1
+        maximum: 50
+        type: integer
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_response.GetUsersResponse:
     properties:
@@ -906,6 +936,8 @@ definitions:
         type: string
       role:
         type: string
+      roles:
+        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserRole'
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_role_request.CreateUserRole:
     properties:
@@ -924,6 +956,42 @@ definitions:
         items:
           type: integer
         type: array
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_subscription_request.CreateUserSubscription:
+    properties:
+      end_date:
+        example: "2025-08-10T00:00:00Z"
+        type: string
+      is_active:
+        example: true
+        type: boolean
+      start_date:
+        example: "2025-07-10T00:00:00Z"
+        type: string
+      subscription_plan_id:
+        example: 1
+        type: integer
+      user_id:
+        example: 7e26e5c0-0cb7-4d3f-a777-2a5adbb099fa
+        type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_subscription_request.UpdateUserSubscription:
+    properties:
+      end_date:
+        example: "2025-08-10T00:00:00Z"
+        type: string
+      is_active:
+        example: true
+        type: boolean
+      start_date:
+        example: "2025-07-10T00:00:00Z"
+        type: string
+      subscription_plan_id:
+        example: 1
+        type: integer
+      user_id:
+        example: 7e26e5c0-0cb7-4d3f-a777-2a5adbb099fa
+        type: string
     type: object
   ? github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response_MovieDetailOnlyResponse
   : properties:
@@ -1210,6 +1278,17 @@ definitions:
       videoURL:
         type: string
     type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.RolePermissions:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: integer
+      permissionName:
+        type: string
+      updatedAt:
+        type: string
+    type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.SearchResult:
     properties:
       genres:
@@ -1225,6 +1304,21 @@ definitions:
       title:
         type: string
       url:
+        type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserRole:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: integer
+      permissions:
+        items:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.RolePermissions'
+        type: array
+      roleName:
+        type: string
+      updatedAt:
         type: string
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.VideoSource:
@@ -2334,7 +2428,7 @@ paths:
       summary: Get a report_error by ID
       tags:
       - report_error
-    patch:
+    put:
       consumes:
       - application/json
       parameters:
@@ -2439,7 +2533,7 @@ paths:
       summary: Get a request_movie by ID
       tags:
       - RequestMovie
-    patch:
+    put:
       consumes:
       - application/json
       parameters:
@@ -2462,6 +2556,99 @@ paths:
       summary: Update a request_movie
       tags:
       - RequestMovie
+  /subscription/plans:
+    get:
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      - description: Search term
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Get all subscription_plan
+      tags:
+      - subscription_plan
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_subscription_plan_request.CreateSubscriptionPlan'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Create a new subscription_plan
+      tags:
+      - subscription_plan
+  /subscription/plans/{id}:
+    delete:
+      parameters:
+      - description: SubscriptionPlan ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Delete a subscription_plan
+      tags:
+      - subscription_plan
+    get:
+      parameters:
+      - description: SubscriptionPlan ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Get a subscription_plan by ID
+      tags:
+      - subscription_plan
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: SubscriptionPlan ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_subscription_plan_request.UpdateSubscriptionPlan'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update a subscription_plan
+      tags:
+      - subscription_plan
   /tmdb:
     get:
       description: Retrieve TMDb-based data (movie) by category (popular, trending,
@@ -2609,7 +2796,7 @@ paths:
       summary: Get a user_role by ID
       tags:
       - user_role
-    patch:
+    put:
       consumes:
       - application/json
       parameters:
@@ -2704,7 +2891,7 @@ paths:
       summary: Get a role_permissions by ID
       tags:
       - role_permissions
-    patch:
+    put:
       consumes:
       - application/json
       parameters:
@@ -2727,6 +2914,103 @@ paths:
       summary: Update a role_permissions
       tags:
       - role_permissions
+  /user/subscriptions:
+    get:
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      - description: Search term
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get all user_subscription
+      tags:
+      - user_subscription
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_subscription_request.CreateUserSubscription'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Create a new user_subscription
+      tags:
+      - user_subscription
+  /user/subscriptions/{user_id}:
+    delete:
+      parameters:
+      - description: User ID (string)
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Delete a user_subscription
+      tags:
+      - user_subscription
+    get:
+      parameters:
+      - description: User ID (string)
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get a user_subscription by ID
+      tags:
+      - user_subscription
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: User ID (string)
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_subscription_request.UpdateUserSubscription'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update a user_subscription
+      tags:
+      - user_subscription
   /users:
     get:
       description: Only admins can retrieve all users.
@@ -2865,7 +3149,7 @@ paths:
       summary: Get a user
       tags:
       - Users
-    patch:
+    put:
       description: Logged in users can only update their own information. Only admins
         can update other users.
       parameters:
@@ -2917,7 +3201,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_response.GetUserSessionResponse'
+            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_response.GetUsersResponse'
       security:
       - BearerAuth: []
       summary: Get user session

@@ -1661,31 +1661,7 @@ const docTemplate = `{
                 ],
                 "responses": {}
             },
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "report_error"
-                ],
-                "summary": "Delete a report_error",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "ReportError ID (uint)",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {}
-            },
-            "patch": {
+            "put": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -1717,6 +1693,30 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_report_error_request.UpdateReportError"
                         }
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "report_error"
+                ],
+                "summary": "Delete a report_error",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ReportError ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {}
@@ -1829,31 +1829,7 @@ const docTemplate = `{
                     }
                 }
             },
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "RequestMovie"
-                ],
-                "summary": "Delete a request_movie",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "RequestMovie ID (uint)",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {}
-            },
-            "patch": {
+            "put": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -1885,6 +1861,174 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_request.UpdateRequestMovie"
                         }
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RequestMovie"
+                ],
+                "summary": "Delete a request_movie",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "RequestMovie ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/subscription/plans": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "subscription_plan"
+                ],
+                "summary": "Get all subscription_plan",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search term",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {}
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "subscription_plan"
+                ],
+                "summary": "Create a new subscription_plan",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_subscription_plan_request.CreateSubscriptionPlan"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/subscription/plans/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "subscription_plan"
+                ],
+                "summary": "Get a subscription_plan by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "SubscriptionPlan ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "subscription_plan"
+                ],
+                "summary": "Update a subscription_plan",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "SubscriptionPlan ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_subscription_plan_request.UpdateSubscriptionPlan"
+                        }
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "subscription_plan"
+                ],
+                "summary": "Delete a subscription_plan",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "SubscriptionPlan ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {}
@@ -2088,31 +2232,7 @@ const docTemplate = `{
                 ],
                 "responses": {}
             },
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user_role"
-                ],
-                "summary": "Delete a user_role",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "UserRole ID (uint)",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {}
-            },
-            "patch": {
+            "put": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -2144,6 +2264,30 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_role_request.UpdateUserRole"
                         }
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_role"
+                ],
+                "summary": "Delete a user_role",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "UserRole ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {}
@@ -2237,31 +2381,7 @@ const docTemplate = `{
                 ],
                 "responses": {}
             },
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "role_permissions"
-                ],
-                "summary": "Delete a role_permissions",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "RolePermissions ID (uint)",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {}
-            },
-            "patch": {
+            "put": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -2293,6 +2413,184 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_role_permissions_request.UpdateRolePermissions"
                         }
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "role_permissions"
+                ],
+                "summary": "Delete a role_permissions",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "RolePermissions ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/user/subscriptions": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_subscription"
+                ],
+                "summary": "Get all user_subscription",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search term",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {}
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_subscription"
+                ],
+                "summary": "Create a new user_subscription",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_subscription_request.CreateUserSubscription"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/user/subscriptions/{user_id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_subscription"
+                ],
+                "summary": "Get a user_subscription by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID (string)",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_subscription"
+                ],
+                "summary": "Update a user_subscription",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID (string)",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_subscription_request.UpdateUserSubscription"
+                        }
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_subscription"
+                ],
+                "summary": "Delete a user_subscription",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID (string)",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {}
@@ -2428,7 +2726,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_response.GetUserSessionResponse"
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_response.GetUsersResponse"
                         }
                     }
                 }
@@ -2485,57 +2783,7 @@ const docTemplate = `{
                     }
                 }
             },
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Logged in users can delete only themselves. Only admins can delete other users.",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Delete a user",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/example.DeleteUserResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/example.Unauthorized"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/example.Forbidden"
-                        }
-                    },
-                    "404": {
-                        "description": "Not found",
-                        "schema": {
-                            "$ref": "#/definitions/example.NotFound"
-                        }
-                    }
-                }
-            },
-            "patch": {
+            "put": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -2596,6 +2844,56 @@ const docTemplate = `{
                         "description": "Email already taken",
                         "schema": {
                             "$ref": "#/definitions/example.DuplicateEmail"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Logged in users can delete only themselves. Only admins can delete other users.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Delete a user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/example.DeleteUserResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/example.Unauthorized"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/example.Forbidden"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "$ref": "#/definitions/example.NotFound"
                         }
                     }
                 }
@@ -3878,13 +4176,54 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_subscription_plan_request.CreateSubscriptionPlan": {
+            "type": "object",
+            "properties": {
+                "benefits": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "duration": {
+                    "type": "integer"
+                },
+                "plan_name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_subscription_plan_request.UpdateSubscriptionPlan": {
+            "type": "object",
+            "properties": {
+                "benefits": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "duration": {
+                    "type": "integer"
+                },
+                "plan_name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "integer"
+                }
+            }
+        },
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_request.CreateUser": {
             "type": "object",
             "required": [
                 "email",
                 "name",
                 "password",
-                "role"
+                "role",
+                "role_id"
             ],
             "properties": {
                 "email": {
@@ -3911,6 +4250,11 @@ const docTemplate = `{
                         "admin"
                     ],
                     "example": "user"
+                },
+                "role_id": {
+                    "type": "integer",
+                    "maximum": 50,
+                    "example": 1
                 }
             }
         },
@@ -3952,14 +4296,11 @@ const docTemplate = `{
                         "admin"
                     ],
                     "example": "user"
-                }
-            }
-        },
-        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_response.GetUserSessionResponse": {
-            "type": "object",
-            "properties": {
-                "user_info": {
-                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_response.GetUsersResponse"
+                },
+                "role_id": {
+                    "type": "integer",
+                    "maximum": 50,
+                    "example": 1
                 }
             }
         },
@@ -3980,6 +4321,9 @@ const docTemplate = `{
                 },
                 "role": {
                     "type": "string"
+                },
+                "roles": {
+                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserRole"
                 }
             }
         },
@@ -4008,6 +4352,56 @@ const docTemplate = `{
                     "items": {
                         "type": "integer"
                     }
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_subscription_request.CreateUserSubscription": {
+            "type": "object",
+            "properties": {
+                "end_date": {
+                    "type": "string",
+                    "example": "2025-08-10T00:00:00Z"
+                },
+                "is_active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "start_date": {
+                    "type": "string",
+                    "example": "2025-07-10T00:00:00Z"
+                },
+                "subscription_plan_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "user_id": {
+                    "type": "string",
+                    "example": "7e26e5c0-0cb7-4d3f-a777-2a5adbb099fa"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_subscription_request.UpdateUserSubscription": {
+            "type": "object",
+            "properties": {
+                "end_date": {
+                    "type": "string",
+                    "example": "2025-08-10T00:00:00Z"
+                },
+                "is_active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "start_date": {
+                    "type": "string",
+                    "example": "2025-07-10T00:00:00Z"
+                },
+                "subscription_plan_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "user_id": {
+                    "type": "string",
+                    "example": "7e26e5c0-0cb7-4d3f-a777-2a5adbb099fa"
                 }
             }
         },
@@ -4445,6 +4839,23 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.RolePermissions": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "permissionName": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.SearchResult": {
             "type": "object",
             "properties": {
@@ -4467,6 +4878,29 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserRole": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "permissions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.RolePermissions"
+                    }
+                },
+                "roleName": {
+                    "type": "string"
+                },
+                "updatedAt": {
                     "type": "string"
                 }
             }
