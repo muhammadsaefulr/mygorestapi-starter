@@ -346,7 +346,7 @@ func ScrapeAnimeSourceData(url string) model.AnimeSourceData {
 		}
 
 		if strings.Contains(e.Text, "See All Episodes") {
-			result.DetailURL = "/detail/" + path.Base(strings.TrimSuffix(e.Attr("href"), "/"))
+			result.DetailURL = "/otakudesu/detail/" + path.Base(strings.TrimSuffix(e.Attr("href"), "/"))
 		}
 	})
 
