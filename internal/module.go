@@ -110,7 +110,7 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	// Native Upload Data Manual
 
 	movieDetailRepo := movieDetailRepo.NewMovieDetailsRepositoryImpl(db)
-	movieDetailSvc := movieDetailService.NewMovieDetailsService(movieDetailRepo, validate)
+	movieDetailSvc := movieDetailService.NewMovieDetailsService(movieDetailRepo, validate, anilistSvc, tmdbSvc, mdlSvc, animeSvc)
 
 	movieUploaderRepo := movieUploaderRepo.NewMovieEpisodeRepositoryImpl(db)
 	movieUploaderSvc := movieUploaderSvc.NewMovieEpisodeService(movieUploaderRepo, validate, uploader, movieDetailSvc)

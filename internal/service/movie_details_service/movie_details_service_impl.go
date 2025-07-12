@@ -1,6 +1,10 @@
 package service
 
 import (
+	"log"
+	"path"
+	"strings"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -12,19 +16,32 @@ import (
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/convert_types"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 	"github.com/sirupsen/logrus"
+
+	svcAnilist "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/anilist_service"
+	svcMdl "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/mdl_service"
+	od_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/otakudesu_scrape"
+	svcTmdb "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/tmdb_service"
 )
 
 type MovieDetailsService struct {
-	Log      *logrus.Logger
-	Validate *validator.Validate
-	Repo     repository.MovieDetailsRepo
+	Log        *logrus.Logger
+	Validate   *validator.Validate
+	Repo       repository.MovieDetailsRepo
+	AnilistSvc svcAnilist.AnilistServiceInterface
+	TmdbSvc    svcTmdb.TmdbServiceInterface
+	MdlSvc     svcMdl.MdlServiceInterface
+	OdService  od_service.AnimeService
 }
 
-func NewMovieDetailsService(repo repository.MovieDetailsRepo, validate *validator.Validate) MovieDetailsServiceInterface {
+func NewMovieDetailsService(repo repository.MovieDetailsRepo, validate *validator.Validate, SvcAn svcAnilist.AnilistServiceInterface, svcTmdb svcTmdb.TmdbServiceInterface, svcMdl svcMdl.MdlServiceInterface, svcOd od_service.AnimeService) MovieDetailsServiceInterface {
 	return &MovieDetailsService{
-		Log:      utils.Log,
-		Validate: validate,
-		Repo:     repo,
+		Log:        utils.Log,
+		Validate:   validate,
+		Repo:       repo,
+		AnilistSvc: SvcAn,
+		TmdbSvc:    svcTmdb,
+		MdlSvc:     svcMdl,
+		OdService:  svcOd,
 	}
 }
 
@@ -50,11 +67,11 @@ func (s *MovieDetailsService) GetById(c *fiber.Ctx, id string) (*model.MovieDeta
 	if err == gorm.ErrRecordNotFound {
 		return nil, fiber.NewError(fiber.StatusNotFound, "MovieDetails not found")
 	}
-
 	if err != nil {
 		s.Log.Errorf("GetByID error: %+v", err)
 		return nil, fiber.NewError(fiber.StatusInternalServerError, "Get movie_details by ID failed")
 	}
+
 	return data, nil
 }
 
@@ -67,7 +84,82 @@ func (s *MovieDetailsService) GetByIDPreEps(c *fiber.Ctx, id string) (*response.
 		s.Log.Errorf("GetByID error: %+v", err)
 		return nil, fiber.NewError(fiber.StatusInternalServerError, "Get movie_details by ID failed")
 	}
-	return convert_types.MovieDetailsModelToResp(data, nil), nil
+
+	resp := convert_types.MovieDetailsModelToResp(data, nil)
+
+	if resp.Rekomend == nil || len(*resp.Rekomend) == 0 {
+		title := data.Title
+		params := &request.QueryMovieDetails{
+			Search:   title,
+			Category: "search",
+			Type:     data.MovieType,
+			Page:     1,
+			Limit:    1,
+		}
+		log.Printf("Rekomendasi: %+v", resp.Rekomend)
+
+		var results []response.MovieDetailOnlyResponse
+		var err error
+
+		switch resp.MovieDetail.MovieType {
+		case "anime":
+			results, _, err = s.AnilistSvc.GetAll(c, convert_types.AnilistQuery(params))
+		case "movie", "tv":
+			results, _, err = s.TmdbSvc.GetAll(c, convert_types.TmdbQuery(params))
+		case "kdrama":
+			results, _, _, err = s.MdlSvc.GetAll(c, convert_types.MdlQuery(params))
+		default:
+			return resp, nil
+		}
+
+		if err == nil && len(results) > 0 {
+			first := results[0]
+			var detail *response.MovieDetailOnlyResponse
+
+			switch resp.MovieDetail.MovieType {
+			case "anime":
+				detail, err = s.AnilistSvc.GetMovieDetailsByID(c, first.IDSource)
+			case "movie", "tv":
+				detail, err = s.TmdbSvc.GetDetailByID(c, first.IDSource, resp.MovieDetail.MovieType)
+			case "kdrama":
+				detail, err = s.MdlSvc.GetDetailByID(c, first.IDSource)
+			}
+
+			if err == nil && detail != nil && detail.Rekomend != nil {
+				var finalRekom []response.MovieDetailOnlyResponse
+
+				for _, r := range *detail.Rekomend {
+					found := false
+
+					movieData, _, err := s.GetAll(c, &request.QueryMovieDetails{Search: r.Title})
+					if err == nil && len(movieData) > 0 {
+						r.MovieID = movieData[0].MovieID
+						r.PathURL = "/movie/details/" + r.MovieID
+						found = true
+					} else if data.MovieType == "anime" {
+						odData, err := s.OdService.GetAnimeByTitle(r.Title)
+						if err == nil && len(odData) > 0 {
+							r.MovieID = path.Base(strings.TrimSuffix(odData[0].URL, "/"))
+							r.PathURL = "/otakudesu/detail/" + r.MovieID
+							found = true
+						}
+					}
+
+					if found {
+						finalRekom = append(finalRekom, r)
+					}
+				}
+
+				if len(finalRekom) > 0 {
+					resp.Rekomend = &finalRekom
+				}
+
+				log.Printf("Rekomendasi: %+v", finalRekom)
+			}
+		}
+	}
+
+	return resp, nil
 }
 
 func (s *MovieDetailsService) Create(c *fiber.Ctx, req *request.CreateMovieDetails) (*model.MovieDetails, error) {

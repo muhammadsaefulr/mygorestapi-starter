@@ -29,9 +29,10 @@ type UpdateMovieDetails struct {
 }
 
 type QueryMovieDetails struct {
-	Page   int    `query:"page"`
-	Limit  int    `query:"limit"`
-	Type   string `query:"type"`
-	Sort   string `query:"sort"`
-	Search string `query:"search"`
+	Page     int    `query:"page"`
+	Limit    int    `query:"limit"`
+	Type     string `query:"type"`
+	Category string `query:"category"`
+	Sort     string `query:"sort"`
+	Search   string `query:"search"`
 }

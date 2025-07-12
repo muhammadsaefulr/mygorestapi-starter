@@ -338,7 +338,7 @@ func (s *DiscoveryService) GetDiscoverDetailByTitle(c *fiber.Ctx, mediaType stri
 
 	results, _, err := s.GetDiscover(c, params)
 	if err != nil {
-		return nil, fiber.NewError(fiber.StatusBadGateway, "Failed to search discovery: "+err.Error())
+		return nil, fiber.NewError(fiber.StatusNotFound, "Failed to search discovery: "+err.Error())
 	}
 	if len(results) == 0 {
 		return nil, fiber.NewError(fiber.StatusNotFound, "No result found for title: "+title)
@@ -389,7 +389,7 @@ func (s *DiscoveryService) GetDiscoverDetailByTitle(c *fiber.Ctx, mediaType stri
 			searchParam := &request.QueryDiscovery{Search: r.Title}
 			movieData, _, err := s.MovieSvc.GetAll(c, convert_types.MapToMovieDtQuery(searchParam))
 			if err == nil && len(movieData) > 0 {
-				r.MovieID = movieData[0].MovieID
+				r.MovieID = r.Title
 				r.PathURL = "/movie/details/" + r.MovieID
 				found = true
 			} else if media == "anime" {

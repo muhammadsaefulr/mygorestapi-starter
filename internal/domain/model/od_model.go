@@ -69,8 +69,9 @@ type SearchResult struct {
 // Anime Episode Types
 
 type AnimeEpisode struct {
-	Title    string `json:"title"`
-	VideoURL string `json:"video_url"`
+	Title       string `json:"title"`
+	VideoURL    string `json:"video_url"`
+	ReleaseDate string `json:"release_date"`
 }
 
 type AnimeDetail struct {
@@ -83,6 +84,7 @@ type AnimeDetail struct {
 	Duration     string      `json:"duration"`
 	Studio       string      `json:"studio"`
 	ReleaseDate  string      `json:"release_date"`
+	UpdatedDay   string      `json:"updated_day"`
 	Synopsis     string      `json:"synopsis"`
 	Genres       []GenreInfo `json:"genres"`
 }
