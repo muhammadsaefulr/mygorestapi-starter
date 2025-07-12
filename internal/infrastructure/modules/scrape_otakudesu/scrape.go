@@ -243,7 +243,7 @@ func ScrapeSearchAnimeByTitle(url string) []model.SearchResult {
 		})
 		results = append(results, model.SearchResult{
 			Title:        e.ChildText("h2 a"),
-			URL:          "/otakudesu/" + path.Base(strings.TrimSuffix(e.ChildAttr("h2 a", "href"), "/")),
+			URL:          "/otakudesu/detail/" + path.Base(strings.TrimSuffix(e.ChildAttr("h2 a", "href"), "/")),
 			ThumbnailURL: e.ChildAttr("img", "src"),
 			Genres:       genres,
 			Status:       strings.TrimSpace(strings.Split(e.DOM.Find(".set b:contains('Status')").Parent().Text(), ":")[1]),

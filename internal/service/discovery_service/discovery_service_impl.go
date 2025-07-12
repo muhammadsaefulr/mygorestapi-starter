@@ -3,6 +3,7 @@ package service
 import (
 	"log"
 	"net/url"
+	"path"
 	"strings"
 	"sync"
 
@@ -95,8 +96,8 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 				} else {
 					odResults, err := s.OdService.GetAnimeByTitle(tmp.Search)
 					if err == nil && len(odResults) > 0 {
-						main.MovieID = odResults[0].URL
-						main.PathURL = "/otakudesu/detail/" + odResults[0].URL
+						main.MovieID = path.Base(strings.TrimSuffix(odResults[0].URL, "/"))
+						main.PathURL = odResults[0].URL
 					}
 				}
 
@@ -230,8 +231,8 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 					if err == nil && len(odResults) > 0 {
 						for _, od := range odResults {
 							if od.URL != "" {
-								d.MovieID = od.URL
-								d.PathURL = "/otakudesu/detail/" + od.URL
+								d.MovieID = path.Base(strings.TrimSuffix(od.URL, "/"))
+								d.PathURL = od.URL
 								filtered = append(filtered, d)
 								break
 							}
@@ -374,7 +375,7 @@ func (s *DiscoveryService) GetDiscoverDetailByTitle(c *fiber.Ctx, mediaType stri
 		} else if media == "anime" {
 			odData, err := s.OdService.GetAnimeByTitle(detail.Title)
 			if err == nil && len(odData) > 0 {
-				detail.MovieID = odData[0].URL
+				detail.MovieID = path.Base(strings.TrimSuffix(odData[0].URL, "/"))
 				detail.PathURL = "/otakudesu/detail/" + detail.MovieID
 			}
 		}
