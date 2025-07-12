@@ -476,7 +476,7 @@ func fetchRecommendationsFromAniList(animeURL string) ([]model.SearchResult, err
 				first.ThumbnailURL = mCover
 			}
 			if first.Rating == "" && mScore > 0 {
-				first.Rating = fmt.Sprintf("%d", float64(mScore)/100)
+				first.Rating = fmt.Sprintf("%.2f", float64(mScore)/10)
 			}
 			if len(first.Genres) == 0 && len(mGenres) > 0 {
 				for _, g := range mGenres {
