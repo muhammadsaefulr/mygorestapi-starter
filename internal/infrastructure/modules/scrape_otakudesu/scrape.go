@@ -16,6 +16,7 @@ import (
 	"sync"
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly"
@@ -159,7 +160,7 @@ func ScrapeAnimeDetail(url string) (model.AnimeDetail, []model.AnimeEpisode, []m
 					slug := path.Base(strings.TrimSuffix(href, "/"))
 					genres = append(genres, model.GenreInfo{
 						Title: s.Text(),
-						URL:   "/" + slug + "/page/",
+						URL:   "/discovery/genres/" + slug,
 					})
 				})
 			}
@@ -177,7 +178,7 @@ func ScrapeAnimeDetail(url string) (model.AnimeDetail, []model.AnimeEpisode, []m
 			TotalEps:     strings.TrimPrefix(infozingle.Find("p:contains('Total Episode')").Text(), "Total Episode: "),
 			Duration:     strings.TrimSuffix(strings.TrimPrefix(infozingle.Find("p:contains('Durasi')").Text(), "Durasi: "), "per ep."),
 			Studio:       strings.TrimPrefix(infozingle.Find("p:contains('Studio:')").Text(), "Studio: "),
-			ReleaseDate:  infozingle.Find("p:contains('Tanggal Rilis')").Text(),
+			ReleaseDate:  strings.TrimSpace(strings.TrimPrefix(infozingle.Find("p:contains('Tanggal Rilis')").Text(), "Tanggal Rilis:")),
 			Synopsis:     cleanSynopsis,
 			Genres:       genres,
 		}
@@ -186,11 +187,13 @@ func ScrapeAnimeDetail(url string) (model.AnimeDetail, []model.AnimeEpisode, []m
 	c.OnHTML(".episodelist li", func(e *colly.HTMLElement) {
 		title := e.ChildText("span a")
 		href := e.ChildAttr("span a", "href")
+		releaseDate := e.ChildText("span.zeebr")
 
 		if !strings.Contains(strings.ToLower(href), "batch") && !strings.Contains(strings.ToLower(href), "lengkap") {
 			episodes = append(episodes, model.AnimeEpisode{
-				Title:    title,
-				VideoURL: "/otakudesu/play/" + path.Base(strings.TrimSuffix(href, "/")),
+				Title:       title,
+				VideoURL:    "/otakudesu/play/" + path.Base(strings.TrimSuffix(href, "/")),
+				ReleaseDate: releaseDate,
 			})
 		}
 	})
@@ -200,7 +203,21 @@ func ScrapeAnimeDetail(url string) (model.AnimeDetail, []model.AnimeEpisode, []m
 
 	recommendations, _ := fetchRecommendationsFromAniList(detail.Title)
 
-	// log.Printf("Recommendations: %+v", recommendations)
+	if strings.ToLower(detail.Status) == "ongoing" {
+		if len(episodes) >= 2 {
+			day1 := utils.ConvertDateStrToDay(episodes[0].ReleaseDate)
+			day2 := utils.ConvertDateStrToDay(episodes[1].ReleaseDate)
+			log.Printf("Day1: %s, Day2: %s", episodes[len(episodes)-2].ReleaseDate, episodes[len(episodes)-1].ReleaseDate)
+
+			if day1 == day2 {
+				detail.UpdatedDay = day2
+			} else {
+				detail.UpdatedDay = day2
+			}
+		} else if len(episodes) == 1 {
+			detail.UpdatedDay = utils.ConvertDateStrToDay(episodes[0].ReleaseDate)
+		}
+	}
 
 	return detail, episodes, recommendations
 }
@@ -220,14 +237,13 @@ func ScrapeSearchAnimeByTitle(url string) []model.SearchResult {
 				el.DOM.Parent().Find("a").Each(func(_ int, s *goquery.Selection) {
 					genres = append(genres, model.GenreInfo{
 						Title: s.Text(),
-						URL:   s.AttrOr("href", ""),
-					})
+						URL:   "/discovery/genres/" + path.Base(strings.TrimSuffix(s.AttrOr("href", ""), "/"))})
 				})
 			}
 		})
 		results = append(results, model.SearchResult{
 			Title:        e.ChildText("h2 a"),
-			URL:          path.Base(strings.TrimSuffix(e.ChildAttr("h2 a", "href"), "/")),
+			URL:          "/otakudesu/" + path.Base(strings.TrimSuffix(e.ChildAttr("h2 a", "href"), "/")),
 			ThumbnailURL: e.ChildAttr("img", "src"),
 			Genres:       genres,
 			Status:       strings.TrimSpace(strings.Split(e.DOM.Find(".set b:contains('Status')").Parent().Text(), ":")[1]),
