@@ -53,6 +53,7 @@ func Connect(dbHost, dbName string) *gorm.DB {
 		&model.MovieEpisode{},
 		&model.ReportError{},
 		&model.UserRole{},
+		&model.UserSubscription{},
 		&model.RolePermissions{},
 	)
 
