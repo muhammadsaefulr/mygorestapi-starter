@@ -33,7 +33,7 @@ type MovieDetailOnlyResponse struct {
 }
 
 type MovieDetailsResponse struct {
-	MovieDetail *MovieDetailOnlyResponse `json:"movie_details"`
-	Episodes    []EpisodesResponse       `json:"episodes"`
-	Rekomend    *MovieDetailOnlyResponse `json:"rekomend"`
+	MovieDetail *MovieDetailOnlyResponse   `json:"movie_details"`
+	Episodes    []EpisodesResponse         `json:"episodes"`
+	Rekomend    *[]MovieDetailOnlyResponse `json:"rekomend"`
 }

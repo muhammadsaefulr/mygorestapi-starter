@@ -8,6 +8,10 @@ import (
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/movie_details/request"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/movie_details/response"
 	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
+
+	requestAn "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/anilist/request"
+	requestMdl "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/mdl/request"
+	requestTm "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/tmdb/request"
 )
 
 func CreateMovieDetailsToModel(req *request.CreateMovieDetails) *model.MovieDetails {
@@ -70,7 +74,7 @@ func MovieDetailsModelToOnlyRespArr(movies []model.MovieDetails) []response.Movi
 
 func MovieDetailsModelToResp(
 	movie *model.MovieDetails,
-	rekomen *model.MovieDetails,
+	rekomen *[]model.MovieDetails,
 ) *response.MovieDetailsResponse {
 
 	episodesResp := make([]response.EpisodesResponse, 0, len(movie.Episodes))
@@ -109,14 +113,46 @@ func MovieDetailsModelToResp(
 		}
 	}
 
-	var rekomendResp *response.MovieDetailOnlyResponse
-	if rekomen != nil {
-		rekomendResp = convertMovie(rekomen)
+	var rekomendResp []response.MovieDetailOnlyResponse
+	if rekomen != nil && len(*rekomen) > 0 {
+		for _, m := range *rekomen {
+			rekomendResp = append(rekomendResp, *convertMovie(&m))
+		}
 	}
 
 	return &response.MovieDetailsResponse{
 		MovieDetail: convertMovie(movie),
 		Episodes:    episodesResp,
-		Rekomend:    rekomendResp,
+		Rekomend:    &rekomendResp,
+	}
+}
+
+// param
+
+func AnilistQuery(q *request.QueryMovieDetails) *requestAn.QueryAnilist {
+	return &requestAn.QueryAnilist{
+		Page:     q.Page,
+		Limit:    q.Limit,
+		Search:   q.Search,
+		Category: q.Category,
+	}
+}
+
+func TmdbQuery(q *request.QueryMovieDetails) *requestTm.QueryTmdb {
+	return &requestTm.QueryTmdb{
+		Page:     q.Page,
+		Limit:    q.Limit,
+		Search:   q.Search,
+		Type:     q.Type,
+		Category: q.Category,
+	}
+}
+
+func MdlQuery(q *request.QueryMovieDetails) *requestMdl.QueryMdl {
+	return &requestMdl.QueryMdl{
+		Page:     q.Page,
+		Limit:    q.Limit,
+		Search:   q.Search,
+		Category: q.Category,
 	}
 }
