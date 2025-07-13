@@ -856,6 +856,20 @@ definitions:
       price:
         type: integer
     type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_points_request.UserPoints:
+    properties:
+      type_update:
+        enum:
+        - add
+        - subtract
+        example: add
+        format: string
+        type: string
+      value_added:
+        example: 1
+        minimum: 1
+        type: integer
+    type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_request.CreateUser:
     properties:
       email:
@@ -1155,9 +1169,13 @@ definitions:
         type: string
       total_eps:
         type: string
+      updated_day:
+        type: string
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.AnimeEpisode:
     properties:
+      release_date:
+        type: string
       title:
         type: string
       video_url:
@@ -3192,6 +3210,55 @@ paths:
       summary: Update a user
       tags:
       - Users
+  /users/points:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user_points, type update can be 'add' or 'subtract'
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_points_request.UserPoints'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Create a new user_points
+      tags:
+      - user_points
+  /users/points/{id}:
+    delete:
+      parameters:
+      - description: UserPoints ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Delete a user_points
+      tags:
+      - user_points
+    get:
+      parameters:
+      - description: UserPoints User ID (string)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Get a user_points by ID
+      tags:
+      - user_points
   /users/session:
     get:
       description: Get user session

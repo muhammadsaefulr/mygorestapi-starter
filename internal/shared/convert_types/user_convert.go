@@ -50,6 +50,7 @@ func UserModelToUserResponse(user *model.User) *response.GetUsersResponse {
 		Email:           user.Email,
 		Role:            user.Role,
 		Roles:           user.UserRole,
+		UserPoint:       user.UserPoint,
 		IsEmailVerified: user.VerifiedEmail,
 	}
 }

@@ -20,6 +20,7 @@ type User struct {
 	Token            []Token           `gorm:"foreignKey:user_id;references:id" json:"-"`
 	UserRole         *UserRole         `gorm:"foreignKey:role_id;references:id" json:"user_role,omitempty"`
 	UserSubscription *UserSubscription `gorm:"foreignKey:user_id;references:id" json:"user_subscription,omitempty"`
+	UserPoint        *UserPoints       `gorm:"foreignKey:user_id;references:id" json:"user_point,omitempty"`
 }
 
 func (user *User) BeforeCreate(_ *gorm.DB) error {

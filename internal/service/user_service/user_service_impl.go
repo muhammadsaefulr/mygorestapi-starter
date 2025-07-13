@@ -77,10 +77,6 @@ func (s *userService) CreateUser(c *fiber.Ctx, req *request.CreateUser) (*user_m
 	return user, nil
 }
 
-func (s *userService) GetUserSession(c *fiber.Ctx) (*user_model.User, error) {
-	return s.GetUserByID(c, c.Locals("user").(*user_model.User).ID.String())
-}
-
 func (s *userService) CreateGoogleUser(c *fiber.Ctx, req *request.GoogleLogin) (*user_model.User, error) {
 	if err := s.Validate.Struct(req); err != nil {
 		return nil, err
@@ -146,6 +142,10 @@ func (s *userService) GetUserByEmail(c *fiber.Ctx, email string) (*user_model.Us
 		return nil, fiber.NewError(fiber.StatusInternalServerError, "Get user by email failed")
 	}
 	return user, nil
+}
+
+func (s *userService) GetUserSession(c *fiber.Ctx) (*user_model.User, error) {
+	return s.GetUserByID(c, c.Locals("user").(*user_model.User).ID.String())
 }
 
 func (s *userService) GetUserByID(c *fiber.Ctx, id string) (*user_model.User, error) {

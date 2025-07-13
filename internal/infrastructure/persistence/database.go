@@ -55,6 +55,7 @@ func Connect(dbHost, dbName string) *gorm.DB {
 		&model.UserRole{},
 		&model.UserSubscription{},
 		&model.RolePermissions{},
+		&model.UserPoints{},
 	)
 
 	// implements seed

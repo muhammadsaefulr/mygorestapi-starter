@@ -50,6 +50,11 @@ import (
 	reportErrRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/report_error"
 	reportErrService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/report_error_service"
 
+	// other services
+
+	userPointsRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/user_points"
+	userPointsService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_points_service"
+
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/validation"
 
@@ -124,6 +129,11 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	reportErrRepo := reportErrRepo.NewReportErrorRepositoryImpl(db)
 	reportErrSvc := reportErrService.NewReportErrorService(reportErrRepo, validate)
 
+	// other services
+
+	userPointsRepo := userPointsRepo.NewUserPointsRepositoryImpl(db)
+	userPointsSvc := userPointsService.NewUserPointsService(userPointsRepo, validate)
+
 	middleware.InitAuthMiddleware(userSvc)
 
 	v1 := app.Group("/api/v1")
@@ -155,6 +165,10 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 
 	router.MovieDetailsRoutes(v1, movieDetailSvc)
 	router.MovieEpisodeRoutes(v1, movieUploaderSvc)
+
+	// other services
+
+	router.UserPointsRoutes(v1, userPointsSvc)
 
 	if !config.IsProd {
 		v1.Get("/docs", func(c *fiber.Ctx) error {
