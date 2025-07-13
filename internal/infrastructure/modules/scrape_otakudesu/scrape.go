@@ -103,7 +103,7 @@ func ScrapeGenreAnime(url string) []model.GenreAnime {
 	c.OnHTML(".col-anime", func(e *colly.HTMLElement) {
 		results = append(results, model.GenreAnime{
 			Title:        e.ChildText(".col-anime-title a"),
-			URL:          "/detail/" + path.Base(strings.TrimSuffix(e.ChildAttr(".col-anime-title a", "href"), "/")),
+			URL:          "/otakudesu/detail/" + path.Base(strings.TrimSuffix(e.ChildAttr(".col-anime-title a", "href"), "/")),
 			Studio:       e.ChildText(".col-anime-studio"),
 			ThumbnailURL: e.ChildAttr(".col-anime-cover img", "src"),
 			Episodes:     e.ChildText(".col-anime-eps"),
