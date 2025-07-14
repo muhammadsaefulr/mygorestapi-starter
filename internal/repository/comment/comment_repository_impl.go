@@ -28,7 +28,11 @@ func (c *commentRepository) GetCommentByMovieID(ctx context.Context, movieID str
 	var comments []model.Comment
 	if err := c.db.WithContext(ctx).
 		Preload("UserDetail").
-		Where("movie_id = ?", movieID).
+		Preload("Likes").
+		Preload("Likes.User").
+		Preload("Replies").
+		Preload("Replies.UserDetail").
+		Where("movie_id = ? AND parent_id IS NULL", movieID).
 		Order("created_at DESC").
 		Find(&comments).Error; err != nil {
 		return nil, err
@@ -66,4 +70,21 @@ func (c *commentRepository) UpdateComment(ctx context.Context, updated *model.Co
 	}
 
 	return &comment, nil
+}
+
+func (c *commentRepository) LikeComment(ctx context.Context, dataCmnt model.CommentLike) error {
+	return c.db.WithContext(ctx).Model(&model.CommentLike{}).Create(&dataCmnt).Error
+}
+
+func (r *commentRepository) HasUserLiked(ctx context.Context, commentID uint, userID string) (bool, error) {
+	var count int64
+	err := r.db.WithContext(ctx).
+		Model(&model.CommentLike{}).
+		Where("comment_id = ? AND user_id = ?", commentID, userID).
+		Count(&count).Error
+	return count > 0, err
+}
+
+func (c *commentRepository) DislikeComment(ctx context.Context, id uint, userId string) error {
+	return c.db.WithContext(ctx).Where("comment_id = ? AND user_id = ?", id, userId).Delete(&model.CommentLike{}).Error
 }

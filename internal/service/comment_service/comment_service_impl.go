@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 	"time"
@@ -13,6 +14,7 @@ import (
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/comment/request"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/comment/response"
 	responseUser "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/response"
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	repository "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/comment"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/convert_types"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
@@ -39,6 +41,8 @@ func (c *commentService) CreateComment(ctx *fiber.Ctx, req *request.CreateCommen
 	}
 
 	req.UserId = IdUsr
+
+	log.Printf("Comment: %+v", req)
 
 	if err := c.commentRepository.CreateComment(ctx.Context(), convert_types.CreateCommentToModel(req)); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, "Failed to create comment")
@@ -82,7 +86,7 @@ func (c *commentService) GetCommentsMovieId(ctx *fiber.Ctx, movieId string) ([]r
 			ID:        1,
 			UserId:    uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 			MovieId:   movieId,
-			Content:   "Halo Aku Dummy !",
+			Content:   "Menarik...",
 			CreatedAt: time.Now().Add(-2 * time.Hour),
 			UserDetal: &responseUser.GetUsersResponse{
 				ID:              uuid.MustParse("11111111-1111-1111-1111-111111111111"),
@@ -92,43 +96,40 @@ func (c *commentService) GetCommentsMovieId(ctx *fiber.Ctx, movieId string) ([]r
 				IsEmailVerified: true,
 			},
 		},
-		{
-			ID:        2,
-			UserId:    uuid.MustParse("22222222-2222-2222-2222-222222222222"),
-			MovieId:   movieId,
-			Content:   "Hidup Jokowwieee",
-			CreatedAt: time.Now().Add(-1 * time.Hour),
-			UserDetal: &responseUser.GetUsersResponse{
-				ID:              uuid.MustParse("22222222-2222-2222-2222-222222222222"),
-				Name:            "Dummy user 2",
-				Email:           "dummy2@example.com",
-				Role:            "user",
-				IsEmailVerified: false,
-			},
-		},
-		{
-			ID:        3,
-			UserId:    uuid.MustParse("33333333-3333-3333-3333-333333333333"),
-			MovieId:   movieId,
-			Content:   "Gemoy Joget",
-			CreatedAt: time.Now(),
-			UserDetal: &responseUser.GetUsersResponse{
-				ID:              uuid.MustParse("33333333-3333-3333-3333-333333333333"),
-				Name:            "Dummy user 3",
-				Email:           "dummy3@example.com",
-				Role:            "user",
-				IsEmailVerified: true,
-			},
-		},
 	}
 
 	responses := make([]response.CommentResponse, 0, len(comments))
+
 	for _, comment := range comments {
+		// Mapping untuk replies
+		replies := make([]response.CommentResponse, 0, len(comment.Replies))
+		for _, reply := range comment.Replies {
+			replies = append(replies, response.CommentResponse{
+				ID:        reply.ID,
+				UserId:    reply.UserId,
+				MovieId:   reply.MovieId,
+				Content:   reply.Content,
+				CreatedAt: reply.CreatedAt,
+				Likes:     len(reply.Likes),
+				UserDetal: &responseUser.GetUsersResponse{
+					ID:              reply.UserId,
+					Name:            reply.UserDetail.Name,
+					Email:           reply.UserDetail.Email,
+					Role:            reply.UserDetail.Role,
+					IsEmailVerified: reply.UserDetail.VerifiedEmail,
+				},
+			})
+		}
+
+		// Mapping comment utama
 		responses = append(responses, response.CommentResponse{
-			ID:      comment.ID,
-			UserId:  comment.UserId,
-			MovieId: comment.MovieId,
-			Content: comment.Content,
+			ID:           comment.ID,
+			UserId:       comment.UserId,
+			MovieId:      comment.MovieId,
+			Content:      comment.Content,
+			CreatedAt:    comment.CreatedAt,
+			Likes:        len(comment.Likes),
+			CommentReply: replies,
 			UserDetal: &responseUser.GetUsersResponse{
 				ID:              comment.UserId,
 				Name:            comment.UserDetail.Name,
@@ -180,4 +181,56 @@ func (c *commentService) UpdateComment(ctx *fiber.Ctx, req *request.UpdateCommen
 
 func (c *commentService) DeleteComment(ctx *fiber.Ctx, id uint) error {
 	return c.commentRepository.DeleteComment(ctx.Context(), id)
+}
+
+func (s *commentService) LikeComment(ctx *fiber.Ctx, commentID uint) error {
+	userSession := ctx.Locals("user")
+	if userSession == nil {
+		return fiber.NewError(fiber.StatusUnauthorized, "Unauthorized")
+	}
+	user := userSession.(*model.User)
+
+	comment, err := s.commentRepository.GetCommentByID(ctx.Context(), commentID)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return fiber.NewError(fiber.StatusNotFound, "Comment not found")
+		}
+		return fiber.NewError(fiber.StatusInternalServerError, "Failed to check comment")
+	}
+
+	liked, err := s.commentRepository.HasUserLiked(ctx.Context(), comment.ID, user.ID.String())
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, "Failed to check like status")
+	}
+	if liked {
+		return nil
+	}
+
+	newLike := model.CommentLike{
+		UserId:    user.ID,
+		CommentID: comment.ID,
+	}
+	if err := s.commentRepository.LikeComment(ctx.Context(), newLike); err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, "Failed to like comment")
+	}
+
+	return nil
+}
+
+func (c *commentService) DislikeComment(ctx *fiber.Ctx, id uint) error {
+	userSession := ctx.Locals("user")
+	if userSession == nil {
+		return fiber.NewError(fiber.StatusUnauthorized, "Unauthorized")
+	}
+	user := userSession.(*model.User)
+
+	err := c.commentRepository.DislikeComment(ctx.Context(), id, user.ID.String())
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return fiber.NewError(fiber.StatusNotFound, "Like not found for this user and comment")
+		}
+		return fiber.NewError(fiber.StatusInternalServerError, "Failed to dislike comment")
+	}
+
+	return nil
 }

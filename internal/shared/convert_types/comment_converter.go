@@ -9,9 +9,10 @@ import (
 
 func CreateCommentToModel(req *request.CreateComment) *model.Comment {
 	return &model.Comment{
-		UserId:  uuid.MustParse(req.UserId),
-		MovieId: req.MovieId,
-		Content: req.Content,
+		UserId:   uuid.MustParse(req.UserId),
+		MovieId:  req.MovieId,
+		ParentId: req.ParentId,
+		Content:  req.Content,
 	}
 }
 

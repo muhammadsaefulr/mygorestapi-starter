@@ -420,12 +420,7 @@
         },
         "/comments": {
             "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Create a comment",
+                "description": "Create a comment. For replying to a comment, fill `parent_id` with the parent comment's ID. If replying to a child comment (nested reply), just mention the user using @username — the frontend should convert it into a hyperlink pointing to /users/info/:username.",
                 "produces": [
                     "application/json"
                 ],
@@ -543,6 +538,60 @@
                     {
                         "type": "integer",
                         "description": "Comment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/comments/{id}/dislike": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Dislike a comment",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "Dislike a comment",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Comment id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/comments/{id}/like": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Like a comment",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "Like a comment",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Comment id",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -3813,6 +3862,9 @@
                 },
                 "movie_id": {
                     "type": "string"
+                },
+                "parent_id": {
+                    "type": "integer"
                 }
             }
         },

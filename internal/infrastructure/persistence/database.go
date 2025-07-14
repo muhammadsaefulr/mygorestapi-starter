@@ -47,6 +47,7 @@ func Connect(dbHost, dbName string) *gorm.DB {
 		&model.Watchlist{},
 		&model.TrackEpisodeView{},
 		&model.Comment{},
+		&model.CommentLike{},
 		&model.History{},
 		&model.RequestMovie{},
 		&model.MovieDetails{},

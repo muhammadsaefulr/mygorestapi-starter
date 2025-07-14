@@ -22,8 +22,7 @@ func NewCommentController(commentService service.CommentService) *CommentControl
 
 // @Tags         Comments
 // @Summary      Create a comment
-// @Description  Create a comment
-// @Security BearerAuth
+// @Description  Create a comment. For replying to a comment, fill `parent_id` with the parent comment's ID. If replying to a child comment (nested reply), just mention the user using @username — the frontend should convert it into a hyperlink pointing to /users/info/:username.
 // @Produce      json
 // @Param        request  body  request.CreateComment  true  "Request body"
 // @Router       /comments [post]
@@ -151,5 +150,57 @@ func (co *CommentController) DeleteComment(c *fiber.Ctx) error {
 		Code:    fiber.StatusOK,
 		Status:  "success",
 		Message: "Delete comment successfully",
+	})
+}
+
+// @Tags         Comments
+// @Summary      Like a comment
+// @Description  Like a comment
+// @Security BearerAuth
+// @Produce      json
+// @Param        id  path  string  true  "Comment id"
+// @Router       /comments/{id}/like [post]
+func (co *CommentController) LikeComment(c *fiber.Ctx) error {
+	commentID := c.Params("id")
+
+	cmntIdUint, err := strconv.ParseUint(commentID, 10, 64)
+	if err != nil {
+		return err
+	}
+
+	if err := co.CommentService.LikeComment(c, uint(cmntIdUint)); err != nil {
+		return err
+	}
+
+	return c.Status(fiber.StatusOK).JSON(response.Common{
+		Code:    fiber.StatusOK,
+		Status:  "success",
+		Message: "Like comment successfully",
+	})
+}
+
+// @Tags         Comments
+// @Summary      Dislike a comment
+// @Description  Dislike a comment
+// @Security BearerAuth
+// @Produce      json
+// @Param        id  path  string  true  "Comment id"
+// @Router       /comments/{id}/dislike [post]
+func (co *CommentController) DislikeComment(c *fiber.Ctx) error {
+	commentID := c.Params("id")
+
+	cmntIdUint, err := strconv.ParseUint(commentID, 10, 64)
+	if err != nil {
+		return err
+	}
+
+	if err := co.CommentService.DislikeComment(c, uint(cmntIdUint)); err != nil {
+		return err
+	}
+
+	return c.Status(fiber.StatusOK).JSON(response.Common{
+		Code:    fiber.StatusOK,
+		Status:  "success",
+		Message: "Dislike comment successfully",
 	})
 }

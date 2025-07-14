@@ -12,4 +12,6 @@ type CommentService interface {
 	GetCommentsMovieId(ctx *fiber.Ctx, movieId string) ([]response.CommentResponse, error)
 	UpdateComment(ctx *fiber.Ctx, req *request.UpdateComment, id string) (*response.CommentResponse, error)
 	DeleteComment(ctx *fiber.Ctx, id uint) error
+	LikeComment(ctx *fiber.Ctx, id uint) error
+	DislikeComment(ctx *fiber.Ctx, id uint) error
 }

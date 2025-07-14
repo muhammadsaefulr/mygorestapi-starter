@@ -18,4 +18,6 @@ func CommentsRoutes(v1 fiber.Router, c service.CommentService) {
 	group.Put("/:id", m.Auth(), commentController.UpdateComment)
 	group.Get("/:id", commentController.GetCommentByID)
 	group.Delete("/:id", m.Auth(), commentController.DeleteComment)
+	group.Post("/:id/like", m.Auth(), commentController.LikeComment)
+	group.Post("/:id/dislike", m.Auth(), commentController.DislikeComment)
 }

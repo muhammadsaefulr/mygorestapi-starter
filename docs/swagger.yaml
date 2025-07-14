@@ -511,6 +511,8 @@ definitions:
         type: string
       movie_id:
         type: string
+      parent_id:
+        type: integer
     required:
     - content
     - movie_id
@@ -1640,7 +1642,10 @@ paths:
       - Auth
   /comments:
     post:
-      description: Create a comment
+      description: Create a comment. For replying to a comment, fill `parent_id` with
+        the parent comment's ID. If replying to a child comment (nested reply), just
+        mention the user using @username — the frontend should convert it into a hyperlink
+        pointing to /users/info/:username.
       parameters:
       - description: Request body
         in: body
@@ -1651,8 +1656,6 @@ paths:
       produces:
       - application/json
       responses: {}
-      security:
-      - BearerAuth: []
       summary: Create a comment
       tags:
       - Comments
@@ -1707,6 +1710,40 @@ paths:
       security:
       - BearerAuth: []
       summary: Update a comment
+      tags:
+      - Comments
+  /comments/{id}/dislike:
+    post:
+      description: Dislike a comment
+      parameters:
+      - description: Comment id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Dislike a comment
+      tags:
+      - Comments
+  /comments/{id}/like:
+    post:
+      description: Like a comment
+      parameters:
+      - description: Comment id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Like a comment
       tags:
       - Comments
   /comments/movie/{movieEpsId}:
