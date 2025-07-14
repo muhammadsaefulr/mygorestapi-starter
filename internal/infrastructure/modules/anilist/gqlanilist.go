@@ -14,12 +14,12 @@ import (
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 )
 
-func FetchAniListMedia(category, queryTitle string, param *request.QueryAnilist) ([]response.MovieDetailOnlyResponse, error) {
+func FetchAniListMedia(category, queryTitle string, param *request.QueryAnilist) ([]response.MovieDetailOnlyResponse, int, error) {
 	endpoint := "https://graphql.anilist.co"
 
 	variables := map[string]interface{}{
 		"page":    param.Page,
-		"perPage": param.Limit,
+		"perPage": param.Limit + 3,
 		"type":    "ANIME",
 	}
 
@@ -34,13 +34,23 @@ func FetchAniListMedia(category, queryTitle string, param *request.QueryAnilist)
 		variables["status"] = "RELEASING"
 	case "search":
 		variables["search"] = param.Search
+	case "genre":
+		variables["genre_in"] = []string{param.Genre}
+		variables["sort"] = []string{"POPULARITY_DESC"}
 	default:
-		return nil, fmt.Errorf("invalid category")
+		return nil, 0, fmt.Errorf("invalid category")
 	}
 
-	query := `query ($page: Int, $perPage: Int, $type: MediaType, $sort: [MediaSort], $search: String, $status: MediaStatus) {
+	query := `query ($page: Int, $perPage: Int, $type: MediaType, $sort: [MediaSort], $search: String, $status: MediaStatus,  $genre_in: [String]) {
 		Page(page: $page, perPage: $perPage) {
-			media(type: $type, sort: $sort, search: $search, status: $status) {
+			pageInfo {
+				total,
+				perPage,
+				currentPage,
+				lastPage,
+				hasNextPage
+			}
+			media(type: $type, sort: $sort, search: $search, status: $status, genre_in: $genre_in) {
 				id
 				title { romaji english native }
 				coverImage { large }
@@ -67,21 +77,24 @@ func FetchAniListMedia(category, queryTitle string, param *request.QueryAnilist)
 	bodyBytes, _ := json.Marshal(reqBody)
 	resp, err := http.Post(endpoint, "application/json", bytes.NewBuffer(bodyBytes))
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 	defer resp.Body.Close()
 
 	var result model.AniListResponse
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return nil, err
+		return nil, 0, err
 	}
+
+	// log.Printf("param: %+v", param)
+	// log.Printf("result: %+v", result)
 
 	var movies []response.MovieDetailOnlyResponse
 	for _, m := range result.Data.Page.Media {
 		movies = append(movies, MapAniListToMovieDetails(m, "anime"))
 	}
 
-	return movies, nil
+	return movies, result.Data.Page.PageInfo.LastPage, nil
 }
 
 func FetchAniListDetail(id string) (response.MovieDetailOnlyResponse, error) {

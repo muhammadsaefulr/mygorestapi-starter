@@ -599,10 +599,17 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
+                        "type": "string",
+                        "description": "Genre",
+                        "name": "genre",
+                        "in": "query"
+                    },
+                    {
                         "enum": [
                             "popular",
                             "trending",
                             "ongoing",
+                            "genre",
                             "search"
                         ],
                         "type": "string",
@@ -2707,6 +2714,83 @@ const docTemplate = `{
                 }
             }
         },
+        "/users/points": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a new user_points, type update can be 'add' or 'subtract'",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_points"
+                ],
+                "summary": "Create a new user_points",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_points_request.UserPoints"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/users/points/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_points"
+                ],
+                "summary": "Get a user_points by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "UserPoints User ID (string)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_points"
+                ],
+                "summary": "Delete a user_points",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "UserPoints ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/users/session": {
             "get": {
                 "security": [
@@ -4216,6 +4300,25 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_points_request.UserPoints": {
+            "type": "object",
+            "properties": {
+                "type_update": {
+                    "type": "string",
+                    "format": "string",
+                    "enum": [
+                        "add",
+                        "subtract"
+                    ],
+                    "example": "add"
+                },
+                "value_added": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "example": 1
+                }
+            }
+        },
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_request.CreateUser": {
             "type": "object",
             "required": [
@@ -4324,6 +4427,9 @@ const docTemplate = `{
                 },
                 "roles": {
                     "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserRole"
+                },
+                "user_point": {
+                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserPoints"
                 }
             }
         },
@@ -4652,12 +4758,18 @@ const docTemplate = `{
                 },
                 "total_eps": {
                     "type": "string"
+                },
+                "updated_day": {
+                    "type": "string"
                 }
             }
         },
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.AnimeEpisode": {
             "type": "object",
             "properties": {
+                "release_date": {
+                    "type": "string"
+                },
                 "title": {
                     "type": "string"
                 },
@@ -4879,6 +4991,26 @@ const docTemplate = `{
                 },
                 "url": {
                     "type": "string"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserPoints": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "integer"
                 }
             }
         },

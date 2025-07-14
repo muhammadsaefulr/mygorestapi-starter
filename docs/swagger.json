@@ -591,10 +591,17 @@
                         "in": "query"
                     },
                     {
+                        "type": "string",
+                        "description": "Genre",
+                        "name": "genre",
+                        "in": "query"
+                    },
+                    {
                         "enum": [
                             "popular",
                             "trending",
                             "ongoing",
+                            "genre",
                             "search"
                         ],
                         "type": "string",
@@ -4412,6 +4419,9 @@
                 },
                 "roles": {
                     "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserRole"
+                },
+                "user_point": {
+                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserPoints"
                 }
             }
         },
@@ -4973,6 +4983,26 @@
                 },
                 "url": {
                     "type": "string"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserPoints": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "integer"
                 }
             }
         },

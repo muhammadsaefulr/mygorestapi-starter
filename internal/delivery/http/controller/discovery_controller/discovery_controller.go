@@ -2,7 +2,6 @@ package controller
 
 import (
 	"log"
-	"math"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -27,8 +26,9 @@ func NewDiscoveryController(service service.DiscoveryServiceInterface) *Discover
 // @Produce      json
 // @Param        page query     int     false "Page"
 // @Param        limit query    int     false "Limit"
-// @Param        type query     string  false  "Movie Type"  Enums(anime, kdrama, tv, movie)  default(anime)
-// @Param        category query string  false  "Discovery Category"  Enums(popular, trending, ongoing, search)  default(popular)
+// @Param        type query     string  false "Movie Type"  Enums(anime, kdrama, tv, movie)  default(anime)
+// @Param        genre query    string  false "Genre"
+// @Param        category query string  false  "Discovery Category"  Enums(popular, trending, ongoing, genre, search)  default(popular)
 // @Param        search query string false "Search term (Only used when category=search)"
 // @Router       /discovery [get]
 func (c *DiscoveryController) GetDiscover(ctx *fiber.Ctx) error {
@@ -37,6 +37,7 @@ func (c *DiscoveryController) GetDiscover(ctx *fiber.Ctx) error {
 		Limit:    ctx.QueryInt("limit", 10),
 		Category: ctx.Query("category"),
 		Search:   ctx.Query("search"),
+		Genre:    ctx.Query("genre"),
 		Type:     ctx.Query("type"),
 	}
 
@@ -51,7 +52,7 @@ func (c *DiscoveryController) GetDiscover(ctx *fiber.Ctx) error {
 		params.Limit = 10
 	}
 
-	data, total, err := c.Service.GetDiscover(ctx, params)
+	data, page, total, err := c.Service.GetDiscover(ctx, params)
 	if err != nil {
 		log.Printf("GetPopularDiscover error: %v", err)
 		return err
@@ -64,7 +65,7 @@ func (c *DiscoveryController) GetDiscover(ctx *fiber.Ctx) error {
 		Results:      data,
 		Page:         params.Page,
 		Limit:        params.Limit,
-		TotalPages:   int64(math.Ceil(float64(total) / float64(params.Limit))),
+		TotalPages:   page,
 		TotalResults: total,
 	})
 }

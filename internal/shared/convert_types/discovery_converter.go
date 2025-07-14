@@ -13,6 +13,7 @@ func MapToAnilistQuery(q *request.QueryDiscovery) *requestAn.QueryAnilist {
 		Page:     q.Page,
 		Limit:    q.Limit,
 		Search:   q.Search,
+		Genre:    q.Genre,
 		Category: q.Category,
 	}
 }

@@ -44,6 +44,12 @@ type AniListMedia struct {
 type AniListResponse struct {
 	Data struct {
 		Page struct {
+			PageInfo struct {
+				PerPage     int  `json:"perPage"`
+				CurrentPage int  `json:"currentPage"`
+				LastPage    int  `json:"lastPage"`
+				HasNextPage bool `json:"hasNextPage"`
+			} `json:"pageInfo"`
 			Media []AniListMedia `json:"media"`
 		} `json:"Page"`
 	} `json:"data"`

@@ -14,5 +14,6 @@ type QueryAnilist struct {
 	Limit    int    `query:"limit"`
 	Sort     string `query:"sort"`
 	Search   string `query:"search"`
+	Genre    string `query:"genre"`
 	Category string `query:"category"` // contoh: "popular", "ongoing", "trending"
 }

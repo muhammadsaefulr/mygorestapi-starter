@@ -37,12 +37,12 @@ func (s *AnilistService) GetAll(c *fiber.Ctx, params *request.QueryAnilist) ([]r
 		params.Limit = 10
 	}
 
-	result, err := modules.FetchAniListMedia(params.Category, params.Search, params)
+	result, totalPage, err := modules.FetchAniListMedia(params.Category, params.Search, params)
 	if err != nil {
 		return nil, 0, err
 	}
 
-	return result, int64(len(result)), nil
+	return result, int64(totalPage), nil
 }
 
 func (s *AnilistService) GetMovieDetailsByID(c *fiber.Ctx, id string) (*response.MovieDetailOnlyResponse, error) {

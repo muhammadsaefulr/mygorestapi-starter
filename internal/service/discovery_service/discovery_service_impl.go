@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/url"
 	"path"
+	"regexp"
 	"strings"
 	"sync"
 
@@ -50,9 +51,9 @@ func NewDiscoveryService(validate *validator.Validate, SvcAn svcAnilist.AnilistS
 	}
 }
 
-func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscovery) ([]response.MovieDetailOnlyResponse, int64, error) {
+func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscovery) ([]response.MovieDetailOnlyResponse, int64, int64, error) {
 	if err := s.Validate.Struct(params); err != nil {
-		return nil, 0, fiber.NewError(fiber.StatusBadRequest, "Invalid query params")
+		return nil, 0, 0, fiber.NewError(fiber.StatusBadRequest, "Invalid query params")
 	}
 	if params.Page < 1 {
 		params.Page = 1
@@ -64,6 +65,7 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 	var (
 		results  = []response.MovieDetailOnlyResponse{}
 		pageRes  int64
+		TotalRes int
 		firstErr error
 		mu       sync.Mutex
 		wg       sync.WaitGroup
@@ -111,6 +113,7 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 				mu.Lock()
 				results = append(results, main)
 				pageRes = 1
+				TotalRes = len(results)
 				mu.Unlock()
 			}()
 
@@ -147,6 +150,7 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 				mu.Lock()
 				results = append(results, main)
 				pageRes = 1
+				TotalRes = len(results)
 				mu.Unlock()
 			}()
 
@@ -183,16 +187,17 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 				mu.Lock()
 				results = append(results, main)
 				pageRes = 1
+				TotalRes = len(results)
 				mu.Unlock()
 			}()
 		}
 
 		wg.Wait()
 		if firstErr != nil && len(results) == 0 {
-			return nil, 0, firstErr
+			return nil, 0, 0, firstErr
 		}
 
-		return results, pageRes, nil
+		return results, pageRes, int64(TotalRes), nil
 	}
 
 	switch strings.ToLower(params.Type) {
@@ -201,7 +206,7 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 		go func() {
 			defer wg.Done()
 
-			data, page, err := s.AnilistSvc.GetAll(c, convert_types.MapToAnilistQuery(params))
+			data, totalPage, err := s.AnilistSvc.GetAll(c, convert_types.MapToAnilistQuery(params))
 			if err != nil {
 				s.Log.Errorf("AnilistSvc.GetAll error: %v", err)
 				mu.Lock()
@@ -212,9 +217,16 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 				return
 			}
 
-			var filtered []response.MovieDetailOnlyResponse
+			var (
+				filtered   = make([]response.MovieDetailOnlyResponse, 0, len(data))
+				numRegex   = regexp.MustCompile(`\d+`)
+				limitCount = 0
+			)
+
 			for _, d := range data {
-				found := false
+				if limitCount >= params.Limit {
+					break
+				}
 
 				tmp := *params
 				tmp.Search = d.Title
@@ -223,29 +235,61 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 					d.MovieID = movieData[0].MovieID
 					d.PathURL = "/movie/details/" + movieData[0].MovieID
 					filtered = append(filtered, d)
-					found = true
+					limitCount++
+					continue
 				}
 
-				if !found {
-					odResults, err := s.OdService.GetAnimeByTitle(d.Title)
-					if err == nil && len(odResults) > 0 {
-						for _, od := range odResults {
-							if od.URL != "" {
-								d.MovieID = path.Base(strings.TrimSuffix(od.URL, "/"))
-								d.PathURL = od.URL
-								filtered = append(filtered, d)
-								break
-							}
+				odResults, err := s.OdService.GetAnimeByTitle(d.Title)
+				if err != nil || len(odResults) == 0 {
+					continue
+				}
+
+				dTitleLower := strings.ToLower(d.Title)
+				dTitleWords := strings.Fields(dTitleLower)
+
+				if len(dTitleWords) > 4 {
+					dTitleWords = dTitleWords[:4]
+				}
+				matchKey := strings.Join(dTitleWords, " ")
+				dNums := numRegex.FindAllString(dTitleLower, -1)
+
+				for _, od := range odResults {
+					if od.URL == "" {
+						continue
+					}
+
+					odTitleLower := strings.ToLower(od.Title)
+					if !strings.Contains(odTitleLower, matchKey) {
+						continue
+					}
+
+					numMatch := true
+					for _, num := range dNums {
+						if !strings.Contains(odTitleLower, num) {
+							numMatch = false
+							break
 						}
+					}
+
+					if len(dNums) == 0 || numMatch {
+						d.MovieID = path.Base(strings.TrimSuffix(od.URL, "/"))
+						d.PathURL = od.URL
+						d.Title = od.Title
+						d.ThumbnailURL = od.ThumbnailURL
+						filtered = append(filtered, d)
+						limitCount++
+						break
 					}
 				}
 			}
 
 			mu.Lock()
 			results = append(results, filtered...)
-			pageRes = page
+			TotalRes = len(filtered)
+			pageRes = totalPage
 			mu.Unlock()
 		}()
+
 	case "movie", "tv":
 		wg.Add(1)
 		go func() {
@@ -276,6 +320,8 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 			mu.Lock()
 			results = append(results, filtered...)
 			pageRes = page
+			TotalRes = len(results)
+
 			mu.Unlock()
 		}()
 
@@ -309,20 +355,21 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 			mu.Lock()
 			results = append(results, filtered...)
 			pageRes = page
+			TotalRes = len(filtered)
 			mu.Unlock()
 		}()
 
 	default:
-		return nil, 0, fiber.NewError(fiber.StatusBadRequest, "Invalid query params")
+		return nil, 0, 0, fiber.NewError(fiber.StatusBadRequest, "Invalid query params")
 	}
 
 	wg.Wait()
 
 	if firstErr != nil && len(results) == 0 {
-		return nil, 0, firstErr
+		return nil, 0, 0, firstErr
 	}
 
-	return results, pageRes, nil
+	return results, pageRes, int64(TotalRes), nil
 }
 
 func (s *DiscoveryService) GetDiscoverDetailByTitle(c *fiber.Ctx, mediaType string, slug string) (*response.MovieDetailOnlyResponse, error) {
@@ -337,7 +384,7 @@ func (s *DiscoveryService) GetDiscoverDetailByTitle(c *fiber.Ctx, mediaType stri
 		Limit:    1,
 	}
 
-	results, _, err := s.GetDiscover(c, params)
+	results, _, _, err := s.GetDiscover(c, params)
 	if err != nil {
 		return nil, fiber.NewError(fiber.StatusNotFound, "Failed to search discovery: "+err.Error())
 	}
