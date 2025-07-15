@@ -40,7 +40,6 @@ func Connect(dbHost, dbName string) *gorm.DB {
 	}
 
 	//auto migrations
-	// db.Migrator().DropTable(&model.User{}, &model.Token{}, &model.Watchlist{}, &model.TrackEpisodeView{}, model.Comment{})
 	db.AutoMigrate(
 		&model.User{},
 		&model.Token{},
@@ -53,19 +52,25 @@ func Connect(dbHost, dbName string) *gorm.DB {
 		&model.MovieDetails{},
 		&model.MovieEpisode{},
 		&model.ReportError{},
+		&model.RolePermissions{},
 		&model.UserRole{},
 		&model.UserSubscription{},
-		&model.RolePermissions{},
 		&model.UserPoints{},
+		&model.BannerApp{},
 	)
 
 	// implements seed
+
+	if err := seed.SeedRolesAndPermissions(db); err != nil {
+		log.Fatal("gagal seed role permission:", err)
+	}
+
 	if err := seed.SeedUserRoles(db); err != nil {
 		log.Fatal("gagal seed user role:", err)
 	}
 
-	if err := seed.SeedRolesAndPermissions(db); err != nil {
-		log.Fatal("gagal seed role permission:", err)
+	if err := seed.SeedUsers(db); err != nil {
+		log.Fatal("gagal seed user:", err)
 	}
 
 	// Config connection pooling

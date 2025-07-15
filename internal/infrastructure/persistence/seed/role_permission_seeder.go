@@ -10,7 +10,7 @@ import (
 )
 
 var allRoles = map[string][]string{
-	"user": {"getUserSession"},
+	"user": {"getUserSession", "postReportError", "getBannerApp"},
 	"admin": {
 		"getUsers", "manageUsers", "getUserSession", "manageAnime",
 		"getUserRole", "getRolePermissions",
@@ -20,6 +20,7 @@ var allRoles = map[string][]string{
 		"userSubscriptionGet", "userSubscriptionPost", "userSubscriptionPut", "userSubscriptionDelete",
 		"getAllReportError", "postReportError", "getReportErrorByID",
 		"updateReportError", "deleteReportError",
+		"createBannerApp", "updateBannerApp", "deleteBannerApp", "getBannerApp",
 	},
 	"owner": {
 		"allActions",
@@ -86,7 +87,6 @@ func SeedRolesAndPermissions(db *gorm.DB) error {
 			}
 		}
 
-		// Assign permissions via many2many
 		if err := db.Model(&dbRole).Association("Permissions").Replace(rolePerms); err != nil {
 			log.Printf("❌ Gagal assign permission untuk role %s: %v", roleName, err)
 		}
