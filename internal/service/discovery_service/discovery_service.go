@@ -9,5 +9,6 @@ import (
 
 type DiscoveryServiceInterface interface {
 	GetDiscoverDetailByTitle(c *fiber.Ctx, mediaType, slug string) (*response.MovieDetailOnlyResponse, error)
+	GetDiscoverGenres(c *fiber.Ctx, params *request.QueryDiscovery) ([]response.GenreDetail, error)
 	GetDiscover(c *fiber.Ctx, params *request.QueryDiscovery) ([]response.MovieDetailOnlyResponse, int64, int64, error)
 }

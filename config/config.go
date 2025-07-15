@@ -14,6 +14,7 @@ var (
 	DBPassword          string
 	DBName              string
 	DBPort              int
+	TMDbApiKey          string
 	JWTSecret           string
 	JWTAccessExp        int
 	JWTRefreshExp       int
@@ -43,6 +44,9 @@ func init() {
 	DBPassword = viper.GetString("DB_PASSWORD")
 	DBName = viper.GetString("DB_NAME")
 	DBPort = viper.GetInt("DB_PORT")
+
+	// apikey configuration
+	TMDbApiKey = viper.GetString("TMDB_APIKEY")
 
 	// jwt configuration
 	JWTSecret = viper.GetString("JWT_SECRET")

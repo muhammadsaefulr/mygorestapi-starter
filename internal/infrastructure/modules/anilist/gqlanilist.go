@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/anilist/request"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/movie_details/response"
@@ -178,6 +179,49 @@ func FetchAniListDetail(id string) (response.MovieDetailOnlyResponse, error) {
 	}
 
 	return main, nil
+}
+
+func GetAniListAllGenres() ([]response.GenreDetail, error) {
+	baseURL := "https://graphql.anilist.co"
+	query := `
+		{
+			GenreCollection
+		}
+	`
+	reqBody := map[string]interface{}{
+		"query": query,
+	}
+	bodyBytes, err := json.Marshal(reqBody)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal request body: %w", err)
+	}
+
+	req, err := http.NewRequest(http.MethodPost, baseURL, bytes.NewBuffer(bodyBytes))
+	if err != nil {
+		return nil, fmt.Errorf("failed to create request: %w", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("failed to send request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var genreResult model.AniListGenreResponse
+	if err := json.NewDecoder(resp.Body).Decode(&genreResult); err != nil {
+		return nil, fmt.Errorf("failed to decode genre response: %w", err)
+	}
+
+	var genres []response.GenreDetail
+	for _, g := range genreResult.Data.GenreCollection {
+		genres = append(genres, response.GenreDetail{
+			GenreName: g,
+			GenreUrl:  fmt.Sprintf("/discovery?type=anime&genre=%s&category=genre", strings.ToLower(strings.ReplaceAll(g, " ", "-"))),
+		})
+	}
+
+	return genres, nil
 }
 
 func MapAniListToMovieDetails(m model.AniListMedia, movieType string) response.MovieDetailOnlyResponse {

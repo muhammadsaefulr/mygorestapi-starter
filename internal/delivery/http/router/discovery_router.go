@@ -14,4 +14,5 @@ func DiscoveryRoutes(v1 fiber.Router, c service.DiscoveryServiceInterface) {
 
 	group.Get("/", discoveryController.GetDiscover)
 	group.Get("/detail/:mediaType/:title", discoveryController.GetDiscoverDetailByTitle)
+	group.Get("/genres", discoveryController.GetDiscoverGenres)
 }

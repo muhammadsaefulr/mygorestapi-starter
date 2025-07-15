@@ -45,6 +45,15 @@ func (s *AnilistService) GetAll(c *fiber.Ctx, params *request.QueryAnilist) ([]r
 	return result, int64(totalPage), nil
 }
 
+func (s *AnilistService) GetAllGenres(c *fiber.Ctx) ([]response.GenreDetail, error) {
+	result, err := modules.GetAniListAllGenres()
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
 func (s *AnilistService) GetMovieDetailsByID(c *fiber.Ctx, id string) (*response.MovieDetailOnlyResponse, error) {
 	detail, err := modules.FetchAniListDetail(id)
 	if err != nil {

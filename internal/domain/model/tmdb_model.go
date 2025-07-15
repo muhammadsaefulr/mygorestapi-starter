@@ -41,3 +41,10 @@ type TMDbDetailResponse struct {
 	NumberOfEpisodes int    `json:"number_of_episodes"`
 	Status           string `json:"status"`
 }
+
+type TMDBGenreResponse struct {
+	Genres []struct {
+		ID   int    `json:"id"`
+		Name string `json:"name"`
+	} `json:"genres"`
+}

@@ -54,3 +54,9 @@ type AniListResponse struct {
 		} `json:"Page"`
 	} `json:"data"`
 }
+
+type AniListGenreResponse struct {
+	Data struct {
+		GenreCollection []string `json:"GenreCollection"`
+	} `json:"data"`
+}

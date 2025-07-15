@@ -71,6 +71,35 @@ func (c *DiscoveryController) GetDiscover(ctx *fiber.Ctx) error {
 }
 
 // @Tags         discovery
+// @Summary      Get genres
+// @Description  Get genres
+// @Accept       json
+// @Produce      json
+// @Param        type query     string  false "Movie Type"  Enums(anime, kdrama, tv, movie)  default(anime)
+// @Router       /discovery/genres [get]
+func (c *DiscoveryController) GetDiscoverGenres(ctx *fiber.Ctx) error {
+	params := &request.QueryDiscovery{
+		Type: ctx.Query("type"),
+	}
+
+	if err := ctx.QueryParser(params); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, "Invalid query params")
+	}
+
+	data, err := c.Service.GetDiscoverGenres(ctx, params)
+	if err != nil {
+		return err
+	}
+
+	return ctx.JSON(response.SuccessWithPaginate[responses.GenreDetail]{
+		Code:    fiber.StatusOK,
+		Status:  "success",
+		Message: "Successfully retrieved data",
+		Results: data,
+	})
+}
+
+// @Tags         discovery
 // @Summary      Get detail by title
 // @Description  Get detail by title
 // @Accept       json

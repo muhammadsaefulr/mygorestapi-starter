@@ -505,6 +505,16 @@ definitions:
     - name
     - password
     type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_banner_app_request.CreateBannerApp:
+    properties:
+      name:
+        type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_banner_app_request.UpdateBannerApp:
+    properties:
+      name:
+        type: string
+    type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_comment_request.CreateComment:
     properties:
       content:
@@ -1640,6 +1650,93 @@ paths:
       summary: Verify email
       tags:
       - Auth
+  /banner_app:
+    get:
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      - description: Search term
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Get all banner_app
+      tags:
+      - banner_app
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_banner_app_request.CreateBannerApp'
+      produces:
+      - application/json
+      responses: {}
+      summary: Create a new banner_app
+      tags:
+      - banner_app
+  /banner_app/{id}:
+    delete:
+      parameters:
+      - description: BannerApp ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Delete a banner_app
+      tags:
+      - banner_app
+    get:
+      parameters:
+      - description: BannerApp ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Get a banner_app by ID
+      tags:
+      - banner_app
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: BannerApp ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_banner_app_request.UpdateBannerApp'
+      produces:
+      - application/json
+      responses: {}
+      summary: Update a banner_app
+      tags:
+      - banner_app
   /comments:
     post:
       description: Create a comment. For replying to a comment, fill `parent_id` with
@@ -1837,6 +1934,28 @@ paths:
       - application/json
       responses: {}
       summary: Get detail by title
+      tags:
+      - discovery
+  /discovery/genres:
+    get:
+      consumes:
+      - application/json
+      description: Get genres
+      parameters:
+      - default: anime
+        description: Movie Type
+        enum:
+        - anime
+        - kdrama
+        - tv
+        - movie
+        in: query
+        name: type
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Get genres
       tags:
       - discovery
   /health-check:

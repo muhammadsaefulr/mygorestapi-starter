@@ -65,6 +65,15 @@ func (s *TMDbService) GetAll(c *fiber.Ctx, params *request.QueryTmdb) ([]respons
 	return responseList, int64(len(responseList)), nil
 }
 
+func (s *TMDbService) GetAllGenres(c *fiber.Ctx) ([]response.GenreDetail, error) {
+	result, err := modules.GetTmdbListAllGenres()
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
 func (s *TMDbService) GetDetailByID(c *fiber.Ctx, id string, typeMov string) (*response.MovieDetailOnlyResponse, error) {
 	idstr, errParseInt := strconv.Atoi(id)
 	if errParseInt != nil {

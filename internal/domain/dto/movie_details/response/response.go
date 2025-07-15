@@ -10,6 +10,11 @@ type EpisodesResponse struct {
 	VideoURL   string `json:"video_url"`
 }
 
+type GenreDetail struct {
+	GenreName string `json:"genre_name"`
+	GenreUrl  string `json:"genre_url"`
+}
+
 type MovieDetailOnlyResponse struct {
 	IDSource     string `json:"id_source,omitempty"`
 	MovieID      string `json:"movie_id,omitempty"`

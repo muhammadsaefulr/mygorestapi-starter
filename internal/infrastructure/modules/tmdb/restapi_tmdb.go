@@ -8,14 +8,16 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
 	"sync"
 
+	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/movie_details/response"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/tmdb/request"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 )
 
-var tmdbApiKey = "7a69a6a33b39eb0ba8503c9fe32eb132"
+var tmdbApiKey = config.TMDbApiKey
 
 func FetchTMDbMedia(category, queryTitle, mediaType string, param *request.QueryTmdb) ([]response.MovieDetailOnlyResponse, error) {
 	baseURL := "https://api.themoviedb.org/3"
@@ -162,6 +164,31 @@ func FetchTMDbDetail(id int, mediaType string, withRekom bool) (response.MovieDe
 	}
 
 	return main, nil
+}
+
+func GetTmdbListAllGenres() ([]response.GenreDetail, error) {
+	baseURL := "https://api.themoviedb.org/3/genre/movie/list?api_key=" + tmdbApiKey + "&language=en-US"
+
+	GenreResp, err := http.Get(baseURL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch genre: %w", err)
+	}
+	defer GenreResp.Body.Close()
+
+	var genreResult model.TMDBGenreResponse
+	if err := json.NewDecoder(GenreResp.Body).Decode(&genreResult); err != nil {
+		return nil, fmt.Errorf("decode genre failed: %w", err)
+	}
+
+	var genres []response.GenreDetail
+	for _, g := range genreResult.Genres {
+		genres = append(genres, response.GenreDetail{
+			GenreName: g.Name,
+			GenreUrl:  fmt.Sprintf("/discovery?type=movie&genre=%s&category=genre", strings.ToLower(g.Name)),
+		})
+	}
+
+	return genres, nil
 }
 
 func MapTMDbToMovieDetailsWithDetail(item model.TMDbResult, mediaType string, detail model.TMDbDetailResponse) response.MovieDetailOnlyResponse {

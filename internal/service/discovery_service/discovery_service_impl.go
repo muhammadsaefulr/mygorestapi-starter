@@ -130,7 +130,7 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 
 				tmdbResults, _, err := s.TmdbSvc.GetAll(c, convert_types.MapToTmdbQuery(&tmp))
 				if err != nil || len(tmdbResults) == 0 {
-					s.Log.Errorf("TMDb fetch error: %v", err)
+					s.Log.Errorf("TMDb fe	tch error: %v", err)
 					return
 				}
 				main := tmdbResults[0]
@@ -462,4 +462,86 @@ func (s *DiscoveryService) GetDiscoverDetailByTitle(c *fiber.Ctx, mediaType stri
 	}
 
 	return detail, nil
+}
+
+func (s *DiscoveryService) GetDiscoverGenres(c *fiber.Ctx, params *request.QueryDiscovery) ([]response.GenreDetail, error) {
+
+	if err := s.Validate.Struct(params); err != nil {
+		return nil, fiber.NewError(fiber.StatusBadRequest, "Invalid query params")
+	}
+
+	if params.Page < 1 {
+		params.Page = 1
+	}
+	if params.Limit < 1 {
+		params.Limit = 10
+	}
+
+	var (
+		results  = []response.GenreDetail{}
+		firstErr error
+		mu       sync.Mutex
+		wg       sync.WaitGroup
+	)
+
+	switch strings.ToLower(params.Type) {
+	case "anime":
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			data, err := s.AnilistSvc.GetAllGenres(c)
+			if err != nil {
+				s.Log.Errorf("AnilistSvc.GetAllGenres error: %v", err)
+				mu.Lock()
+				if firstErr == nil {
+					firstErr = err
+				}
+				mu.Unlock()
+				return
+			}
+			var filtered []response.GenreDetail
+			for _, d := range data {
+				filtered = append(filtered, d)
+			}
+			mu.Lock()
+			results = append(results, filtered...)
+			mu.Unlock()
+		}()
+	case "movie":
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+
+			data, err := s.TmdbSvc.GetAllGenres(c)
+			if err != nil {
+				s.Log.Errorf("TmdbSvc.GetAllGenres error: %v", err)
+				mu.Lock()
+				if firstErr == nil {
+					firstErr = err
+				}
+				mu.Unlock()
+				return
+			}
+
+			var filtered []response.GenreDetail
+			for _, d := range data {
+				filtered = append(filtered, d)
+			}
+
+			mu.Lock()
+			results = append(results, filtered...)
+			mu.Unlock()
+		}()
+
+	default:
+		return nil, fiber.NewError(fiber.StatusBadRequest, "Invalid query params")
+	}
+
+	wg.Wait()
+
+	if firstErr != nil && len(results) == 0 {
+		return nil, firstErr
+	}
+
+	return results, nil
 }
