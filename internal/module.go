@@ -55,6 +55,9 @@ import (
 	userPointsRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/user_points"
 	userPointsService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_points_service"
 
+	bannerAppRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/banner_app"
+	bannerAppService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/banner_app_service"
+
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/validation"
 
@@ -134,6 +137,9 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	userPointsRepo := userPointsRepo.NewUserPointsRepositoryImpl(db)
 	userPointsSvc := userPointsService.NewUserPointsService(userPointsRepo, validate)
 
+	bannerAppRepo := bannerAppRepo.NewBannerAppRepositoryImpl(db)
+	bannerAppSvc := bannerAppService.NewBannerAppService(bannerAppRepo, validate)
+
 	middleware.InitAuthMiddleware(userSvc)
 
 	v1 := app.Group("/api/v1")
@@ -169,6 +175,7 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	// other services
 
 	router.UserPointsRoutes(v1, userPointsSvc)
+	router.BannerAppRoutes(v1, bannerAppSvc)
 
 	if !config.IsProd {
 		v1.Get("/docs", func(c *fiber.Ctx) error {
