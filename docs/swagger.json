@@ -94,6 +94,160 @@
                 }
             }
         },
+        "/app/banner": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "banner_app"
+                ],
+                "summary": "Get all banner_app",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search term",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {}
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "banner_app"
+                ],
+                "summary": "Create a new banner_app",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_banner_app_request.CreateBannerApp"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/app/banner/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "banner_app"
+                ],
+                "summary": "Get a banner_app by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "BannerApp ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "banner_app"
+                ],
+                "summary": "Update a banner_app",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "BannerApp ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_banner_app_request.UpdateBannerApp"
+                        }
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "banner_app"
+                ],
+                "summary": "Delete a banner_app",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "BannerApp ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/auth/forgot-password": {
             "post": {
                 "description": "An email will be sent to reset password.",
@@ -416,135 +570,6 @@
                         }
                     }
                 }
-            }
-        },
-        "/banner_app": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "banner_app"
-                ],
-                "summary": "Get all banner_app",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "default": 1,
-                        "description": "Page number",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "default": 10,
-                        "description": "Items per page",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Search term",
-                        "name": "search",
-                        "in": "query"
-                    }
-                ],
-                "responses": {}
-            },
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "banner_app"
-                ],
-                "summary": "Create a new banner_app",
-                "parameters": [
-                    {
-                        "description": "Request body",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_banner_app_request.CreateBannerApp"
-                        }
-                    }
-                ],
-                "responses": {}
-            }
-        },
-        "/banner_app/{id}": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "banner_app"
-                ],
-                "summary": "Get a banner_app by ID",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "BannerApp ID (uint)",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {}
-            },
-            "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "banner_app"
-                ],
-                "summary": "Update a banner_app",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "BannerApp ID (uint)",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Request body",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_banner_app_request.UpdateBannerApp"
-                        }
-                    }
-                ],
-                "responses": {}
-            },
-            "delete": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "banner_app"
-                ],
-                "summary": "Delete a banner_app",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "BannerApp ID (uint)",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {}
             }
         },
         "/comments": {
@@ -4013,7 +4038,13 @@
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_banner_app_request.CreateBannerApp": {
             "type": "object",
             "properties": {
-                "name": {
+                "detail_url": {
+                    "type": "string"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "title": {
                     "type": "string"
                 }
             }
@@ -4021,7 +4052,16 @@
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_banner_app_request.UpdateBannerApp": {
             "type": "object",
             "properties": {
+                "detail_url": {
+                    "type": "string"
+                },
+                "image_url": {
+                    "type": "string"
+                },
                 "name": {
+                    "type": "string"
+                },
+                "title": {
                     "type": "string"
                 }
             }

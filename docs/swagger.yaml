@@ -507,12 +507,22 @@ definitions:
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_banner_app_request.CreateBannerApp:
     properties:
-      name:
+      detail_url:
+        type: string
+      image_url:
+        type: string
+      title:
         type: string
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_banner_app_request.UpdateBannerApp:
     properties:
+      detail_url:
+        type: string
+      image_url:
+        type: string
       name:
+        type: string
+      title:
         type: string
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_comment_request.CreateComment:
@@ -1441,6 +1451,103 @@ paths:
       summary: Get a movie_details by ID
       tags:
       - Anilist
+  /app/banner:
+    get:
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      - description: Search term
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get all banner_app
+      tags:
+      - banner_app
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_banner_app_request.CreateBannerApp'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Create a new banner_app
+      tags:
+      - banner_app
+  /app/banner/{id}:
+    delete:
+      parameters:
+      - description: BannerApp ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Delete a banner_app
+      tags:
+      - banner_app
+    get:
+      parameters:
+      - description: BannerApp ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get a banner_app by ID
+      tags:
+      - banner_app
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: BannerApp ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_banner_app_request.UpdateBannerApp'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update a banner_app
+      tags:
+      - banner_app
   /auth/forgot-password:
     post:
       consumes:
@@ -1650,93 +1757,6 @@ paths:
       summary: Verify email
       tags:
       - Auth
-  /banner_app:
-    get:
-      parameters:
-      - default: 1
-        description: Page number
-        in: query
-        name: page
-        type: integer
-      - default: 10
-        description: Items per page
-        in: query
-        name: limit
-        type: integer
-      - description: Search term
-        in: query
-        name: search
-        type: string
-      produces:
-      - application/json
-      responses: {}
-      summary: Get all banner_app
-      tags:
-      - banner_app
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: Request body
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_banner_app_request.CreateBannerApp'
-      produces:
-      - application/json
-      responses: {}
-      summary: Create a new banner_app
-      tags:
-      - banner_app
-  /banner_app/{id}:
-    delete:
-      parameters:
-      - description: BannerApp ID (uint)
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses: {}
-      summary: Delete a banner_app
-      tags:
-      - banner_app
-    get:
-      parameters:
-      - description: BannerApp ID (uint)
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses: {}
-      summary: Get a banner_app by ID
-      tags:
-      - banner_app
-    put:
-      consumes:
-      - application/json
-      parameters:
-      - description: BannerApp ID (uint)
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Request body
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_banner_app_request.UpdateBannerApp'
-      produces:
-      - application/json
-      responses: {}
-      summary: Update a banner_app
-      tags:
-      - banner_app
   /comments:
     post:
       description: Create a comment. For replying to a comment, fill `parent_id` with
