@@ -342,7 +342,7 @@ func (a *AuthController) GoogleCallback(c *fiber.Ctx) error {
 		return errJSON
 	}
 
-	user, err := a.UserService.CreateGoogleUser(c, googleUser)
+	user, err := a.UserService.GoogleAuthHandler(c, googleUser)
 	if err != nil {
 		return err
 	}

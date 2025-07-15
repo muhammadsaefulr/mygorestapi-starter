@@ -1,6 +1,8 @@
 package service
 
 import (
+	"errors"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -77,20 +79,29 @@ func (s *userService) CreateUser(c *fiber.Ctx, req *request.CreateUser) (*user_m
 	return user, nil
 }
 
-func (s *userService) CreateGoogleUser(c *fiber.Ctx, req *request.GoogleLogin) (*user_model.User, error) {
+func (s *userService) GoogleAuthHandler(c *fiber.Ctx, req *request.GoogleLogin) (*user_model.User, error) {
 	if err := s.Validate.Struct(req); err != nil {
 		return nil, err
 	}
 
-	userFromDB, err := s.GetUserByEmail(c, req.Email)
-	if err == nil {
-		return nil, fiber.NewError(fiber.StatusConflict, "Email is already in use")
+	userFromDB, err := s.UserRepo.GetUserByEmail(c.Context(), req.Email)
+	if err == nil && userFromDB != nil {
+		if userFromDB.Password != "" {
+			return nil, fiber.NewError(fiber.StatusUnauthorized, "Silakan login menggunakan email dan password")
+		}
+
+		return userFromDB, nil
+	}
+
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		s.Log.Errorf("Unexpected error checking user email: %+v", err)
+		return nil, fiber.NewError(fiber.StatusInternalServerError, "Internal Server Error")
 	}
 
 	createUser := &user_model.User{
 		Name:          req.Name,
 		Email:         req.Email,
-		VerifiedEmail: userFromDB.VerifiedEmail,
+		VerifiedEmail: false,
 	}
 
 	if createErr := s.UserRepo.CreateUser(c.Context(), createUser); createErr != nil {
