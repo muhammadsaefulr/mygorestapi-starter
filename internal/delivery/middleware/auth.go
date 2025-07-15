@@ -39,9 +39,15 @@ func Auth(requiredRights ...string) fiber.Handler {
 
 		c.Locals("user", user)
 
+		// log.Printf("user permission: %+v", user.UserRole.Permissions)
+
+		var userRights []string
+		for _, p := range user.UserRole.Permissions {
+			userRights = append(userRights, p.PermissionName)
+		}
+
 		if len(requiredRights) > 0 {
-			userRights, hasRights := config.RoleRights[user.Role]
-			if (!hasRights || !hasAllRights(userRights, requiredRights)) && c.Params("userId") != userID {
+			if (!hasAllRights(userRights, requiredRights)) && c.Params("userId") != userID {
 				return fiber.NewError(fiber.StatusForbidden, "You don't have permission to access this resource")
 			}
 		}
