@@ -734,11 +734,15 @@ definitions:
     properties:
       episode_id:
         type: string
+      movie_type:
+        type: string
       problem_desc:
         type: string
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_report_error_request.UpdateReportError:
     properties:
+      movie_type:
+        type: string
       problem_desc:
         type: string
       status_report:
@@ -1008,8 +1012,14 @@ definitions:
         type: string
       roles:
         $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserRole'
+      user_badge:
+        items:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserBadgeInfo'
+        type: array
       user_point:
         $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserPoints'
+      user_subscription:
+        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserSubscription'
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_role_request.CreateUserRole:
     properties:
@@ -1382,6 +1392,82 @@ definitions:
       url:
         type: string
     type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.SubscriptionPlan:
+    properties:
+      benefit:
+        items:
+          type: string
+        type: array
+      createdAt:
+        type: string
+      duration:
+        type: integer
+      id:
+        type: integer
+      planName:
+        type: string
+      price:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.User:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      role:
+        type: string
+      role_id:
+        type: integer
+      user_badge:
+        items:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserBadgeInfo'
+        type: array
+      user_point:
+        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserPoints'
+      user_role:
+        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserRole'
+      user_subscription:
+        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserSubscription'
+      verified_email:
+        type: boolean
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserBadge:
+    properties:
+      badgeName:
+        type: string
+      color:
+        type: string
+      createdAt:
+        type: string
+      iconURL:
+        type: string
+      id:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserBadgeInfo:
+    properties:
+      badge:
+        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserBadge'
+      badgeID:
+        type: integer
+      givenAt:
+        type: string
+      handledBy:
+        type: string
+      id:
+        type: integer
+      note:
+        type: string
+      userID:
+        type: string
+    type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserPoints:
     properties:
       createdAt:
@@ -1408,6 +1494,31 @@ definitions:
       roleName:
         type: string
       updatedAt:
+        type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserSubscription:
+    properties:
+      createdAt:
+        type: string
+      endDate:
+        type: string
+      id:
+        type: integer
+      isActive:
+        type: boolean
+      startDate:
+        type: string
+      subscription_plan:
+        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.SubscriptionPlan'
+      subscriptionPlanID:
+        type: integer
+      updatedAt:
+        type: string
+      updatedBy:
+        type: string
+      user:
+        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.User'
+      userID:
         type: string
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.VideoSource:
@@ -1464,7 +1575,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response_MovieDetailOnlyResponse'
-      summary: Get anime discovery list (popular, trending, ongoing, rekomendasi)
+      summary: Get anime anilist gql list (popular, trending, ongoing, rekomendasi)
       tags:
       - Anilist
   /anilist/{id}:

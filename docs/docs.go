@@ -24,7 +24,7 @@ const docTemplate = `{
                 "tags": [
                     "Anilist"
                 ],
-                "summary": "Get anime discovery list (popular, trending, ongoing, rekomendasi)",
+                "summary": "Get anime anilist gql list (popular, trending, ongoing, rekomendasi)",
                 "parameters": [
                     {
                         "minimum": 1,
@@ -4628,6 +4628,9 @@ const docTemplate = `{
                 "episode_id": {
                     "type": "string"
                 },
+                "movie_type": {
+                    "type": "string"
+                },
                 "problem_desc": {
                     "type": "string"
                 }
@@ -4636,6 +4639,9 @@ const docTemplate = `{
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_report_error_request.UpdateReportError": {
             "type": "object",
             "properties": {
+                "movie_type": {
+                    "type": "string"
+                },
                 "problem_desc": {
                     "type": "string"
                 },
@@ -5018,8 +5024,17 @@ const docTemplate = `{
                 "roles": {
                     "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserRole"
                 },
+                "user_badge": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserBadgeInfo"
+                    }
+                },
                 "user_point": {
                     "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserPoints"
+                },
+                "user_subscription": {
+                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserSubscription"
                 }
             }
         },
@@ -5584,6 +5599,122 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.SubscriptionPlan": {
+            "type": "object",
+            "properties": {
+                "benefit": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "duration": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "planName": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.User": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "role_id": {
+                    "type": "integer"
+                },
+                "user_badge": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserBadgeInfo"
+                    }
+                },
+                "user_point": {
+                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserPoints"
+                },
+                "user_role": {
+                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserRole"
+                },
+                "user_subscription": {
+                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserSubscription"
+                },
+                "verified_email": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserBadge": {
+            "type": "object",
+            "properties": {
+                "badgeName": {
+                    "type": "string"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "iconURL": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserBadgeInfo": {
+            "type": "object",
+            "properties": {
+                "badge": {
+                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserBadge"
+                },
+                "badgeID": {
+                    "type": "integer"
+                },
+                "givenAt": {
+                    "type": "string"
+                },
+                "handledBy": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "note": {
+                    "type": "string"
+                },
+                "userID": {
+                    "type": "string"
+                }
+            }
+        },
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserPoints": {
             "type": "object",
             "properties": {
@@ -5623,6 +5754,44 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserSubscription": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "endDate": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isActive": {
+                    "type": "boolean"
+                },
+                "startDate": {
+                    "type": "string"
+                },
+                "subscriptionPlanID": {
+                    "type": "integer"
+                },
+                "subscription_plan": {
+                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.SubscriptionPlan"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "updatedBy": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.User"
+                },
+                "userID": {
                     "type": "string"
                 }
             }

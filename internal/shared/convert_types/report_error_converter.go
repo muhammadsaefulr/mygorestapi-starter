@@ -10,14 +10,23 @@ func CreateReportErrorToModel(req *request.CreateReportError) *model.ReportError
 	return &model.ReportError{
 		ReportedBy:  uuid.MustParse(req.ReportedBy),
 		ProblemDesc: req.ProblemDesc,
+		TypeMovie:   req.TypeMovie,
 		EpisodeId:   req.EpisodeId,
 	}
 }
 
 func UpdateReportErrorToModel(req *request.UpdateReportError) *model.ReportError {
+
+	var handledBy *uuid.UUID
+	if req.HandledBy != "" {
+		parsed := uuid.MustParse(req.HandledBy)
+		handledBy = &parsed
+	}
+
 	return &model.ReportError{
-		HandledBy:    uuid.MustParse(req.HandledBy),
+		HandledBy:    handledBy,
 		ProblemDesc:  req.ProblemDesc,
+		TypeMovie:    req.TypeMovie,
 		StatusReport: req.StatusReport,
 	}
 }
