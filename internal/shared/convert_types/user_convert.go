@@ -45,12 +45,14 @@ func UserResponseToUserModel(user *model.User) *model.User {
 
 func UserModelToUserResponse(user *model.User) *response.GetUsersResponse {
 	return &response.GetUsersResponse{
-		ID:              user.ID,
-		Name:            user.Name,
-		Email:           user.Email,
-		Role:            user.Role,
-		Roles:           user.UserRole,
-		UserPoint:       user.UserPoint,
-		IsEmailVerified: user.VerifiedEmail,
+		ID:               user.ID,
+		Name:             user.Name,
+		Email:            user.Email,
+		Role:             user.Role,
+		Roles:            user.UserRole,
+		UserBadge:        user.UserBadge,
+		UserSubscription: user.UserSubscription,
+		UserPoint:        user.UserPoint,
+		IsEmailVerified:  user.VerifiedEmail,
 	}
 }

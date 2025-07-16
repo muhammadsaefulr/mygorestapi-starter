@@ -6,11 +6,10 @@ import (
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 )
 
 var allRoles = map[string][]string{
-	"user": {"getUserSession", "postReportError", "getBannerApp"},
+	"user": {"getUserSession", "postReportError", "getBannerApp", "getUserBadge"},
 	"admin": {
 		"getUsers", "manageUsers", "getUserSession", "manageAnime",
 		"getUserRole", "getRolePermissions",
@@ -21,6 +20,8 @@ var allRoles = map[string][]string{
 		"getAllReportError", "postReportError", "getReportErrorByID",
 		"updateReportError", "deleteReportError",
 		"createBannerApp", "updateBannerApp", "deleteBannerApp", "getBannerApp",
+		"addUserBadge", "updateUserBadge", "deleteUserBadge", "getUserBadge",
+		"addBadge", "updateBadge", "deleteBadge", "getBadge",
 	},
 	"owner": {
 		"allActions",
@@ -28,70 +29,80 @@ var allRoles = map[string][]string{
 }
 
 func SeedRolesAndPermissions(db *gorm.DB) error {
-	// 1. Seed all unique permissions
-	permMap := make(map[string]model.RolePermissions)
+	// 1. Insert all unique permissions
+	permSet := make(map[string]struct{})
 	for _, perms := range allRoles {
 		for _, name := range perms {
-			permMap[name] = model.RolePermissions{
+			permSet[name] = struct{}{}
+		}
+	}
+
+	for name := range permSet {
+		var count int64
+		db.Model(&model.RolePermissions{}).Where("permission_name = ?", name).Count(&count)
+		if count == 0 {
+			perm := model.RolePermissions{
 				PermissionName: name,
 				CreatedAt:      time.Now(),
 				UpdatedAt:      time.Now(),
 			}
+			if err := db.Create(&perm).Error; err != nil {
+				log.Printf("❌ Gagal insert permission %s: %v", name, err)
+			}
 		}
 	}
-	var permissions []model.RolePermissions
-	for _, p := range permMap {
-		permissions = append(permissions, p)
-	}
-	if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&permissions).Error; err != nil {
+
+	// 2. Load all permissions to a map
+	var allPerms []model.RolePermissions
+	if err := db.Find(&allPerms).Error; err != nil {
 		return err
 	}
-
-	// 2. Reload permissions from DB into map[name] => record
-	var permissionRecords []model.RolePermissions
-	if err := db.Find(&permissionRecords).Error; err != nil {
-		return err
-	}
-	permLookup := make(map[string]model.RolePermissions)
-	for _, p := range permissionRecords {
-		permLookup[p.PermissionName] = p
+	permMap := make(map[string]model.RolePermissions)
+	for _, p := range allPerms {
+		permMap[p.PermissionName] = p
 	}
 
-	// 3. Seed roles one by one, then assign permissions
+	// 3. Process each role
 	for roleName, permNames := range allRoles {
-		// Insert role (ON CONFLICT DO NOTHING)
-		role := model.UserRole{
-			RoleName:  roleName,
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
-		}
-		if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&role).Error; err != nil {
-			log.Printf("❌ Gagal insert role %s: %v", roleName, err)
-			continue
-		}
-
-		// Fetch role (guaranteed exists now)
-		var dbRole model.UserRole
-		if err := db.Where("role_name = ?", roleName).First(&dbRole).Error; err != nil {
-			log.Printf("❌ Gagal fetch role %s: %v", roleName, err)
-			continue
-		}
-
-		// Collect permission records
-		var rolePerms []model.RolePermissions
-		for _, pname := range permNames {
-			if perm, ok := permLookup[pname]; ok {
-				rolePerms = append(rolePerms, perm)
-			} else {
-				log.Printf("⚠️ Permission %s tidak ditemukan di DB", pname)
+		// Ensure role exists
+		var role model.UserRole
+		if err := db.Where("role_name = ?", roleName).First(&role).Error; err != nil {
+			role = model.UserRole{
+				RoleName:  roleName,
+				CreatedAt: time.Now(),
+				UpdatedAt: time.Now(),
+			}
+			if err := db.Create(&role).Error; err != nil {
+				log.Printf("❌ Gagal insert role %s: %v", roleName, err)
+				continue
 			}
 		}
 
-		if err := db.Model(&dbRole).Association("Permissions").Replace(rolePerms); err != nil {
-			log.Printf("❌ Gagal assign permission untuk role %s: %v", roleName, err)
+		// Load current permissions for the role
+		var currentPerms []model.RolePermissions
+		if err := db.Model(&role).Association("Permissions").Find(&currentPerms); err != nil {
+			log.Printf("❌ Gagal load permissions untuk role %s: %v", roleName, err)
+			continue
+		}
+		existingPerms := make(map[string]bool)
+		for _, p := range currentPerms {
+			existingPerms[p.PermissionName] = true
+		}
+
+		// Append only new permissions
+		for _, permName := range permNames {
+			if !existingPerms[permName] {
+				if perm, ok := permMap[permName]; ok {
+					if err := db.Model(&role).Association("Permissions").Append(&perm); err != nil {
+						log.Printf("❌ Gagal assign permission %s ke role %s: %v", permName, roleName, err)
+					}
+				} else {
+					log.Printf("⚠️ Permission %s tidak ditemukan di permMap", permName)
+				}
+			}
 		}
 	}
 
-	log.Println("✅ Seeder role & permission berhasil.")
+	log.Println("✅ Seeder role & permission selesai.")
 	return nil
 }

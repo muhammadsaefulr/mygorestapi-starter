@@ -572,8 +572,167 @@
                 }
             }
         },
+        "/badge": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_badge"
+                ],
+                "summary": "Get all user_badge",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search term",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {}
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_badge"
+                ],
+                "summary": "Create a new user_badge",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_badge_request.CreateUserBadge"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/badge/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_badge"
+                ],
+                "summary": "Get a user_badge by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "UserBadge ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_badge"
+                ],
+                "summary": "Update a user_badge",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "UserBadge ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_badge_request.UpdateUserBadge"
+                        }
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_badge"
+                ],
+                "summary": "Delete a user_badge",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "UserBadge ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/comments": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Create a comment. For replying to a comment, fill `parent_id` with the parent comment's ID. If replying to a child comment (nested reply), just mention the user using @username — the frontend should convert it into a hyperlink pointing to /users/info/:username.",
                 "produces": [
                     "application/json"
@@ -2370,6 +2529,116 @@
                         }
                     }
                 }
+            }
+        },
+        "/user/badge": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_badge"
+                ],
+                "summary": "Create user badge info",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_badge_request.CreateUserBadgeInfo"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/user/badge/{user_id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_badge"
+                ],
+                "summary": "Get user badge info by user id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_badge"
+                ],
+                "summary": "Update user badge info",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_badge_request.UpdateUserBadgeInfo"
+                        }
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user_badge"
+                ],
+                "summary": "Delete user badge info",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
             }
         },
         "/user/role": {
@@ -4557,6 +4826,59 @@
                 },
                 "price": {
                     "type": "integer"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_badge_request.CreateUserBadge": {
+            "type": "object",
+            "properties": {
+                "badge_name": {
+                    "type": "string"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "icon_url": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_badge_request.CreateUserBadgeInfo": {
+            "type": "object",
+            "properties": {
+                "badge_id": {
+                    "type": "integer"
+                },
+                "note": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_badge_request.UpdateUserBadge": {
+            "type": "object",
+            "properties": {
+                "badge_name": {
+                    "type": "string"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "icon_url": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_badge_request.UpdateUserBadgeInfo": {
+            "type": "object",
+            "properties": {
+                "badge_id": {
+                    "type": "integer"
+                },
+                "note": {
+                    "type": "string"
                 }
             }
         },

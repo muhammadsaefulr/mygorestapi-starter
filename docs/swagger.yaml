@@ -878,6 +878,40 @@ definitions:
       price:
         type: integer
     type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_badge_request.CreateUserBadge:
+    properties:
+      badge_name:
+        type: string
+      color:
+        type: string
+      icon_url:
+        type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_badge_request.CreateUserBadgeInfo:
+    properties:
+      badge_id:
+        type: integer
+      note:
+        type: string
+      user_id:
+        type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_badge_request.UpdateUserBadge:
+    properties:
+      badge_name:
+        type: string
+      color:
+        type: string
+      icon_url:
+        type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_badge_request.UpdateUserBadgeInfo:
+    properties:
+      badge_id:
+        type: integer
+      note:
+        type: string
+    type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_points_request.UserPoints:
     properties:
       type_update:
@@ -1757,6 +1791,103 @@ paths:
       summary: Verify email
       tags:
       - Auth
+  /badge:
+    get:
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      - description: Search term
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get all user_badge
+      tags:
+      - user_badge
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_badge_request.CreateUserBadge'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Create a new user_badge
+      tags:
+      - user_badge
+  /badge/{id}:
+    delete:
+      parameters:
+      - description: UserBadge ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Delete a user_badge
+      tags:
+      - user_badge
+    get:
+      parameters:
+      - description: UserBadge ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get a user_badge by ID
+      tags:
+      - user_badge
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: UserBadge ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_badge_request.UpdateUserBadge'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update a user_badge
+      tags:
+      - user_badge
   /comments:
     post:
       description: Create a comment. For replying to a comment, fill `parent_id` with
@@ -1773,6 +1904,8 @@ paths:
       produces:
       - application/json
       responses: {}
+      security:
+      - BearerAuth: []
       summary: Create a comment
       tags:
       - Comments
@@ -2936,6 +3069,74 @@ paths:
       summary: Get a movie_details by ID
       tags:
       - Tmdb
+  /user/badge:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_badge_request.CreateUserBadgeInfo'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Create user badge info
+      tags:
+      - user_badge
+  /user/badge/{user_id}:
+    delete:
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Delete user badge info
+      tags:
+      - user_badge
+    get:
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get user badge info by user id
+      tags:
+      - user_badge
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_badge_request.UpdateUserBadgeInfo'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update user badge info
+      tags:
+      - user_badge
   /user/role:
     get:
       parameters:

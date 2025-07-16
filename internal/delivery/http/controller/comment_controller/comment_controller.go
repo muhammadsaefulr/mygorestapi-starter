@@ -23,6 +23,7 @@ func NewCommentController(commentService service.CommentService) *CommentControl
 // @Tags         Comments
 // @Summary      Create a comment
 // @Description  Create a comment. For replying to a comment, fill `parent_id` with the parent comment's ID. If replying to a child comment (nested reply), just mention the user using @username — the frontend should convert it into a hyperlink pointing to /users/info/:username.
+// @Security     BearerAuth
 // @Produce      json
 // @Param        request  body  request.CreateComment  true  "Request body"
 // @Router       /comments [post]

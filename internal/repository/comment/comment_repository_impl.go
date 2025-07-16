@@ -28,6 +28,8 @@ func (c *commentRepository) GetCommentByMovieID(ctx context.Context, movieID str
 	var comments []model.Comment
 	if err := c.db.WithContext(ctx).
 		Preload("UserDetail").
+		Preload("UserDetail.UserBadge").
+		Preload("UserDetail.UserBadge.Badge").
 		Preload("Likes").
 		Preload("Likes.User").
 		Preload("Replies").
@@ -37,6 +39,7 @@ func (c *commentRepository) GetCommentByMovieID(ctx context.Context, movieID str
 		Find(&comments).Error; err != nil {
 		return nil, err
 	}
+
 	return comments, nil
 }
 

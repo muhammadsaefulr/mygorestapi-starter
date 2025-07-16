@@ -56,6 +56,8 @@ func Connect(dbHost, dbName string) *gorm.DB {
 		&model.UserRole{},
 		&model.UserSubscription{},
 		&model.UserPoints{},
+		&model.UserBadge{},
+		&model.UserBadgeInfo{},
 		&model.BannerApp{},
 	)
 

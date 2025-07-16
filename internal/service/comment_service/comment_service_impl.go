@@ -3,7 +3,6 @@ package service
 import (
 	"errors"
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 	"time"
@@ -42,7 +41,7 @@ func (c *commentService) CreateComment(ctx *fiber.Ctx, req *request.CreateCommen
 
 	req.UserId = IdUsr
 
-	log.Printf("Comment: %+v", req)
+	// log.Printf("Comment: %+v", req)
 
 	if err := c.commentRepository.CreateComment(ctx.Context(), convert_types.CreateCommentToModel(req)); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, "Failed to create comment")
@@ -70,6 +69,7 @@ func (c *commentService) GetCommentByID(ctx *fiber.Ctx, id uint) (*response.Comm
 			Name:            comment.UserDetail.Name,
 			Email:           comment.UserDetail.Email,
 			Role:            comment.UserDetail.Role,
+			UserBadge:       comment.UserDetail.UserBadge,
 			IsEmailVerified: comment.UserDetail.VerifiedEmail,
 		},
 	}, nil
@@ -135,6 +135,7 @@ func (c *commentService) GetCommentsMovieId(ctx *fiber.Ctx, movieId string) ([]r
 				Name:            comment.UserDetail.Name,
 				Email:           comment.UserDetail.Email,
 				Role:            comment.UserDetail.Role,
+				UserBadge:       comment.UserDetail.UserBadge,
 				IsEmailVerified: comment.UserDetail.VerifiedEmail,
 			},
 		})

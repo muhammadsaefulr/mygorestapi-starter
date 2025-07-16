@@ -58,6 +58,9 @@ import (
 	bannerAppRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/banner_app"
 	bannerAppService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/banner_app_service"
 
+	userBadgeRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/user_badge"
+	userBadgeService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_badge_service"
+
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/validation"
 
@@ -140,6 +143,9 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	bannerAppRepo := bannerAppRepo.NewBannerAppRepositoryImpl(db)
 	bannerAppSvc := bannerAppService.NewBannerAppService(bannerAppRepo, validate)
 
+	userBadgeRepo := userBadgeRepo.NewUserBadgeRepositoryImpl(db)
+	userBadgeSvc := userBadgeService.NewUserBadgeService(userBadgeRepo, validate)
+
 	middleware.InitAuthMiddleware(userSvc)
 
 	v1 := app.Group("/api/v1")
@@ -156,6 +162,7 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	router.ReportErrorRoutes(v1, reportErrSvc)
 	router.UserRoleRoutes(v1, userRoleSvc)
 	router.RolePermissionsRoutes(v1, rolePermissionSvc)
+	router.UserBadgeRoutes(v1, userBadgeSvc)
 
 	// Other Sources
 

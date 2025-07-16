@@ -86,7 +86,7 @@ func (n *newUserRepositryImpl) GetUserByID(ctx context.Context, id string) (*mod
 	user := new(model.User)
 
 	result := n.DB.WithContext(ctx).Where("id = ?", id).Preload("UserRole").
-		Preload("UserRole.Permissions").Preload("UserSubscription").Preload("UserPoint").First(user)
+		Preload("UserRole.Permissions").Preload("UserSubscription").Preload("UserPoint").Preload("UserBadge").Preload("UserBadge.Badge").First(user)
 	if result.Error != nil {
 		return nil, result.Error
 	}
