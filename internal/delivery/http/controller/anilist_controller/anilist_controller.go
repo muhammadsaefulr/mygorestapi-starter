@@ -20,7 +20,7 @@ func NewAnilistController(service service.AnilistServiceInterface) *AnilistContr
 }
 
 // @Tags         Anilist
-// @Summary      Get anime discovery list (popular, trending, ongoing, rekomendasi)
+// @Summary      Get anime anilist gql list (popular, trending, ongoing, rekomendasi)
 // @Description  Retrieve anime from AniList API based on category. When using category=rekom, 'search' is required to perform a title-based recommendation.
 // @Produce      json
 // @Param        page      query     int     false  "Page number"  default(1)        minimum(1)

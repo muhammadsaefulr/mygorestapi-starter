@@ -24,6 +24,7 @@ func MapToTmdbQuery(q *request.QueryDiscovery) *requestTm.QueryTmdb {
 		Limit:    q.Limit,
 		Search:   q.Search,
 		Type:     q.Type,
+		Genre:    q.Genre,
 		Category: q.Category,
 	}
 }
@@ -33,6 +34,7 @@ func MapToMdlQuery(q *request.QueryDiscovery) *requestMdl.QueryMdl {
 		Page:     q.Page,
 		Limit:    q.Limit,
 		Search:   q.Search,
+		Genre:    q.Genre,
 		Category: q.Category,
 	}
 }

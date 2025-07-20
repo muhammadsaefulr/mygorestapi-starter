@@ -1,8 +1,6 @@
 package controller
 
 import (
-	"math"
-
 	"github.com/gofiber/fiber/v2"
 
 	responses "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/movie_details/response"
@@ -39,7 +37,7 @@ func (h *TmdbController) GetAllTmdb(c *fiber.Ctx) error {
 		Search:   c.Query("search", ""),
 	}
 
-	data, total, err := h.Service.GetAll(c, query)
+	data, total, pages, err := h.Service.GetAll(c, query)
 	if err != nil {
 		return err
 	}
@@ -51,7 +49,7 @@ func (h *TmdbController) GetAllTmdb(c *fiber.Ctx) error {
 		Results:      data,
 		Page:         query.Page,
 		Limit:        query.Limit,
-		TotalPages:   int64(math.Ceil(float64(total) / float64(query.Limit))),
+		TotalPages:   pages,
 		TotalResults: total,
 	})
 }

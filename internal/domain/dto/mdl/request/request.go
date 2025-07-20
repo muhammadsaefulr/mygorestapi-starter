@@ -14,5 +14,6 @@ type QueryMdl struct {
 	Search   string `query:"search"`
 	Limit    int    `query:"limit"`
 	Category string `query:"category"`
+	Genre    string `query:"genre"`
 	Sort     string `query:"sort"`
 }

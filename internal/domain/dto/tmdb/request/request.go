@@ -14,5 +14,6 @@ type QueryTmdb struct {
 	Limit    int    `query:"limit"`
 	Category string `query:"category"` // contoh: "popular", "ongoing", "trending"
 	Search   string `query:"search"`
+	Genre    string `query:"genre"`
 	Type     string `query:"type"` // contoh: "movie", "tv"
 }

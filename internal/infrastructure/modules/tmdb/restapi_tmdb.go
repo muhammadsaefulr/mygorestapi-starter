@@ -19,7 +19,7 @@ import (
 
 var tmdbApiKey = config.TMDbApiKey
 
-func FetchTMDbMedia(category, queryTitle, mediaType string, param *request.QueryTmdb) ([]response.MovieDetailOnlyResponse, error) {
+func FetchTMDbMedia(mediaType string, param *request.QueryTmdb) ([]response.MovieDetailOnlyResponse, int, error) {
 	baseURL := "https://api.themoviedb.org/3"
 	var endpoint string
 
@@ -28,23 +28,30 @@ func FetchTMDbMedia(category, queryTitle, mediaType string, param *request.Query
 		limit = 20
 	}
 
-	switch category {
+	switch param.Category {
 	case "popular":
 		endpoint = fmt.Sprintf("%s/%s/popular", baseURL, mediaType)
 	case "trending":
 		endpoint = fmt.Sprintf("%s/trending/%s/day", baseURL, mediaType)
 	case "ongoing":
 		if mediaType != "tv" {
-			return nil, fmt.Errorf("ongoing hanya tersedia untuk tv show (kdrama)")
+			return nil, 0, fmt.Errorf("ongoing hanya tersedia untuk tv show (kdrama)")
 		}
 		endpoint = fmt.Sprintf("%s/tv/on_the_air", baseURL)
 	case "search":
-		if queryTitle == "" {
-			return nil, fmt.Errorf("query title tidak boleh kosong untuk pencarian")
+		if param.Search == "" {
+			return nil, 0, fmt.Errorf("query title tidak boleh kosong untuk pencarian")
 		}
-		endpoint = fmt.Sprintf("%s/search/%s?query=%s", baseURL, mediaType, url.QueryEscape(queryTitle))
+		endpoint = fmt.Sprintf("%s/search/%s?query=%s", baseURL, mediaType, url.QueryEscape(param.Search))
+	case "genre":
+		if param.Genre == "" {
+			return nil, 0, fmt.Errorf("query title tidak boleh kosong untuk pencarian")
+		}
+		endpoint = fmt.Sprintf("%s/discover/movie", baseURL)
+		queryParams := fmt.Sprintf("?with_genres=%s&api_key=%s&page=%d", url.QueryEscape(param.Genre), tmdbApiKey, param.Page)
+		endpoint += queryParams
 	default:
-		return nil, fmt.Errorf("invalid category")
+		return nil, 0, fmt.Errorf("invalid category")
 	}
 
 	endpoint += fmt.Sprintf("?api_key=%s&page=%d", tmdbApiKey, param.Page)
@@ -52,10 +59,12 @@ func FetchTMDbMedia(category, queryTitle, mediaType string, param *request.Query
 		endpoint += "&with_origin_country=KR"
 	}
 
+	// fmt.Println(">>> [INFO] URL Detail:", endpoint)
+
 	resp, err := http.Get(endpoint)
 	if err != nil {
 		// fmt.Println(">>> [ERROR] Failed fetch main list:", err)
-		return nil, err
+		return nil, 0, err
 	}
 	defer resp.Body.Close()
 
@@ -64,12 +73,12 @@ func FetchTMDbMedia(category, queryTitle, mediaType string, param *request.Query
 	var result model.TMDbResponse
 	if err := json.Unmarshal(body, &result); err != nil {
 		fmt.Println(">>> [ERROR] Decode error:", err)
-		return nil, err
+		return nil, 0, err
 	}
 
 	if len(result.Results) == 0 {
 		fmt.Println(">>> [WARNING] Empty result from TMDb")
-		return nil, nil
+		return nil, 0, nil
 	}
 
 	if len(result.Results) > limit {
@@ -114,7 +123,7 @@ func FetchTMDbMedia(category, queryTitle, mediaType string, param *request.Query
 
 	wg.Wait()
 
-	return movies, nil
+	return movies, result.TotalPages, nil
 }
 
 func FetchTMDbDetail(id int, mediaType string, withRekom bool) (response.MovieDetailOnlyResponse, error) {
@@ -184,7 +193,7 @@ func GetTmdbListAllGenres() ([]response.GenreDetail, error) {
 	for _, g := range genreResult.Genres {
 		genres = append(genres, response.GenreDetail{
 			GenreName: g.Name,
-			GenreUrl:  fmt.Sprintf("/discovery?type=movie&genre=%s&category=genre", strings.ToLower(g.Name)),
+			GenreUrl:  fmt.Sprintf("/discovery?type=movie&genre=%s&category=genre", strings.ToLower(strconv.Itoa(g.ID))),
 		})
 	}
 

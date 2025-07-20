@@ -105,7 +105,7 @@ func (s *MovieDetailsService) GetByIDPreEps(c *fiber.Ctx, id string) (*response.
 		case "anime":
 			results, _, err = s.AnilistSvc.GetAll(c, convert_types.AnilistQuery(params))
 		case "movie", "tv":
-			results, _, err = s.TmdbSvc.GetAll(c, convert_types.TmdbQuery(params))
+			results, _, _, err = s.TmdbSvc.GetAll(c, convert_types.TmdbQuery(params))
 		case "kdrama":
 			results, _, _, err = s.MdlSvc.GetAll(c, convert_types.MdlQuery(params))
 		default:

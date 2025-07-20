@@ -26,7 +26,7 @@ func NewDiscoveryController(service service.DiscoveryServiceInterface) *Discover
 // @Produce      json
 // @Param        page query     int     false "Page"
 // @Param        limit query    int     false "Limit"
-// @Param        type query     string  false "Movie Type"  Enums(anime, kdrama, tv, movie)  default(anime)
+// @Param        type query     string  false "Movie Type"  Enums(anime, kdrama, movie)  default(anime)
 // @Param        genre query    string  false "Genre"
 // @Param        category query string  false  "Discovery Category"  Enums(popular, trending, ongoing, genre, search)  default(popular)
 // @Param        search query string false "Search term (Only used when category=search)"
@@ -75,7 +75,7 @@ func (c *DiscoveryController) GetDiscover(ctx *fiber.Ctx) error {
 // @Description  Get genres
 // @Accept       json
 // @Produce      json
-// @Param        type query     string  false "Movie Type"  Enums(anime, kdrama, tv, movie)  default(anime)
+// @Param        type query     string  false "Movie Type"  Enums(anime, kdrama, movie)  default(anime)
 // @Router       /discovery/genres [get]
 func (c *DiscoveryController) GetDiscoverGenres(ctx *fiber.Ctx) error {
 	params := &request.QueryDiscovery{
@@ -91,7 +91,7 @@ func (c *DiscoveryController) GetDiscoverGenres(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	return ctx.JSON(response.SuccessWithPaginate[responses.GenreDetail]{
+	return ctx.JSON(response.SuccessWithCommonData[responses.GenreDetail]{
 		Code:    fiber.StatusOK,
 		Status:  "success",
 		Message: "Successfully retrieved data",

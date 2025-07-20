@@ -37,7 +37,7 @@ func (s *MdlService) GetAll(c *fiber.Ctx, params *request.QueryMdl) ([]response.
 	chromeCtx, cancel := modules.NewChromeContext()
 	defer cancel()
 
-	result, total, totalPages, err := modules.FetchMDLMedia(chromeCtx, params.Category, params.Search, params.Page, params.Limit)
+	result, total, totalPages, err := modules.FetchMDLMedia(chromeCtx, params)
 
 	if err != nil {
 		return nil, 0, 0, fiber.NewError(fiber.StatusInternalServerError, "Internal server error: "+err.Error())
@@ -57,4 +57,16 @@ func (s *MdlService) GetDetailByID(c *fiber.Ctx, id string) (*response.MovieDeta
 	}
 
 	return &result, nil
+}
+
+func (s *MdlService) GetAllGenres(c *fiber.Ctx) ([]response.GenreDetail, error) {
+	chromeCtx, cancel := modules.NewChromeContext()
+	defer cancel()
+
+	result, err := modules.GetDramaListGenre(chromeCtx)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }

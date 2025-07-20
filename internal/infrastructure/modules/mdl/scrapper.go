@@ -2,9 +2,11 @@ package scrapper
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"path"
+	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -16,6 +18,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/chromedp/cdproto/network"
 	"github.com/chromedp/chromedp"
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/mdl/request"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/movie_details/response"
 )
 
@@ -147,8 +150,8 @@ func GetDramaDetail(parentCtx context.Context, urlstr string, rekomend bool) (re
 				MovieID:      movieID,
 				Title:        title,
 				ThumbnailURL: img,
-				MovieType:    "drama",
-				PathURL:      "/drama/detail/" + movieID,
+				MovieType:    "kdrama",
+				PathURL:      "/movie/detail/" + movieID,
 			}
 
 			*resultDtl.Rekomend = append(*resultDtl.Rekomend, rekom)
@@ -157,7 +160,7 @@ func GetDramaDetail(parentCtx context.Context, urlstr string, rekomend bool) (re
 	}
 
 	resultDtl = response.MovieDetailOnlyResponse{
-		MovieType:    "drama",
+		MovieType:    "kdrama",
 		IDSource:     path.Base(urlstr),
 		Title:        title,
 		Rating:       rating,
@@ -176,14 +179,15 @@ func GetDramaDetail(parentCtx context.Context, urlstr string, rekomend bool) (re
 	return resultDtl, nil
 }
 
-func FetchMDLMedia(ctx context.Context, category string, search string, page, limit int) ([]response.MovieDetailOnlyResponse, int, int, error) {
+func FetchMDLMedia(ctx context.Context, params *request.QueryMdl) ([]response.MovieDetailOnlyResponse, int, int, error) {
 	var html string
 
-	log.Printf("param cat: %+v", category)
-	log.Printf("param search: %+v", search)
+	log.Printf("param cat: %+v", params.Category)
+	log.Printf("param search: %+v", params.Search)
+	log.Printf("param genre: %+v", params.Genre)
 
 	base := "https://mydramalist.com/search?adv=titles&ty=68&co=3"
-	switch category {
+	switch params.Category {
 	case "trending":
 		base += "&so=top"
 	case "popular":
@@ -191,14 +195,14 @@ func FetchMDLMedia(ctx context.Context, category string, search string, page, li
 	case "ongoing":
 		base += "&st=1"
 	case "search":
-		base += "&st=1&q=" + url.QueryEscape(search)
-	case "detail":
-
+		base += "&st=1&q=" + url.QueryEscape(params.Search)
+	case "genre":
+		base += "&ge=" + params.Genre
 	default:
-		return nil, 0, 0, fmt.Errorf("kategori tidak dikenali: %s", category)
+		return nil, 0, 0, fmt.Errorf("kategori tidak dikenali: %s", params.Category)
 	}
 
-	urlStr := fmt.Sprintf("%s&page=%d", base, page)
+	urlStr := fmt.Sprintf("%s&page=%d", base, params.Page)
 	log.Printf("URL: %s", urlStr)
 
 	if err := chromedp.Run(ctx,
@@ -246,8 +250,8 @@ func FetchMDLMedia(ctx context.Context, category string, search string, page, li
 		}
 	})
 
-	if len(links) > limit {
-		links = links[:limit]
+	if len(links) > params.Limit {
+		links = links[:params.Limit]
 	}
 
 	const maxGoroutines = 6
@@ -281,4 +285,51 @@ func FetchMDLMedia(ctx context.Context, category string, search string, page, li
 
 	wg.Wait()
 	return results, len(results), totalPages, nil
+}
+
+func GetDramaListGenre(ctx context.Context) ([]response.GenreDetail, error) {
+	var html string
+	urlstr := "https://mydramalist.com/search?adv=titles&ty=68&co=3"
+
+	err := chromedp.Run(ctx,
+		network.Enable(),
+		network.SetBlockedURLs([]string{"*.png", "*.jpg", "*.jpeg", "*.css", "*.js", "*.woff", "*.svg"}),
+		chromedp.Navigate(urlstr),
+		chromedp.OuterHTML("html", &html), // ambil seluruh dokumen
+	)
+	if err != nil {
+		return nil, fmt.Errorf("navigate genre page failed: %w", err)
+	}
+
+	re := regexp.MustCompile(`(?s)var filters = (\{.*?\});`)
+	match := re.FindStringSubmatch(html)
+	if len(match) < 2 {
+		return nil, fmt.Errorf("filters data not found in HTML")
+	}
+
+	jsonStr := match[1]
+
+	type Genre struct {
+		Value int    `json:"value"`
+		Label string `json:"label"`
+	}
+
+	var parsed struct {
+		Genres []Genre `json:"genres"`
+	}
+
+	err = json.Unmarshal([]byte(jsonStr), &parsed)
+	if err != nil {
+		return nil, fmt.Errorf("unmarshal filters json failed: %w", err)
+	}
+
+	var results []response.GenreDetail
+	for _, g := range parsed.Genres {
+		results = append(results, response.GenreDetail{
+			GenreName: g.Label,
+			GenreUrl:  fmt.Sprintf("/discovery?type=kdrama&genre=%d&category=genre", g.Value),
+		})
+	}
+
+	return results, nil
 }

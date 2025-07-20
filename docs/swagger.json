@@ -943,7 +943,6 @@
                         "enum": [
                             "anime",
                             "kdrama",
-                            "tv",
                             "movie"
                         ],
                         "type": "string",
@@ -1039,7 +1038,6 @@
                         "enum": [
                             "anime",
                             "kdrama",
-                            "tv",
                             "movie"
                         ],
                         "type": "string",

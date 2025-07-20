@@ -18,10 +18,10 @@ func NewTMDbService(validate *validator.Validate) *TMDbService {
 	return &TMDbService{Validate: validate}
 }
 
-func (s *TMDbService) GetAll(c *fiber.Ctx, params *request.QueryTmdb) ([]response.MovieDetailOnlyResponse, int64, error) {
+func (s *TMDbService) GetAll(c *fiber.Ctx, params *request.QueryTmdb) ([]response.MovieDetailOnlyResponse, int64, int64, error) {
 
 	if err := s.Validate.Struct(params); err != nil {
-		return nil, 0, err
+		return nil, 0, 0, err
 	}
 	if params.Page < 1 {
 		params.Page = 1
@@ -36,12 +36,12 @@ func (s *TMDbService) GetAll(c *fiber.Ctx, params *request.QueryTmdb) ([]respons
 	}
 
 	if mediaType == "movie" && params.Category == "ongoing" {
-		return nil, 0, fiber.NewError(fiber.StatusBadRequest, "Ongoing Only available for tv show, drama or anime !")
+		return nil, 0, 0, fiber.NewError(fiber.StatusBadRequest, "Ongoing Only available for tv show, drama or anime !")
 	}
 
-	result, err := modules.FetchTMDbMedia(params.Category, params.Search, mediaType, params)
+	result, totalPage, err := modules.FetchTMDbMedia(mediaType, params)
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, 0, err
 	}
 
 	var responseList []response.MovieDetailOnlyResponse
@@ -62,7 +62,7 @@ func (s *TMDbService) GetAll(c *fiber.Ctx, params *request.QueryTmdb) ([]respons
 		})
 	}
 
-	return responseList, int64(len(responseList)), nil
+	return responseList, int64(len(responseList)), int64(totalPage), nil
 }
 
 func (s *TMDbService) GetAllGenres(c *fiber.Ctx) ([]response.GenreDetail, error) {

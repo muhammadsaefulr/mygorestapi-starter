@@ -951,7 +951,6 @@ const docTemplate = `{
                         "enum": [
                             "anime",
                             "kdrama",
-                            "tv",
                             "movie"
                         ],
                         "type": "string",
@@ -1047,7 +1046,6 @@ const docTemplate = `{
                         "enum": [
                             "anime",
                             "kdrama",
-                            "tv",
                             "movie"
                         ],
                         "type": "string",

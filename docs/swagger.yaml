@@ -2142,7 +2142,6 @@ paths:
         enum:
         - anime
         - kdrama
-        - tv
         - movie
         in: query
         name: type
@@ -2211,7 +2210,6 @@ paths:
         enum:
         - anime
         - kdrama
-        - tv
         - movie
         in: query
         name: type

@@ -128,9 +128,9 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 					s.Log.Errorf("MovieSvc.GetAll error (%s): %v", tmp.Type, err)
 				}
 
-				tmdbResults, _, err := s.TmdbSvc.GetAll(c, convert_types.MapToTmdbQuery(&tmp))
+				tmdbResults, _, _, err := s.TmdbSvc.GetAll(c, convert_types.MapToTmdbQuery(&tmp))
 				if err != nil || len(tmdbResults) == 0 {
-					s.Log.Errorf("TMDb fe	tch error: %v", err)
+					s.Log.Errorf("TMDb fetch error: %v", err)
 					return
 				}
 				main := tmdbResults[0]
@@ -295,7 +295,7 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 		go func() {
 			defer wg.Done()
 
-			data, page, err := s.TmdbSvc.GetAll(c, convert_types.MapToTmdbQuery(params))
+			data, _, totalPages, err := s.TmdbSvc.GetAll(c, convert_types.MapToTmdbQuery(params))
 			if err != nil {
 				s.Log.Errorf("TmdbSvc.GetAll error: %v", err)
 				mu.Lock()
@@ -319,7 +319,7 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 
 			mu.Lock()
 			results = append(results, filtered...)
-			pageRes = page
+			pageRes = totalPages
 			TotalRes = len(results)
 
 			mu.Unlock()
@@ -348,6 +348,7 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 				movieData, _, err := s.MovieSvc.GetAll(c, convert_types.MapToMovieDtQuery(&tmp))
 				if err == nil && len(movieData) > 0 {
 					d.MovieID = movieData[0].MovieID
+					d.PathURL = movieData[0].PathURL
 					filtered = append(filtered, d)
 				}
 			}
@@ -523,6 +524,31 @@ func (s *DiscoveryService) GetDiscoverGenres(c *fiber.Ctx, params *request.Query
 				return
 			}
 
+			var filtered []response.GenreDetail
+			for _, d := range data {
+				filtered = append(filtered, d)
+			}
+
+			mu.Lock()
+			results = append(results, filtered...)
+			mu.Unlock()
+		}()
+
+	case "kdrama":
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+
+			data, err := s.MdlSvc.GetAllGenres(c)
+			if err != nil {
+				s.Log.Errorf("MdlSvc.GetAllGenres error: %v", err)
+				mu.Lock()
+				if firstErr == nil {
+					firstErr = err
+				}
+				mu.Unlock()
+				return
+			}
 			var filtered []response.GenreDetail
 			for _, d := range data {
 				filtered = append(filtered, d)
