@@ -89,7 +89,6 @@ services:
     depends_on:
       - nimestreamapi-backend
       - minio
-      - pgadmin
     networks:
       - app-net
 
