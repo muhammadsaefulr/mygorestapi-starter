@@ -14,6 +14,8 @@ var (
 	DBPassword          string
 	DBName              string
 	DBPort              int
+	RedisHost           string
+	RedisPassword       string
 	TMDbApiKey          string
 	JWTSecret           string
 	JWTAccessExp        int
@@ -44,6 +46,10 @@ func init() {
 	DBPassword = viper.GetString("DB_PASSWORD")
 	DBName = viper.GetString("DB_NAME")
 	DBPort = viper.GetInt("DB_PORT")
+
+	// Redis configuration
+	RedisHost = viper.GetString("REDIS_HOST")
+	RedisPassword = viper.GetString("REDIS_PASSWORD")
 
 	// apikey configuration
 	TMDbApiKey = viper.GetString("TMDB_APIKEY")
