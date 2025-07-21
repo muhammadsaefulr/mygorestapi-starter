@@ -12,9 +12,19 @@ var RedisClient *redis.Client
 var Ctx = context.Background()
 
 func ConnectRedis() *redis.Client {
+	addr := "redis:6379"
+	if config.RedisHost != "" {
+		addr = config.RedisHost
+	}
+
+	password := ""
+	if config.RedisPassword != "" {
+		password = config.RedisPassword
+	}
+
 	client := redis.NewClient(&redis.Options{
-		Addr:     config.RedisHost,
-		Password: config.RedisPassword,
+		Addr:     addr,
+		Password: password,
 		DB:       0,
 	})
 
