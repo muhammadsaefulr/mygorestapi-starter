@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y \
 RUN wget -O /tmp/chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
     apt-get update && apt-get install -y /tmp/chrome.deb || apt-get -fy install && \
     rm /tmp/chrome.deb && \
-    ln -s /usr/bin/google-chrome-stable /usr/bin/google-chrome
+    ln -sf /usr/bin/google-chrome-stable /usr/bin/google-chrome
 
 WORKDIR /root
 

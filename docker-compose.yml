@@ -18,20 +18,30 @@ services:
       - ./database/init:/docker-entrypoint-initdb.d
     networks:
       - app-net
-
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin
+  
+  redis:
+    image: redis:alpine
+    container_name: redis
     restart: always
     ports:
-      - "8081:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
-    depends_on:
-      - postgresdb
+      - "6379:6379"
     networks:
       - app-net
+
+  # too much consuming ram
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   container_name: pgadmin
+  #   restart: always
+  #   ports:
+  #     - "8081:80"
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+  #     PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+  #   depends_on:
+  #     - postgresdb
+  #   networks:
+  #     - app-net
 
   nimestreamapi-backend:
     image: saepulid07/nimestreamapi-backend:latest
