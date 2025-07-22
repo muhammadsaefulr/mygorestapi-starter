@@ -68,6 +68,9 @@ import (
 	UserSubscriptionRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/user_subscription"
 	UserSubscriptionSvc "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_subscription_service"
 
+	requestVipRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/request_vip"
+	requestVipService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/request_vip_service"
+
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/validation"
 
@@ -159,6 +162,9 @@ func InitModule(app *fiber.App, db *gorm.DB, redis *redis.Client) {
 	userSubscriptionRepo := UserSubscriptionRepo.NewUserSubscriptionRepositoryImpl(db)
 	userSubscriptionSvc := UserSubscriptionSvc.NewUserSubscriptionService(userSubscriptionRepo, validate, userSvc, subsPlanSvc, &userBadgeSvc)
 
+	requestVipRepo := requestVipRepo.NewRequestVipRepositoryImpl(db)
+	requestVipSvc := requestVipService.NewRequestVipService(requestVipRepo, validate, uploader)
+
 	middleware.InitAuthMiddleware(userSvc)
 
 	v1 := app.Group("/api/v1")
@@ -198,6 +204,7 @@ func InitModule(app *fiber.App, db *gorm.DB, redis *redis.Client) {
 	router.BannerAppRoutes(v1, bannerAppSvc)
 	router.SubscriptionPlanRoutes(v1, subsPlanSvc)
 	router.UserSubscriptionRoutes(v1, userSubscriptionSvc)
+	router.RequestVipRoutes(v1, requestVipSvc)
 
 	if !config.IsProd {
 		v1.Get("/docs", func(c *fiber.Ctx) error {
