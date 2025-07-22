@@ -81,8 +81,9 @@ func (s *UserSubscriptionService) Create(c *fiber.Ctx, req *request.CreateUserSu
 		return nil, err
 	}
 
+	sessionNow := c.Locals("user").(*model.User)
 	data := convert_types.CreateUserSubscriptionToModel(req)
-	updatedBy := uuid.MustParse(c.Locals("user").(string))
+	updatedBy := uuid.MustParse(sessionNow.ID.String())
 	data.UpdatedBy = updatedBy
 
 	if err := s.Repo.Create(c.Context(), data); err != nil {
