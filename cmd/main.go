@@ -38,6 +38,7 @@ func main() {
 	db := setupDatabase()
 	defer closeDatabase(db)
 	setupModule(app, db)
+	utils.StartVIPCronJob(db)
 
 	address := fmt.Sprintf("%s:%d", config.AppHost, config.AppPort)
 
