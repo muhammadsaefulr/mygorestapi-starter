@@ -156,7 +156,7 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	subsPlanSvc := SubsPlan.NewSubscriptionPlanService(subsPlanRepo, validate)
 
 	userSubscriptionRepo := UserSubscriptionRepo.NewUserSubscriptionRepositoryImpl(db)
-	userSubscriptionSvc := UserSubscriptionSvc.NewUserSubscriptionService(userSubscriptionRepo, validate, userSvc, subsPlanSvc)
+	userSubscriptionSvc := UserSubscriptionSvc.NewUserSubscriptionService(userSubscriptionRepo, validate, userSvc, subsPlanSvc, &userBadgeSvc)
 
 	middleware.InitAuthMiddleware(userSvc)
 

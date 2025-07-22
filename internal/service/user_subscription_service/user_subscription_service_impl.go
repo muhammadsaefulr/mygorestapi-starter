@@ -7,7 +7,10 @@ import (
 	"gorm.io/gorm"
 
 	subs_plan_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/subscription_plan_service"
+	badge_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_badge_service"
 	user_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_service"
+
+	request_bdge "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user_badge/request"
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user_subscription/request"
 	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
@@ -23,15 +26,17 @@ type UserSubscriptionService struct {
 	Repo        repository.UserSubscriptionRepo
 	UserSvc     user_service.UserService
 	SubsPlanSvc subs_plan_service.SubscriptionPlanServiceInterface
+	BadgeSvc    badge_service.UserBadgeServiceInterface
 }
 
-func NewUserSubscriptionService(repo repository.UserSubscriptionRepo, validate *validator.Validate, userSvc user_service.UserService, subsPlanSvc subs_plan_service.SubscriptionPlanServiceInterface) UserSubscriptionServiceInterface {
+func NewUserSubscriptionService(repo repository.UserSubscriptionRepo, validate *validator.Validate, userSvc user_service.UserService, subsPlanSvc subs_plan_service.SubscriptionPlanServiceInterface, badgeSvc badge_service.UserBadgeServiceInterface) UserSubscriptionServiceInterface {
 	return &UserSubscriptionService{
 		Log:         utils.Log,
 		Validate:    validate,
 		Repo:        repo,
 		UserSvc:     userSvc,
 		SubsPlanSvc: subsPlanSvc,
+		BadgeSvc:    badgeSvc,
 	}
 }
 
@@ -86,8 +91,20 @@ func (s *UserSubscriptionService) Create(c *fiber.Ctx, req *request.CreateUserSu
 	updatedBy := uuid.MustParse(sessionNow.ID.String())
 	data.UpdatedBy = updatedBy
 
+	badgeSubmt := &request_bdge.CreateUserBadgeInfo{
+		UserID:    data.UserID.String(),
+		BadgeID:   1,
+		Note:      "User Subscription",
+		HandledBy: sessionNow.ID.String(),
+	}
+
+	if err := s.BadgeSvc.CreateUserBadgeInfo(c, badgeSubmt); err != nil {
+		// s.Log.Errorf("Create User Badge Info error: %+v", err)
+		return nil, fiber.NewError(fiber.StatusInternalServerError, "Create User Badge Info failed")
+	}
+
 	if err := s.Repo.Create(c.Context(), data); err != nil {
-		s.Log.Errorf("Create error: %+v", err)
+		// s.Log.Errorf("Create error: %+v", err)
 		return nil, fiber.NewError(fiber.StatusInternalServerError, "Create User Subscription failed")
 	}
 	return data, nil
