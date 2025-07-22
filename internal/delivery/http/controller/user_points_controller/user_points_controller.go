@@ -20,6 +20,7 @@ func NewUserPointsController(service service.UserPointsService) *UserPointsContr
 // @Tags         user_points
 // @Summary      Get a user_points by ID
 // @Produce      json
+// @Security     BearerAuth
 // @Param        id  path  string  true  "UserPoints User ID (string)"
 // @Router       /users/points/{id} [get]
 func (h *UserPointsController) GetUserPointsByID(c *fiber.Ctx) error {
@@ -65,22 +66,22 @@ func (h *UserPointsController) PostUserPoints(c *fiber.Ctx) error {
 	})
 }
 
-// @Tags         user_points
-// @Summary      Delete a user_points
-// @Produce      json
-// @Security 	 BearerAuth
-// @Param        id  path  int  true  "UserPoints ID (uint)"
-// @Router      /users/points/{id} [delete]
-func (h *UserPointsController) DeleteUserPoints(c *fiber.Ctx) error {
-	idStr := c.Params("id")
+// // @Tags         user_points
+// // @Summary      Delete a user_points
+// // @Produce      json
+// // @Security 	 BearerAuth
+// // @Param        id  path  int  true  "UserPoints ID (uint)"
+// // @Router      /users/points/{id} [delete]
+// func (h *UserPointsController) DeleteUserPoints(c *fiber.Ctx) error {
+// 	idStr := c.Params("id")
 
-	if err := h.Service.Delete(c, idStr); err != nil {
-		return err
-	}
+// 	if err := h.Service.Delete(c, idStr); err != nil {
+// 		return err
+// 	}
 
-	return c.Status(fiber.StatusOK).JSON(response.Common{
-		Code:    fiber.StatusOK,
-		Status:  "success",
-		Message: "Data deleted successfully",
-	})
-}
+// 	return c.Status(fiber.StatusOK).JSON(response.Common{
+// 		Code:    fiber.StatusOK,
+// 		Status:  "success",
+// 		Message: "Data deleted successfully",
+// 	})
+// }

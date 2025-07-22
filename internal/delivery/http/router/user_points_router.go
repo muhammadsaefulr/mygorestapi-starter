@@ -14,5 +14,5 @@ func UserPointsRoutes(v1 fiber.Router, c service.UserPointsService) {
 
 	group.Post("/", m.Auth(), user_pointsController.PostUserPoints)
 	group.Get("/:id", m.Auth(), user_pointsController.GetUserPointsByID)
-	group.Delete("/:id", m.Auth(), user_pointsController.DeleteUserPoints)
+	// group.Delete("/:id", m.Auth(), user_pointsController.DeleteUserPoints)
 }
