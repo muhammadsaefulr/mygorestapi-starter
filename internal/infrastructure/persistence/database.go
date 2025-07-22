@@ -75,6 +75,10 @@ func Connect(dbHost, dbName string) *gorm.DB {
 		log.Fatal("gagal seed user:", err)
 	}
 
+	if err := seed.SeedSubscriptionPlans(db); err != nil {
+		log.Fatal("gagal seed subscription plan:", err)
+	}
+
 	// Config connection pooling
 	sqlDB.SetMaxIdleConns(10)
 	sqlDB.SetMaxOpenConns(100)

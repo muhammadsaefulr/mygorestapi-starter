@@ -61,6 +61,12 @@ import (
 	userBadgeRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/user_badge"
 	userBadgeService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_badge_service"
 
+	SubsPlanRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/subscription_plan"
+	SubsPlan "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/subscription_plan_service"
+
+	UserSubscriptionRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/user_subscription"
+	UserSubscriptionSvc "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_subscription_service"
+
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/validation"
 
@@ -146,6 +152,12 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 	userBadgeRepo := userBadgeRepo.NewUserBadgeRepositoryImpl(db)
 	userBadgeSvc := userBadgeService.NewUserBadgeService(userBadgeRepo, validate)
 
+	subsPlanRepo := SubsPlanRepo.NewSubscriptionPlanRepositoryImpl(db)
+	subsPlanSvc := SubsPlan.NewSubscriptionPlanService(subsPlanRepo, validate)
+
+	userSubscriptionRepo := UserSubscriptionRepo.NewUserSubscriptionRepositoryImpl(db)
+	userSubscriptionSvc := UserSubscriptionSvc.NewUserSubscriptionService(userSubscriptionRepo, validate, userSvc, subsPlanSvc)
+
 	middleware.InitAuthMiddleware(userSvc)
 
 	v1 := app.Group("/api/v1")
@@ -183,6 +195,8 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 
 	router.UserPointsRoutes(v1, userPointsSvc)
 	router.BannerAppRoutes(v1, bannerAppSvc)
+	router.SubscriptionPlanRoutes(v1, subsPlanSvc)
+	router.UserSubscriptionRoutes(v1, userSubscriptionSvc)
 
 	if !config.IsProd {
 		v1.Get("/docs", func(c *fiber.Ctx) error {
