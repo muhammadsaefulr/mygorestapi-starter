@@ -14,11 +14,12 @@ var App = fiber.New(fiber.Config{
 	ErrorHandler:  utils.ErrorHandler,
 })
 var DB *gorm.DB
+var Redis = database.RedisClient
 var Log = utils.Log
 
 func init() {
 	// TODO: You can modify host and database configuration for tests
 	DB = database.Connect("localhost", "testdb")
-	module.InitModule(App, DB)
+	module.InitModule(App, DB, Redis)
 	App.Use(utils.NotFoundHandler)
 }

@@ -10,6 +10,7 @@ import (
 	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 	"github.com/muhammadsaefulr/NimeStreamAPI/docs"
 	module "github.com/muhammadsaefulr/NimeStreamAPI/internal"
+	"github.com/redis/go-redis/v9"
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/delivery/middleware"
 	database "github.com/muhammadsaefulr/NimeStreamAPI/internal/infrastructure/persistence"
@@ -36,8 +37,9 @@ func main() {
 
 	app := setupFiberApp()
 	db := setupDatabase()
+	redis := setupRedis()
 	defer closeDatabase(db)
-	setupModule(app, db)
+	setupModule(app, db, redis)
 	utils.StartVIPCronJob(db)
 
 	address := fmt.Sprintf("%s:%d", config.AppHost, config.AppPort)
@@ -79,8 +81,13 @@ func setupDatabase() *gorm.DB {
 	return db
 }
 
-func setupModule(app *fiber.App, db *gorm.DB) {
-	module.InitModule(app, db)
+func setupRedis() *redis.Client {
+	client := database.ConnectRedis()
+	return client
+}
+
+func setupModule(app *fiber.App, db *gorm.DB, redis *redis.Client) {
+	module.InitModule(app, db, redis)
 	app.Use(utils.NotFoundHandler)
 }
 

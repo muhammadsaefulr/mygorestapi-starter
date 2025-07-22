@@ -9,6 +9,7 @@ import (
 	watchListRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/watchlist"
 	userService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_service"
 	watchlistService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/watchlist_service"
+	"github.com/redis/go-redis/v9"
 
 	trackRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/track_episode_view"
 
@@ -73,7 +74,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func InitModule(app *fiber.App, db *gorm.DB) {
+func InitModule(app *fiber.App, db *gorm.DB, redis *redis.Client) {
 	validate := validation.Validator()
 
 	uploader, err := utils.NewS3Uploader(
@@ -134,7 +135,7 @@ func InitModule(app *fiber.App, db *gorm.DB) {
 
 	// Dynamic Orchestrator Source
 
-	discoverySvc := discoverySvc.NewDiscoveryService(validate, anilistSvc, tmdbSvc, mdlSvc, animeSvc, movieDetailSvc)
+	discoverySvc := discoverySvc.NewDiscoveryService(validate, redis, anilistSvc, tmdbSvc, mdlSvc, animeSvc, movieDetailSvc)
 
 	// reporting
 

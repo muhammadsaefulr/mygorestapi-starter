@@ -1,15 +1,20 @@
 package service
 
 import (
+	"context"
+	"encoding/json"
 	"log"
 	"net/url"
 	"path"
 	"regexp"
+	"strconv"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"github.com/redis/go-redis/v9"
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/discovery/request"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/movie_details/response"
@@ -35,11 +40,12 @@ type DiscoveryService struct {
 	MdlSvc     svcMdl.MdlServiceInterface
 	OdService  od_service.AnimeService
 	MovieSvc   svcMovieDt.MovieDetailsServiceInterface
+	redisCl    *redis.Client
 }
 
 // GetDiscoverSearch implements DiscoveryServiceInterface.
 
-func NewDiscoveryService(validate *validator.Validate, SvcAn svcAnilist.AnilistServiceInterface, svcTmdb svcTmdb.TmdbServiceInterface, svcMdl svcMdl.MdlServiceInterface, svcOd od_service.AnimeService, svcMvDt svcMovieDt.MovieDetailsServiceInterface) DiscoveryServiceInterface {
+func NewDiscoveryService(validate *validator.Validate, redisCl *redis.Client, SvcAn svcAnilist.AnilistServiceInterface, svcTmdb svcTmdb.TmdbServiceInterface, svcMdl svcMdl.MdlServiceInterface, svcOd od_service.AnimeService, svcMvDt svcMovieDt.MovieDetailsServiceInterface) DiscoveryServiceInterface {
 	return &DiscoveryService{
 		Log:        utils.Log,
 		Validate:   validate,
@@ -48,6 +54,7 @@ func NewDiscoveryService(validate *validator.Validate, SvcAn svcAnilist.AnilistS
 		MdlSvc:     svcMdl,
 		OdService:  svcOd,
 		MovieSvc:   svcMvDt,
+		redisCl:    redisCl,
 	}
 }
 
@@ -60,6 +67,19 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 	}
 	if params.Limit < 1 {
 		params.Limit = 10
+	}
+
+	key := BuildRedisKeyFromDiscoveryParams(params)
+
+	type cacheResult struct {
+		Data      []response.MovieDetailOnlyResponse `json:"data"`
+		PageTotal int64                              `json:"page"`
+		TotalData int64                              `json:"total"`
+	}
+
+	var cached cacheResult
+	if err := s.GetDiscoveryCache(c.Context(), key, &cached); err == nil {
+		return cached.Data, cached.PageTotal, cached.TotalData, nil
 	}
 
 	var (
@@ -370,6 +390,12 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 		return nil, 0, 0, firstErr
 	}
 
+	_ = s.SetDiscoveryCache(c.Context(), key, cacheResult{
+		Data:      results,
+		PageTotal: pageRes,
+		TotalData: int64(TotalRes),
+	}, params)
+
 	return results, pageRes, int64(TotalRes), nil
 }
 
@@ -478,6 +504,19 @@ func (s *DiscoveryService) GetDiscoverGenres(c *fiber.Ctx, params *request.Query
 		params.Limit = 10
 	}
 
+	key := BuildRedisKeyFromDiscoveryParams(params)
+
+	type cacheResult struct {
+		Data      []response.GenreDetail `json:"data"`
+		PageTotal int64                  `json:"page"`
+		TotalData int64                  `json:"total"`
+	}
+
+	var cached cacheResult
+	if err := s.GetDiscoveryCache(c.Context(), key, &cached); err == nil {
+		return cached.Data, nil
+	}
+
 	var (
 		results  = []response.GenreDetail{}
 		firstErr error
@@ -569,5 +608,64 @@ func (s *DiscoveryService) GetDiscoverGenres(c *fiber.Ctx, params *request.Query
 		return nil, firstErr
 	}
 
+	_ = s.SetDiscoveryCache(c.Context(), key, cacheResult{
+		Data:      results,
+		PageTotal: 1,
+		TotalData: int64(len(results)),
+	}, params)
+
 	return results, nil
+}
+
+// Utils
+
+func BuildRedisKeyFromDiscoveryParams(params *request.QueryDiscovery) string {
+	parts := []string{"discovery"}
+
+	if params.Type != "" {
+		parts = append(parts, "type", params.Type)
+	}
+	if params.Category != "" {
+		parts = append(parts, "category", params.Category)
+	}
+	if params.Genre != "" {
+		parts = append(parts, "genre", params.Genre)
+	}
+	if params.Search != "" {
+		parts = append(parts, "search", params.Search)
+	}
+	if params.Page > 0 {
+		parts = append(parts, "page", strconv.Itoa(params.Page))
+	}
+	if params.Limit > 0 {
+		parts = append(parts, "limit", strconv.Itoa(params.Limit))
+	}
+
+	return strings.Join(parts, ":")
+}
+
+func (s *DiscoveryService) GetDiscoveryCache(ctx context.Context, key string, dst any) error {
+	data, err := s.redisCl.Get(ctx, key).Result()
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal([]byte(data), dst)
+}
+
+func (s *DiscoveryService) SetDiscoveryCache(ctx context.Context, key string, val any, params *request.QueryDiscovery) error {
+	b, err := json.Marshal(val)
+	if err != nil {
+		return err
+	}
+
+	ttl := time.Hour
+	if params.Search != "" || params.Genre != "" {
+		ttl = 30 * time.Minute
+	} else if params.Category == "popular" {
+		ttl = 6 * time.Hour
+	} else if params.Category == "ongoing" || params.Category == "trending" {
+		ttl = 1 * time.Hour
+	}
+
+	return s.redisCl.Set(ctx, key, b, ttl).Err()
 }
