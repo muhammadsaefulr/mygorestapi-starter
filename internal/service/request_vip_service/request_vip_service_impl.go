@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -78,8 +79,11 @@ func (s *RequestVipService) Create(c *fiber.Ctx, req *request.CreateRequestVip) 
 		contentType = "application/octet-stream"
 	}
 
+	log.Printf("Form data info: %+v", req)
+
 	filePath, _, err := s.S3.UploadFile("bukti-transfer", file, fileName, contentType)
 	if err != nil {
+		log.Printf("Error: %v", err)
 		return nil, fiber.NewError(fiber.StatusInternalServerError, "Gagal upload file ke MinIO")
 	}
 
