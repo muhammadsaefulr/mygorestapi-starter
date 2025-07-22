@@ -3249,25 +3249,6 @@ const docTemplate = `{
         },
         "/users/points/{id}": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user_points"
-                ],
-                "summary": "Get a user_points by ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "UserPoints User ID (string)",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {}
-            },
-            "delete": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -3279,11 +3260,11 @@ const docTemplate = `{
                 "tags": [
                     "user_points"
                 ],
-                "summary": "Delete a user_points",
+                "summary": "Get a user_points by ID",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "UserPoints ID (uint)",
+                        "type": "string",
+                        "description": "UserPoints User ID (string)",
                         "name": "id",
                         "in": "path",
                         "required": true

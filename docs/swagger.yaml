@@ -3737,21 +3737,6 @@ paths:
       tags:
       - user_points
   /users/points/{id}:
-    delete:
-      parameters:
-      - description: UserPoints ID (uint)
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses: {}
-      security:
-      - BearerAuth: []
-      summary: Delete a user_points
-      tags:
-      - user_points
     get:
       parameters:
       - description: UserPoints User ID (string)
@@ -3762,6 +3747,8 @@ paths:
       produces:
       - application/json
       responses: {}
+      security:
+      - BearerAuth: []
       summary: Get a user_points by ID
       tags:
       - user_points
