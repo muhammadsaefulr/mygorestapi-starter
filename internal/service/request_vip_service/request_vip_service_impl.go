@@ -73,7 +73,7 @@ func (s *RequestVipService) Create(c *fiber.Ctx, req *request.CreateRequestVip) 
 	}
 	defer file.Close()
 
-	fileName := fmt.Sprintf("bukti-tf/%d_%s", time.Now().Unix(), req.BuktiTf.Filename)
+	fileName := fmt.Sprintf("bukti-transfer/%d_%s", time.Now().Unix(), req.BuktiTf.Filename)
 	contentType := req.BuktiTf.Header.Get("Content-Type")
 	if contentType == "" {
 		contentType = "application/octet-stream"
@@ -81,7 +81,7 @@ func (s *RequestVipService) Create(c *fiber.Ctx, req *request.CreateRequestVip) 
 
 	log.Printf("Form data info: %+v", req)
 
-	filePath, _, err := s.S3.UploadFile("bukti-transfer", file, fileName, contentType)
+	filePath, _, err := s.S3.UploadFile("bukti-tf", file, fileName, contentType)
 	if err != nil {
 		log.Printf("Error: %v", err)
 		return nil, fiber.NewError(fiber.StatusInternalServerError, "Gagal upload file ke MinIO")
