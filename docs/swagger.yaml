@@ -846,6 +846,17 @@ definitions:
         example: user
         type: string
     type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_vip_request.UpdateRequestVip:
+    properties:
+      atas_nama_tf:
+        type: string
+      bukti_tf:
+        type: string
+      email:
+        type: string
+      status_acc:
+        type: string
+    type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_role_permissions_request.CreateRolePermissions:
     properties:
       name:
@@ -3012,6 +3023,117 @@ paths:
       summary: Update a request_movie
       tags:
       - RequestMovie
+  /request-vip/{id}:
+    delete:
+      parameters:
+      - description: RequestVip ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Delete a request_vip
+      tags:
+      - request_vip
+    get:
+      parameters:
+      - description: RequestVip ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get a request_vip by ID
+      tags:
+      - request_vip
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: RequestVip ID (uint)
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_vip_request.UpdateRequestVip'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update a request_vip
+      tags:
+      - request_vip
+  /request_vip:
+    get:
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      - description: Search term
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get all request_vip
+      tags:
+      - request_vip
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Payment method
+        in: formData
+        name: payment_method
+        required: true
+        type: string
+      - description: Nama pengirim
+        in: formData
+        name: atas_nama_tf
+        required: true
+        type: string
+      - description: Email
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: Bukti transfer (image)
+        in: formData
+        name: bukti_tf
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Create a new request_vip
+      tags:
+      - request_vip
   /subscription/plans:
     get:
       parameters:

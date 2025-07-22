@@ -2288,6 +2288,179 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/request-vip/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "request_vip"
+                ],
+                "summary": "Get a request_vip by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "RequestVip ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "request_vip"
+                ],
+                "summary": "Update a request_vip",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "RequestVip ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_vip_request.UpdateRequestVip"
+                        }
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "request_vip"
+                ],
+                "summary": "Delete a request_vip",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "RequestVip ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/request_vip": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "request_vip"
+                ],
+                "summary": "Get all request_vip",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Items per page",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search term",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {}
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "request_vip"
+                ],
+                "summary": "Create a new request_vip",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Payment method",
+                        "name": "payment_method",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Nama pengirim",
+                        "name": "atas_nama_tf",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Email",
+                        "name": "email",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Bukti transfer (image)",
+                        "name": "bukti_tf",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/subscription/plans": {
             "get": {
                 "produces": [
@@ -4763,6 +4936,23 @@ const docTemplate = `{
                 "role": {
                     "type": "string",
                     "example": "user"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_vip_request.UpdateRequestVip": {
+            "type": "object",
+            "properties": {
+                "atas_nama_tf": {
+                    "type": "string"
+                },
+                "bukti_tf": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "status_acc": {
+                    "type": "string"
                 }
             }
         },

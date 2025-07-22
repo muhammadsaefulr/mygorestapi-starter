@@ -22,6 +22,7 @@ var allRoles = map[string][]string{
 		"createBannerApp", "updateBannerApp", "deleteBannerApp", "getBannerApp",
 		"addUserBadge", "updateUserBadge", "deleteUserBadge", "getUserBadge",
 		"addBadge", "updateBadge", "deleteBadge", "getBadge",
+		"getRequestVIP", "updateRequestVIP", "deleteRequestVIP",
 	},
 	"owner": {
 		"allActions",
