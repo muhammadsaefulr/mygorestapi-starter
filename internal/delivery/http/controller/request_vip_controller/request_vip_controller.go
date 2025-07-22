@@ -29,7 +29,7 @@ func NewRequestVipController(service service.RequestVipService) *RequestVipContr
 // @Param        page   query     int     false  "Page number"  default(1)
 // @Param        limit  query     int     false  "Items per page"  default(10)
 // @Param        search query     string  false  "Search term"
-// @Router       /request_vip [get]
+// @Router       /request-vip [get]
 func (h *RequestVipController) GetAllRequestVip(c *fiber.Ctx) error {
 	query := &request.QueryRequestVip{
 		Page:  c.QueryInt("page", 1),
@@ -89,7 +89,7 @@ func (h *RequestVipController) GetRequestVipByID(c *fiber.Ctx) error {
 // @Param        atas_nama_tf   formData string true "Nama pengirim"
 // @Param        email          formData string true "Email"
 // @Param        bukti_tf       formData file   true "Bukti transfer (image)"
-// @Router       /request_vip [post]
+// @Router       /request-vip [post]
 func (h *RequestVipController) CreateRequestVip(c *fiber.Ctx) error {
 	req := new(request.CreateRequestVip)
 

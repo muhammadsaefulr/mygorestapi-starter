@@ -2288,93 +2288,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/request-vip/{id}": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "request_vip"
-                ],
-                "summary": "Get a request_vip by ID",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "RequestVip ID (uint)",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {}
-            },
-            "put": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "request_vip"
-                ],
-                "summary": "Update a request_vip",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "RequestVip ID (uint)",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Request body",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_vip_request.UpdateRequestVip"
-                        }
-                    }
-                ],
-                "responses": {}
-            },
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "request_vip"
-                ],
-                "summary": "Delete a request_vip",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "RequestVip ID (uint)",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {}
-            }
-        },
-        "/request_vip": {
+        "/request-vip": {
             "get": {
                 "security": [
                     {
@@ -2455,6 +2369,92 @@ const docTemplate = `{
                         "description": "Bukti transfer (image)",
                         "name": "bukti_tf",
                         "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/request-vip/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "request_vip"
+                ],
+                "summary": "Get a request_vip by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "RequestVip ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "request_vip"
+                ],
+                "summary": "Update a request_vip",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "RequestVip ID (uint)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_vip_request.UpdateRequestVip"
+                        }
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "request_vip"
+                ],
+                "summary": "Delete a request_vip",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "RequestVip ID (uint)",
+                        "name": "id",
+                        "in": "path",
                         "required": true
                     }
                 ],
