@@ -59,9 +59,12 @@ func NewDiscoveryService(validate *validator.Validate, redisCl *redis.Client, Sv
 }
 
 func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscovery) ([]response.MovieDetailOnlyResponse, int64, int64, error) {
+	log.Printf("param info: %+v", params)
+
 	if err := s.Validate.Struct(params); err != nil {
 		return nil, 0, 0, fiber.NewError(fiber.StatusBadRequest, "Invalid query params")
 	}
+
 	if params.Page < 1 {
 		params.Page = 1
 	}
