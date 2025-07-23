@@ -6,6 +6,7 @@ import (
 	"github.com/lib/pq"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 func SeedDrakor(db *gorm.DB) error {
@@ -57,8 +58,11 @@ func SeedDrakor(db *gorm.DB) error {
 		},
 	}
 
-	if err := db.Create(&drakorSeed).Error; err != nil {
-		return err
+	for _, drakor := range drakorSeed {
+		if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&drakor).Error; err != nil {
+			return err
+		}
 	}
+
 	return nil
 }
