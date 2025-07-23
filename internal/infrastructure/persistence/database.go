@@ -59,6 +59,7 @@ func Connect(dbHost, dbName string) *gorm.DB {
 		&model.UserBadge{},
 		&model.UserBadgeInfo{},
 		&model.BannerApp{},
+		&model.RequestVip{},
 	)
 
 	// implements seed
