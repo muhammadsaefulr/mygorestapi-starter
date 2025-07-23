@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/anilist/request"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/movie_details/response"
@@ -24,15 +25,18 @@ func FetchAniListMedia(category, queryTitle string, param *request.QueryAnilist)
 		"type":    "ANIME",
 	}
 
-	// log.Printf("Param: %+v", param)
-
 	switch category {
 	case "popular":
 		variables["sort"] = []string{"POPULARITY_DESC"}
 	case "trending":
 		variables["sort"] = []string{"TRENDING_DESC"}
 	case "ongoing":
-		variables["status"] = "RELEASING"
+		season, seasonYear := GetCurrentSeason()
+		variables["season"] = season
+		variables["seasonYear"] = seasonYear
+		variables["status_in"] = []string{"RELEASING", "NOT_YET_RELEASED"}
+		variables["format_in"] = []string{"TV", "MOVIE", "ONA", "OVA"}
+		variables["sort"] = []string{"POPULARITY_DESC"}
 	case "search":
 		variables["search"] = param.Search
 	case "genre":
@@ -42,16 +46,38 @@ func FetchAniListMedia(category, queryTitle string, param *request.QueryAnilist)
 		return nil, 0, fmt.Errorf("invalid category")
 	}
 
-	query := `query ($page: Int, $perPage: Int, $type: MediaType, $sort: [MediaSort], $search: String, $status: MediaStatus,  $genre_in: [String]) {
+	query := `query (
+		$page: Int, 
+		$perPage: Int, 
+		$type: MediaType, 
+		$sort: [MediaSort], 
+		$search: String, 
+		$status: MediaStatus,  
+		$genre_in: [String],
+		$season: MediaSeason,
+		$seasonYear: Int,
+		$status_in: [MediaStatus],
+		$format_in: [MediaFormat]
+	) {
 		Page(page: $page, perPage: $perPage) {
 			pageInfo {
-				total,
-				perPage,
-				currentPage,
-				lastPage,
+				total
+				perPage
+				currentPage
+				lastPage
 				hasNextPage
 			}
-			media(type: $type, sort: $sort, search: $search, status: $status, genre_in: $genre_in) {
+			media(
+				type: $type,
+				sort: $sort,
+				search: $search,
+				status: $status,
+				genre_in: $genre_in,
+				season: $season,
+				seasonYear: $seasonYear,
+				status_in: $status_in,
+				format_in: $format_in
+			) {
 				id
 				title { romaji english native }
 				coverImage { large }
@@ -76,6 +102,7 @@ func FetchAniListMedia(category, queryTitle string, param *request.QueryAnilist)
 	}
 
 	bodyBytes, _ := json.Marshal(reqBody)
+	log.Printf("bodyBytes: %s", bodyBytes)
 	resp, err := http.Post(endpoint, "application/json", bytes.NewBuffer(bodyBytes))
 	if err != nil {
 		return nil, 0, err
@@ -86,9 +113,6 @@ func FetchAniListMedia(category, queryTitle string, param *request.QueryAnilist)
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return nil, 0, err
 	}
-
-	// log.Printf("param: %+v", param)
-	// log.Printf("result: %+v", result)
 
 	var movies []response.MovieDetailOnlyResponse
 	for _, m := range result.Data.Page.Media {
@@ -248,4 +272,23 @@ func MapAniListToMovieDetails(m model.AniListMedia, movieType string) response.M
 		Synopsis:     m.Description,
 		Genres:       m.Genres,
 	}
+}
+
+func GetCurrentSeason() (string, int) {
+	now := time.Now()
+	month := now.Month()
+	year := now.Year()
+
+	var season string
+	switch {
+	case month >= 1 && month <= 3:
+		season = "WINTER"
+	case month >= 4 && month <= 6:
+		season = "SPRING"
+	case month >= 7 && month <= 9:
+		season = "SUMMER"
+	default:
+		season = "FALL"
+	}
+	return season, year
 }

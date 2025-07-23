@@ -16,6 +16,7 @@ type User struct {
 	RoleId           uint              `gorm:"default:1;not null" json:"role_id"`
 	VerifiedEmail    bool              `gorm:"default:false;not null" json:"verified_email"`
 	CreatedAt        time.Time         `gorm:"autoCreateTime:milli" json:"-"`
+	AvatarUrl        string            `json:"avatar_url"`
 	UpdatedAt        time.Time         `gorm:"autoCreateTime:milli;autoUpdateTime:milli" json:"-"`
 	Token            []Token           `gorm:"foreignKey:user_id;references:id" json:"-"`
 	UserRole         *UserRole         `gorm:"foreignKey:role_id;references:id" json:"user_role,omitempty"`
