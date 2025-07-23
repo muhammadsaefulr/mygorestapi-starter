@@ -102,6 +102,10 @@ func (h *RequestVipController) CreateRequestVip(c *fiber.Ctx) error {
 	req.UserId = session.ID.String()
 	req.BuktiTf = fileHeader
 
+	req.PaymentMethod = c.FormValue("payment_method")
+	req.Name = c.FormValue("atas_nama_tf")
+	req.Email = c.FormValue("email")
+
 	_, err = h.Service.Create(c, req)
 	if err != nil {
 		return err
