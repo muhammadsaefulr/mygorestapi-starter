@@ -5480,6 +5480,9 @@ const docTemplate = `{
                 "latest_ep": {
                     "type": "string"
                 },
+                "path_url": {
+                    "type": "string"
+                },
                 "thumbnail_url": {
                     "type": "string"
                 },
@@ -5487,9 +5490,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "update_anime": {
-                    "type": "string"
-                },
-                "url": {
                     "type": "string"
                 }
             }
@@ -5593,14 +5593,14 @@ const docTemplate = `{
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.EpisodePageResult": {
             "type": "object",
             "properties": {
-                "anime_detail": {
-                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.AnimeDetail"
-                },
-                "episode": {
+                "episodes": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.AnimeEpisode"
                     }
+                },
+                "movie_details": {
+                    "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.AnimeDetail"
                 },
                 "rekomend": {
                     "type": "array",
@@ -5636,10 +5636,10 @@ const docTemplate = `{
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.GenreInfo": {
             "type": "object",
             "properties": {
-                "title": {
+                "path_url": {
                     "type": "string"
                 },
-                "url": {
+                "title": {
                     "type": "string"
                 }
             }
@@ -5751,6 +5751,9 @@ const docTemplate = `{
                         "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.GenreInfo"
                     }
                 },
+                "path_url": {
+                    "type": "string"
+                },
                 "rating": {
                     "type": "string"
                 },
@@ -5761,9 +5764,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "title": {
-                    "type": "string"
-                },
-                "url": {
                     "type": "string"
                 }
             }
@@ -5800,6 +5800,9 @@ const docTemplate = `{
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.User": {
             "type": "object",
             "properties": {
+                "avatar_url": {
+                    "type": "string"
+                },
                 "email": {
                     "type": "string"
                 },

@@ -2,7 +2,7 @@ package model
 
 type AnimeData struct {
 	Title        string `json:"title"`
-	URL          string `json:"url"`
+	URL          string `json:"path_url"`
 	JudulPath    string `json:"judul_path"`
 	ThumbnailURL string `json:"thumbnail_url"`
 	LatestEp     string `json:"latest_ep"`
@@ -23,7 +23,7 @@ type OngoingAnime struct {
 	URL          string `json:"url"`
 	JudulPath    string `json:"judul_path"`
 	ThumbnailURL string `json:"thumbnail_url"`
-	Episode      string `json:"episode"`
+	Episode      string `json:"episodes"`
 	DaysUpdated  string `json:"days_updated"`
 	UpdatedAt    string `json:"updated_at"`
 }
@@ -49,17 +49,17 @@ type GenreAnime struct {
 
 type GenreList struct {
 	Title string `json:"title"`
-	URL   string `json:"url"`
+	URL   string `json:"path_url"`
 }
 
 type GenreInfo struct {
 	Title string `json:"title"`
-	URL   string `json:"url"`
+	URL   string `json:"path_url"`
 }
 
 type SearchResult struct {
 	Title        string      `json:"title"`
-	URL          string      `json:"url"`
+	URL          string      `json:"path_url"`
 	ThumbnailURL string      `json:"thumbnail_url"`
 	Genres       []GenreInfo `json:"genres"`
 	Status       string      `json:"status"`
@@ -90,8 +90,8 @@ type AnimeDetail struct {
 }
 
 type EpisodePageResult struct {
-	AnimeDetail AnimeDetail    `json:"anime_detail"`
-	AnimeEps    []AnimeEpisode `json:"episode"`
+	AnimeDetail AnimeDetail    `json:"movie_details"`
+	AnimeEps    []AnimeEpisode `json:"episodes"`
 	AnimeRekom  []SearchResult `json:"rekomend"`
 }
 

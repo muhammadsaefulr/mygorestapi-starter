@@ -1213,13 +1213,13 @@ definitions:
         type: string
       latest_ep:
         type: string
+      path_url:
+        type: string
       thumbnail_url:
         type: string
       title:
         type: string
       update_anime:
-        type: string
-      url:
         type: string
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.AnimeDetail:
@@ -1287,12 +1287,12 @@ definitions:
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.EpisodePageResult:
     properties:
-      anime_detail:
-        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.AnimeDetail'
-      episode:
+      episodes:
         items:
           $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.AnimeEpisode'
         type: array
+      movie_details:
+        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.AnimeDetail'
       rekomend:
         items:
           $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.SearchResult'
@@ -1315,9 +1315,9 @@ definitions:
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.GenreInfo:
     properties:
-      title:
+      path_url:
         type: string
-      url:
+      title:
         type: string
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieDetails:
@@ -1392,6 +1392,8 @@ definitions:
         items:
           $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.GenreInfo'
         type: array
+      path_url:
+        type: string
       rating:
         type: string
       status:
@@ -1399,8 +1401,6 @@ definitions:
       thumbnail_url:
         type: string
       title:
-        type: string
-      url:
         type: string
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.SubscriptionPlan:
@@ -1424,6 +1424,8 @@ definitions:
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.User:
     properties:
+      avatar_url:
+        type: string
       email:
         type: string
       id:
