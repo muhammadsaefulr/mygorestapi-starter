@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"log"
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/watchlist/request"
 	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
@@ -20,10 +21,11 @@ func NewWatchlistRepositoryImpl(db *gorm.DB) WatchlistRepo {
 
 func (r *WatchlistRepositoryImpl) GetAllWatchlist(ctx context.Context, param *request.QueryWatchlist, user_id string) ([]model.Watchlist, int64, error) {
 	var data []model.Watchlist
-	var total int64
 
 	query := r.DB.WithContext(ctx).Model(&model.Watchlist{}).Where("user_id = ?", user_id)
 	offset := (param.Page - 1) * param.Limit
+
+	log.Printf("param: %+v", param)
 
 	// log.Println(param)
 
@@ -32,15 +34,11 @@ func (r *WatchlistRepositoryImpl) GetAllWatchlist(ctx context.Context, param *re
 		query = query.Where("name LIKE ?", searchLike)
 	}
 
-	if err := query.Count(&total).Error; err != nil {
-		return nil, 0, err
-	}
-
 	if err := query.Limit(param.Limit).Offset(offset).Find(&data).Error; err != nil {
 		return nil, 0, err
 	}
 
-	return data, total, nil
+	return data, int64(len(data)), nil
 }
 
 func (r *WatchlistRepositoryImpl) CreateWatchlist(ctx context.Context, data *model.Watchlist) error {

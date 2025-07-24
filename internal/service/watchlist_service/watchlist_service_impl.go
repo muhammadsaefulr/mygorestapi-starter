@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"sync"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -68,24 +69,42 @@ func (s *newWatchlistService) GetAllWatchlist(c *fiber.Ctx, params *request.Quer
 		return nil, 0, fiber.NewError(fiber.StatusInternalServerError, fmt.Sprintf("Failed to get watchlist: %s", err.Error()))
 	}
 
-	var watchlistResponses []response.WatchlistResponse
+	const maxConcurrent = 8
+	sem := make(chan struct{}, maxConcurrent)
+
+	var (
+		wg        sync.WaitGroup
+		mu        sync.Mutex
+		responses []response.WatchlistResponse
+	)
 
 	for _, watch := range resultFromDB {
-		detailMovie, _, _, errAnimeService := s.AnimeService.GetAnimeDetails(watch.MovieId)
-		if errAnimeService != nil {
-			log.Println("Gagal ambil detail anime:", errAnimeService.Error())
-			detailMovie = model.AnimeDetail{}
-		}
+		wg.Add(1)
+		sem <- struct{}{}
 
-		watchlistResponses = append(watchlistResponses, response.WatchlistResponse{
-			ID:          watch.ID,
-			UserId:      IdUsr,
-			MovieId:     watch.MovieId,
-			AnimeDetail: detailMovie,
-		})
+		go func(watch model.Watchlist) {
+			defer wg.Done()
+			defer func() { <-sem }()
+
+			detailMovie, _, _, err := s.AnimeService.GetAnimeDetails(watch.MovieId)
+			if err != nil {
+				log.Println("Gagal ambil detail anime:", err)
+				detailMovie = model.AnimeDetail{}
+			}
+
+			mu.Lock()
+			responses = append(responses, response.WatchlistResponse{
+				ID:          watch.ID,
+				UserId:      IdUsr,
+				MovieId:     watch.MovieId,
+				AnimeDetail: detailMovie,
+			})
+			mu.Unlock()
+		}(watch)
 	}
 
-	return watchlistResponses, totalResults, nil
+	wg.Wait()
+	return responses, totalResults, nil
 }
 
 func (s *newWatchlistService) CreateWatchlist(c *fiber.Ctx, req *request.CreateWatchlist) (*model.Watchlist, error) {
