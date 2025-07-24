@@ -84,7 +84,6 @@ func (s *authService) Login(c *fiber.Ctx, req *auth_request_dto.Login) (*user_mo
 
 	return user, nil
 }
-
 func (s *authService) Logout(c *fiber.Ctx, req *auth_request_dto.Logout) error {
 	if err := s.Validate.Struct(req); err != nil {
 		return err

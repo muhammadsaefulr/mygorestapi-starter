@@ -113,20 +113,56 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 					s.Log.Errorf("Anilist fetch error: %v", err)
 					return
 				}
-				main := anilistResults[0]
 
-				if len(movieData) > 0 {
-					main.MovieID = movieData[0].MovieID
-					main.PathURL = "/movie/details/" + movieData[0].MovieID
-				} else {
-					odResults, err := s.OdService.GetAnimeByTitle(tmp.Search)
-					if err == nil && len(odResults) > 0 {
-						main.MovieID = path.Base(strings.TrimSuffix(odResults[0].URL, "/"))
-						main.PathURL = odResults[0].URL
-					}
+				odResults, err := s.OdService.GetAnimeByTitle(tmp.Search)
+				if err != nil || len(odResults) == 0 {
+					s.Log.Errorf("OD fetch error: %v", err)
 				}
 
-				if main.PathURL == "" {
+				var aniTitles []string
+				for _, a := range anilistResults {
+					aniTitles = append(aniTitles, a.Title)
+				}
+
+				var odTitles []string
+				for _, o := range odResults {
+					odTitles = append(odTitles, o.Title)
+				}
+
+				aIdx, bIdx := utils.JaroWinklerPairIndices(aniTitles, odTitles, 5)
+
+				var picked []response.MovieDetailOnlyResponse
+				if len(aIdx) > 0 {
+					for i := range aIdx {
+						ani := anilistResults[aIdx[i]]
+						if len(movieData) > 0 {
+							ani.MovieID = movieData[0].MovieID
+							ani.PathURL = "/movie/details/" + movieData[0].MovieID
+						} else if len(bIdx) > i && bIdx[i] < len(odResults) {
+							od := odResults[bIdx[i]]
+							ani.MovieID = path.Base(strings.TrimSuffix(od.URL, "/"))
+							ani.PathURL = od.URL
+							ani.ThumbnailURL = od.ThumbnailURL
+							ani.Status = od.Status
+							ani.Rating = od.Rating
+							ani.Genres = []string{}
+							for _, g := range od.Genres {
+								ani.Genres = append(ani.Genres, g.Title)
+							}
+						}
+						picked = append(picked, ani)
+					}
+				} else {
+					// fallback ke anilistResults[0]
+					main := anilistResults[0]
+					if len(movieData) > 0 {
+						main.MovieID = movieData[0].MovieID
+						main.PathURL = "/movie/details/" + movieData[0].MovieID
+					}
+					picked = append(picked, main)
+				}
+
+				if len(picked) == 0 || picked[0].PathURL == "" {
 					mu.Lock()
 					firstErr = fiber.NewError(fiber.StatusNotFound, "Tidak ditemukan di MovieDetails maupun OD")
 					mu.Unlock()
@@ -134,12 +170,11 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 				}
 
 				mu.Lock()
-				results = append(results, main)
+				results = append(results, picked...)
 				pageRes = 1
 				TotalRes = len(results)
 				mu.Unlock()
 			}()
-
 		case "movie", "tv":
 			wg.Add(1)
 			go func() {
@@ -156,14 +191,39 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 					s.Log.Errorf("TMDb fetch error: %v", err)
 					return
 				}
-				main := tmdbResults[0]
 
-				if len(movieData) > 0 {
-					main.MovieID = movieData[0].MovieID
-					main.PathURL = "/movie/details/" + movieData[0].MovieID
+				var tmdbTitles []string
+				for _, t := range tmdbResults {
+					tmdbTitles = append(tmdbTitles, t.Title)
 				}
 
-				if main.PathURL == "" {
+				var dbTitles []string
+				for _, m := range movieData {
+					dbTitles = append(dbTitles, m.Title)
+				}
+
+				var picked []response.MovieDetailOnlyResponse
+				if len(dbTitles) > 0 {
+					aIdx, bIdx := utils.JaroWinklerPairIndices(tmdbTitles, dbTitles, 5)
+
+					for i := range aIdx {
+						main := tmdbResults[aIdx[i]]
+						main.MovieID = movieData[bIdx[i]].MovieID
+						main.PathURL = "/movie/details/" + movieData[bIdx[i]].MovieID
+						picked = append(picked, main)
+					}
+				}
+
+				if len(picked) == 0 {
+					main := tmdbResults[0]
+					if len(movieData) > 0 {
+						main.MovieID = movieData[0].MovieID
+						main.PathURL = "/movie/details/" + movieData[0].MovieID
+					}
+					picked = append(picked, main)
+				}
+
+				if len(picked) == 0 || picked[0].PathURL == "" {
 					mu.Lock()
 					firstErr = fiber.NewError(fiber.StatusNotFound, "Tidak ditemukan di MovieDetails")
 					mu.Unlock()
@@ -171,48 +231,12 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 				}
 
 				mu.Lock()
-				results = append(results, main)
+				results = append(results, picked...)
 				pageRes = 1
 				TotalRes = len(results)
 				mu.Unlock()
 			}()
 
-		case "kdrama":
-			wg.Add(1)
-			go func() {
-				defer wg.Done()
-				tmp := *params
-
-				movieData, _, err := s.MovieSvc.GetAll(c, convert_types.MapToMovieDtQuery(&tmp))
-				if err != nil {
-					s.Log.Errorf("MovieSvc.GetAll error (kdrama): %v", err)
-				}
-
-				mdlResults, _, _, err := s.MdlSvc.GetAll(c, convert_types.MapToMdlQuery(&tmp))
-				if err != nil || len(mdlResults) == 0 {
-					s.Log.Errorf("MDL fetch error: %v", err)
-					return
-				}
-				main := mdlResults[0]
-
-				if len(movieData) > 0 {
-					main.MovieID = movieData[0].MovieID
-					main.PathURL = "/movie/details/" + movieData[0].MovieID
-				}
-
-				if main.PathURL == "" {
-					mu.Lock()
-					firstErr = fiber.NewError(fiber.StatusNotFound, "Tidak ditemukan di MovieDetails")
-					mu.Unlock()
-					return
-				}
-
-				mu.Lock()
-				results = append(results, main)
-				pageRes = 1
-				TotalRes = len(results)
-				mu.Unlock()
-			}()
 		}
 
 		wg.Wait()
