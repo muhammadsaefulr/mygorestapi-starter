@@ -48,6 +48,8 @@ services:
     container_name: nimestreamapi-backend
     env_file:
       - .env
+    volumes:
+      - ./FirebaseServiceAccountKey.json:/app/FirebaseServiceAccountKey.json
     depends_on:
       postgresdb:
         condition: service_healthy
