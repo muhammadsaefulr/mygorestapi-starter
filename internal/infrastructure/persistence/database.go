@@ -88,6 +88,10 @@ func Connect(dbHost, dbName string) *gorm.DB {
 		log.Fatal("gagal seed drakor:", err)
 	}
 
+	if err := seed.SeedDrakorEpisodes(db); err != nil {
+		log.Fatal("gagal seed drakor episodes:", err)
+	}
+
 	// Config connection pooling
 	sqlDB.SetMaxIdleConns(10)
 	sqlDB.SetMaxOpenConns(100)
