@@ -21,10 +21,6 @@ type GoogleLogin struct {
 	VerifiedEmail bool   `json:"verified_email" validate:"required"`
 }
 
-type FirebaseLogin struct {
-	IDToken string `json:"idToken" validate:"required"`
-}
-
 type Logout struct {
 	RefreshToken string `json:"refresh_token" validate:"required,max=255"`
 }
