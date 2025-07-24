@@ -9,6 +9,7 @@ import (
 type UserService interface {
 	CreateUser(c *fiber.Ctx, req *request.CreateUser) (*user_model.User, error)
 	GoogleAuthHandler(c *fiber.Ctx, req *request.GoogleLogin) (*user_model.User, error)
+	LoginWithFirebaseToken(c *fiber.Ctx, idToken string) (*user_model.User, error)
 	GetUserByEmail(c *fiber.Ctx, email string) (*user_model.User, error)
 	GetUserByID(c *fiber.Ctx, id string) (*user_model.User, error)
 	GetUserSession(c *fiber.Ctx) (*user_model.User, error)

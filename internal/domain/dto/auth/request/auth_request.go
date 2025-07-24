@@ -11,6 +11,10 @@ type Login struct {
 	Password string `json:"password" validate:"required,min=8,max=20" example:"password1"`
 }
 
+type FirebaseLogin struct {
+	IDToken string `json:"id_token" validate:"required"`
+}
+
 type GoogleLogin struct {
 	Name          string `json:"name" validate:"required,max=50"`
 	Email         string `json:"email" validate:"required,email,max=50"`

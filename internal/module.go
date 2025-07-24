@@ -1,6 +1,8 @@
 package module
 
 import (
+	"firebase.google.com/go/v4/auth"
+	"firebase.google.com/go/v4/messaging"
 	"github.com/gofiber/fiber/v2"
 	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/delivery/http/router"
@@ -71,13 +73,15 @@ import (
 	requestVipRepo "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/request_vip"
 	requestVipService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/request_vip_service"
 
+	fcmService "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/notification_service"
+
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/validation"
 
 	"gorm.io/gorm"
 )
 
-func InitModule(app *fiber.App, db *gorm.DB, redis *redis.Client) {
+func InitModule(app *fiber.App, db *gorm.DB, redis *redis.Client, firebase *auth.Client, firebaseMessaging *messaging.Client) {
 	validate := validation.Validator()
 
 	uploader, err := utils.NewS3Uploader(
@@ -91,8 +95,9 @@ func InitModule(app *fiber.App, db *gorm.DB, redis *redis.Client) {
 		return
 	}
 	// Init services
+	fcmService := fcmService.NewNotificationService(firebaseMessaging)
 	userRepo := userRepo.NewUserRepositryImpl(db)
-	userSvc := userService.NewUserService(userRepo, validate)
+	userSvc := userService.NewUserService(userRepo, validate, firebase)
 
 	// User Auth And Role
 
@@ -134,7 +139,7 @@ func InitModule(app *fiber.App, db *gorm.DB, redis *redis.Client) {
 	movieDetailSvc := movieDetailService.NewMovieDetailsService(movieDetailRepo, validate, anilistSvc, tmdbSvc, mdlSvc, animeSvc)
 
 	movieUploaderRepo := movieUploaderRepo.NewMovieEpisodeRepositoryImpl(db)
-	movieUploaderSvc := movieUploaderSvc.NewMovieEpisodeService(movieUploaderRepo, validate, uploader, movieDetailSvc)
+	movieUploaderSvc := movieUploaderSvc.NewMovieEpisodeService(movieUploaderRepo, validate, uploader, movieDetailSvc, fcmService)
 
 	// Dynamic Orchestrator Source
 

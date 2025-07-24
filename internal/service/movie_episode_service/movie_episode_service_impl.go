@@ -14,26 +14,29 @@ import (
 	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	repository "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/movie_episode"
 	serviceMvDtl "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/movie_details_service"
+	fcm_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/notification_service"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/convert_types"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 	"github.com/sirupsen/logrus"
 )
 
 type MovieEpisodeService struct {
-	Log            *logrus.Logger
-	Validate       *validator.Validate
-	Repo           repository.MovieEpisodeRepo
-	MovieDetailSvc serviceMvDtl.MovieDetailsServiceInterface
-	S3             *utils.S3Uploader
+	Log             *logrus.Logger
+	Validate        *validator.Validate
+	Repo            repository.MovieEpisodeRepo
+	MovieDetailSvc  serviceMvDtl.MovieDetailsServiceInterface
+	S3              *utils.S3Uploader
+	NotificationSvc fcm_service.NotificationServiceInterface
 }
 
-func NewMovieEpisodeService(repo repository.MovieEpisodeRepo, validate *validator.Validate, s3 *utils.S3Uploader, movieDetailSvc serviceMvDtl.MovieDetailsServiceInterface) MovieEpisodeServiceInterface {
+func NewMovieEpisodeService(repo repository.MovieEpisodeRepo, validate *validator.Validate, s3 *utils.S3Uploader, movieDetailSvc serviceMvDtl.MovieDetailsServiceInterface, notificationSvc fcm_service.NotificationServiceInterface) MovieEpisodeServiceInterface {
 	return &MovieEpisodeService{
-		Log:            utils.Log,
-		Validate:       validate,
-		Repo:           repo,
-		MovieDetailSvc: movieDetailSvc,
-		S3:             s3,
+		Log:             utils.Log,
+		Validate:        validate,
+		Repo:            repo,
+		MovieDetailSvc:  movieDetailSvc,
+		S3:              s3,
+		NotificationSvc: notificationSvc,
 	}
 }
 
@@ -173,6 +176,12 @@ func (s *MovieEpisodeService) CreateUpload(c *fiber.Ctx, req *request.CreateMovi
 		s.Log.Errorf("DB create failed: %v", err)
 		return nil, fiber.NewError(fiber.StatusInternalServerError, "Failed to save movie episode")
 	}
+
+	go func() {
+		notificationTitle := "Episode Baru Telah Tayang! 🔥"
+		notificationBody := fmt.Sprintf("Episode baru telah ditambahkan ke %s", data.Title)
+		s.NotificationSvc.SendNotificationToUser(c, data.SourceBy, notificationTitle, notificationBody)
+	}()
 
 	return data, nil
 }

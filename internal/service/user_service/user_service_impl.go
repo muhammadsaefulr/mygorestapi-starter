@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 
+	"firebase.google.com/go/v4/auth"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -16,16 +17,18 @@ import (
 )
 
 type userService struct {
-	Log      *logrus.Logger
-	Validate *validator.Validate
-	UserRepo repository.UserRepo
+	Log          *logrus.Logger
+	Validate     *validator.Validate
+	UserRepo     repository.UserRepo
+	FirebaseAuth *auth.Client
 }
 
-func NewUserService(userRepo repository.UserRepo, validate *validator.Validate) UserService {
+func NewUserService(userRepo repository.UserRepo, validate *validator.Validate, FirebaseAuth *auth.Client) UserService {
 	return &userService{
-		Log:      utils.Log,
-		Validate: validate,
-		UserRepo: userRepo,
+		Log:          utils.Log,
+		Validate:     validate,
+		UserRepo:     userRepo,
+		FirebaseAuth: FirebaseAuth,
 	}
 }
 
@@ -74,6 +77,46 @@ func (s *userService) CreateUser(c *fiber.Ctx, req *request.CreateUser) (*user_m
 	if err := s.UserRepo.CreateUser(c.Context(), user); err != nil {
 		s.Log.Errorf("CreateUser failed: %+v", err)
 		return nil, fiber.NewError(fiber.StatusInternalServerError, "Create user failed")
+	}
+
+	return user, nil
+}
+
+func (s *userService) LoginWithFirebaseToken(c *fiber.Ctx, idToken string) (*user_model.User, error) {
+	token, err := s.FirebaseAuth.VerifyIDToken(c.Context(), idToken)
+	if err != nil {
+		s.Log.Errorf("Failed to verify Firebase ID token: %+v", err)
+		return nil, fiber.NewError(fiber.StatusUnauthorized, "Invalid or expired token")
+	}
+
+	email, _ := token.Claims["email"].(string)
+	name, _ := token.Claims["name"].(string)
+	firebaseUID := token.UID
+
+	if email == "" {
+		return nil, fiber.NewError(fiber.StatusBadRequest, "Email not found in Firebase token")
+	}
+
+	user, err := s.UserRepo.GetUserByEmail(c.Context(), email)
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		newUser := &user_model.User{
+			Name:        name,
+			FirebaseUID: firebaseUID,
+			Email:       email,
+		}
+
+		if err := s.UserRepo.CreateUser(c.Context(), newUser); err != nil {
+			s.Log.Errorf("Failed to create user from Firebase token: %+v", err)
+			return nil, fiber.NewError(fiber.StatusInternalServerError, "Failed to create user")
+		}
+
+		return newUser, nil
+	}
+
+	if err != nil {
+		s.Log.Errorf("Error fetching user by email: %+v", err)
+		return nil, fiber.NewError(fiber.StatusInternalServerError, "Internal Server Error")
 	}
 
 	return user, nil

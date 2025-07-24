@@ -30,5 +30,6 @@ func AuthRoutes(
 	auth.Post("/send-verification-email", m.Auth(), authController.SendVerificationEmail)
 	auth.Post("/verify-email", authController.VerifyEmail)
 	auth.Get("/google", authController.GoogleLogin)
+	auth.Post("/google/signin", authController.FirebaseGoogleSignIn)
 	auth.Get("/google-callback", authController.GoogleCallback)
 }

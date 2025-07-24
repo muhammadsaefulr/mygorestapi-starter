@@ -7,6 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	"firebase.google.com/go/v4/auth"
+	"firebase.google.com/go/v4/messaging"
 	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 	"github.com/muhammadsaefulr/NimeStreamAPI/docs"
 	module "github.com/muhammadsaefulr/NimeStreamAPI/internal"
@@ -38,8 +40,11 @@ func main() {
 	app := setupFiberApp()
 	db := setupDatabase()
 	redis := setupRedis()
+	firebase := setupFirebaseAuthClient()
+	firebaseMessaging := setupFirebaseMessagingClient()
+
 	defer closeDatabase(db)
-	setupModule(app, db, redis)
+	setupModule(app, db, redis, firebase, firebaseMessaging)
 	utils.StartVIPCronJob(db)
 
 	address := fmt.Sprintf("%s:%d", config.AppHost, config.AppPort)
@@ -81,13 +86,21 @@ func setupDatabase() *gorm.DB {
 	return db
 }
 
+func setupFirebaseAuthClient() *auth.Client {
+	return config.InitFirebaseAuthClient()
+}
+
+func setupFirebaseMessagingClient() *messaging.Client {
+	return config.InitFirebaseMessagingClient()
+}
+
 func setupRedis() *redis.Client {
 	client := database.ConnectRedis()
 	return client
 }
 
-func setupModule(app *fiber.App, db *gorm.DB, redis *redis.Client) {
-	module.InitModule(app, db, redis)
+func setupModule(app *fiber.App, db *gorm.DB, redis *redis.Client, firebase *auth.Client, firebaseMessaging *messaging.Client) {
+	module.InitModule(app, db, redis, firebase, firebaseMessaging)
 	app.Use(utils.NotFoundHandler)
 }
 

@@ -461,6 +461,13 @@ definitions:
         example: success
         type: string
     type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_auth_request.FirebaseLogin:
+    properties:
+      id_token:
+        type: string
+    required:
+    - id_token
+    type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_auth_request.ForgotPassword:
     properties:
       email:
@@ -1424,7 +1431,11 @@ definitions:
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.User:
     properties:
+      avatar_url:
+        type: string
       email:
+        type: string
+      firebase_uid:
         type: string
       id:
         type: string
@@ -1742,6 +1753,25 @@ paths:
       summary: Login with google
       tags:
       - Auth
+  /auth/google/signin:
+    post:
+      description: This route initiates the Google OAuth2 login flow with Firebase.
+        Please try this in your browser.
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_auth_request.FirebaseLogin'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/example.GoogleLoginResponse'
+      summary: Login with google
+      tags:
+      - Auth Google
   /auth/login:
     post:
       consumes:

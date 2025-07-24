@@ -110,6 +110,39 @@ func (a *AuthController) Login(c *fiber.Ctx) error {
 		})
 }
 
+// @Tags         Auth Google
+// @Summary      Login with google
+// @Description  This route initiates the Google OAuth2 login flow with Firebase. Please try this in your browser.
+// @Param        request  body  auth_request_dto.FirebaseLogin  true  "Request body"
+// @Router       /auth/google/signin [post]
+// @Success      200  {object}  example.GoogleLoginResponse
+func (a *AuthController) FirebaseGoogleSignIn(c *fiber.Ctx) error {
+	req := new(auth_request_dto.FirebaseLogin)
+
+	if err := c.BodyParser(req); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, "Invalid request body")
+	}
+
+	user, err := a.UserService.LoginWithFirebaseToken(c, req.IDToken)
+	if err != nil {
+		return err
+	}
+
+	tokens, err := a.TokenService.GenerateAuthTokens(c, user)
+	if err != nil {
+		return err
+	}
+
+	return c.Status(fiber.StatusOK).
+		JSON(response.SuccessWithTokens{
+			Code:    fiber.StatusOK,
+			Status:  "success",
+			Message: "Login successfully",
+			User_id: user.ID.String(),
+			Tokens:  *tokens,
+		})
+}
+
 // @Tags         Auth
 // @Summary      Logout
 // @Accept       json

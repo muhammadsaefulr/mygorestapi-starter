@@ -6,30 +6,31 @@ import (
 )
 
 var (
-	IsProd              bool
-	AppHost             string
-	AppPort             int
-	DBHost              string
-	DBUser              string
-	DBPassword          string
-	DBName              string
-	DBPort              int
-	RedisHost           string
-	RedisPassword       string
-	TMDbApiKey          string
-	JWTSecret           string
-	JWTAccessExp        int
-	JWTRefreshExp       int
-	JWTResetPasswordExp int
-	JWTVerifyEmailExp   int
-	SMTPHost            string
-	SMTPPort            int
-	SMTPUsername        string
-	SMTPPassword        string
-	EmailFrom           string
-	GoogleClientID      string
-	GoogleClientSecret  string
-	RedirectURL         string
+	IsProd               bool
+	AppHost              string
+	AppPort              int
+	DBHost               string
+	DBUser               string
+	DBPassword           string
+	DBName               string
+	DBPort               int
+	RedisHost            string
+	RedisPassword        string
+	TMDbApiKey           string
+	GoogleAppCredentials string
+	JWTSecret            string
+	JWTAccessExp         int
+	JWTRefreshExp        int
+	JWTResetPasswordExp  int
+	JWTVerifyEmailExp    int
+	SMTPHost             string
+	SMTPPort             int
+	SMTPUsername         string
+	SMTPPassword         string
+	EmailFrom            string
+	GoogleClientID       string
+	GoogleClientSecret   string
+	RedirectURL          string
 )
 
 func init() {
@@ -50,6 +51,8 @@ func init() {
 	// Redis configuration
 	RedisHost = viper.GetString("REDIS_HOST")
 	RedisPassword = viper.GetString("REDIS_PASSWORD")
+
+	GoogleAppCredentials = viper.GetString("GOOGLE_APPLICATION_CREDENTIALS")
 
 	// apikey configuration
 	TMDbApiKey = viper.GetString("TMDB_APIKEY")

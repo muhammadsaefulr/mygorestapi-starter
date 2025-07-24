@@ -313,6 +313,34 @@ const docTemplate = `{
                 }
             }
         },
+        "/auth/google/signin": {
+            "post": {
+                "description": "This route initiates the Google OAuth2 login flow with Firebase. Please try this in your browser.",
+                "tags": [
+                    "Auth Google"
+                ],
+                "summary": "Login with google",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_auth_request.FirebaseLogin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/example.GoogleLoginResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/login": {
             "post": {
                 "consumes": [
@@ -4405,6 +4433,17 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_auth_request.FirebaseLogin": {
+            "type": "object",
+            "required": [
+                "id_token"
+            ],
+            "properties": {
+                "id_token": {
+                    "type": "string"
+                }
+            }
+        },
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_auth_request.ForgotPassword": {
             "type": "object",
             "required": [
@@ -5800,7 +5839,13 @@ const docTemplate = `{
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.User": {
             "type": "object",
             "properties": {
+                "avatar_url": {
+                    "type": "string"
+                },
                 "email": {
+                    "type": "string"
+                },
+                "firebase_uid": {
                     "type": "string"
                 },
                 "id": {
