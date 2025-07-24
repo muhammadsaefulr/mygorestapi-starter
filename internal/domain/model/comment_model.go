@@ -17,9 +17,9 @@ type Comment struct {
 
 	Likes []CommentLike `gorm:"foreignKey:CommentID;references:ID" json:"likes,omitempty"`
 
-	UserDetail User      `gorm:"foreignKey:UserId;references:ID" json:"user_detail"`
+	UserDetail User      `g	orm:"foreignKey:UserId;references:ID" json:"user_detail"`
 	CreatedAt  time.Time `gorm:"autoCreateTime:milli" json:"created_at"`
-	UpdatedAt  time.Time
+	UpdatedAt  time.Time `gorm:"autoUpdateTime:milli" json:"updated_at"`
 }
 
 type CommentLike struct {
