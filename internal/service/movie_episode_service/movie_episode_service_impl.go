@@ -179,7 +179,7 @@ func (s *MovieEpisodeService) CreateUpload(c *fiber.Ctx, req *request.CreateMovi
 
 	navigationData := map[string]string{
 		"click_action": "FLUTTER_NOTIFICATION_CLICK",
-		"screen":       "anime_episode_player",
+		"screen":       "AppRoutes.detail",
 		"episode_id":   req.MovieEpsID,
 		"movie_id":     data.MovieId,
 	}
