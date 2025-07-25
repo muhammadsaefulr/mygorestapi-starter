@@ -60,7 +60,7 @@ func MovieDetailsModelToOnlyRespArr(movies []model.MovieDetails) []response.Movi
 			ReleaseDate:  d.ReleaseDate,
 			Studio:       d.Studio,
 			Status:       d.Status,
-			TotalEps:     strconv.Itoa(len(d.Episode)),
+			TotalEps:     strconv.Itoa(len(d.Episodes)),
 			Rating:       d.Rating,
 			Producer:     d.Producer,
 			Synopsis:     d.Synopsis,
@@ -77,10 +77,10 @@ func MovieDetailsModelToResp(
 	rekomen *[]model.MovieDetails,
 ) *response.MovieDetailsResponse {
 
-	episodesResp := make([]response.EpisodesResponse, 0, len(movie.Episode))
+	episodesResp := make([]response.EpisodesResponse, 0, len(movie.Episodes))
 	seen := make(map[string]bool)
 
-	for _, ep := range movie.Episode {
+	for _, ep := range movie.Episodes {
 		if seen[ep.MovieEpsID] {
 			continue
 		}
