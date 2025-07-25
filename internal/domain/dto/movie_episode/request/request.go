@@ -25,7 +25,7 @@ type CreateMovieEpisodesUpload struct {
 	Title          string                `form:"title" validate:"required" example:"upload"`
 	Resolution     string                `form:"resolution" validate:"required" example:"720p"`
 	ContentUploads *multipart.FileHeader `form:"file_video" validate:"required"`
-	SourceBy       string                `form:"-"` // tetap diisi dari backend
+	SourceBy       string                `form:"-"`
 }
 
 type UpdateMovieEpisodesUpload struct {

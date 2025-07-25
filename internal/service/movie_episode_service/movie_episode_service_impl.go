@@ -177,10 +177,17 @@ func (s *MovieEpisodeService) CreateUpload(c *fiber.Ctx, req *request.CreateMovi
 		return nil, fiber.NewError(fiber.StatusInternalServerError, "Failed to save movie episode")
 	}
 
+	navigationData := map[string]string{
+		"click_action": "FLUTTER_NOTIFICATION_CLICK",
+		"screen":       "anime_episode_player",
+		"episode_id":   req.MovieEpsID,
+		"movie_id":     data.MovieId,
+	}
+
 	go func() {
 		notificationTitle := "Episode Baru Telah Tayang! 🔥"
 		notificationBody := fmt.Sprintf("Episode baru telah ditambahkan ke %s", data.Title)
-		s.NotificationSvc.SendNotificationToUser(c, data.SourceBy, notificationTitle, notificationBody)
+		s.NotificationSvc.BroadcastToTopic(c, data.SourceBy, notificationTitle, notificationBody, navigationData)
 	}()
 
 	return data, nil
