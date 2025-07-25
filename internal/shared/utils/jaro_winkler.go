@@ -55,3 +55,39 @@ func JaroWinklerPairIndices(aniTitles, odTitles []string, topN int) (a []int, b 
 
 	return
 }
+
+func MatchSourceIndices(baseTitles, persistTitles []string, threshold float64) []int {
+	norm := func(s string) string { return strings.ToLower(strings.TrimSpace(s)) }
+	score := func(a, b string) float64 {
+		a, b = norm(a), norm(b)
+		if a == "" || b == "" {
+			return 0
+		}
+		s := smetrics.JaroWinkler(a, b, 0.7, 4)
+		if strings.Contains(a, b) || strings.Contains(b, a) {
+			s += 0.05
+		}
+		return s
+	}
+
+	res := make([]int, len(baseTitles))
+	for i := range res {
+		res[i] = -1
+	}
+
+	for bi, bt := range baseTitles {
+		best := -1.0
+		bestIdx := -1
+		for pi, pt := range persistTitles {
+			s := score(bt, pt)
+			if s > best {
+				best = s
+				bestIdx = pi
+			}
+		}
+		if best >= threshold {
+			res[bi] = bestIdx
+		}
+	}
+	return res
+}

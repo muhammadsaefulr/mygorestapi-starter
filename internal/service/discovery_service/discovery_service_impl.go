@@ -15,6 +15,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/redis/go-redis/v9"
+	"github.com/xrash/smetrics"
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/discovery/request"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/movie_details/response"
@@ -109,62 +110,140 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 				}
 
 				anilistResults, _, err := s.AnilistSvc.GetAll(c, convert_types.MapToAnilistQuery(&tmp))
-				if err != nil || len(anilistResults) == 0 {
+				if err != nil {
 					s.Log.Errorf("Anilist fetch error: %v", err)
+				}
+
+				if len(movieData) > 0 {
+					base := movieData[0]
+
+					bestIdx := -1
+					bestScore := -1.0
+					norm := func(s string) string { return strings.ToLower(strings.TrimSpace(s)) }
+					score := func(a, b string) float64 {
+						a, b = norm(a), norm(b)
+						if a == "" || b == "" {
+							return 0
+						}
+						s := smetrics.JaroWinkler(a, b, 0.7, 4)
+						if strings.Contains(a, b) || strings.Contains(b, a) {
+							s += 0.05
+						}
+						return s
+					}
+					for i := range anilistResults {
+						sc := score(base.Title, anilistResults[i].Title)
+						if sc > bestScore {
+							bestScore = sc
+							bestIdx = i
+						}
+					}
+					if bestIdx != -1 {
+						ani := anilistResults[bestIdx]
+						if base.ThumbnailURL == "" && ani.ThumbnailURL != "" {
+							base.ThumbnailURL = ani.ThumbnailURL
+						}
+						if base.Synopsis == "" && ani.Synopsis != "" {
+							base.Synopsis = ani.Synopsis
+						}
+						if len(base.Genres) == 0 && len(ani.Genres) > 0 {
+							base.Genres = ani.Genres
+						}
+						if base.Rating == "" && ani.Rating != "" {
+							base.Rating = ani.Rating
+						}
+						if base.Status == "" && ani.Status != "" {
+							base.Status = ani.Status
+						}
+					}
+
+					if base.PathURL == "" {
+						base.PathURL = "/movie/details/" + base.MovieID
+					}
+					if base.PathURL == "" {
+						mu.Lock()
+						firstErr = fiber.NewError(fiber.StatusNotFound, "Tidak ditemukan di MovieDetails")
+						mu.Unlock()
+						return
+					}
+
+					mu.Lock()
+					results = append(results, base)
+					pageRes = 1
+					TotalRes = len(results)
+					mu.Unlock()
 					return
 				}
 
 				odResults, err := s.OdService.GetAnimeByTitle(tmp.Search)
 				if err != nil || len(odResults) == 0 {
-					s.Log.Errorf("OD fetch error: %v", err)
+					mu.Lock()
+					firstErr = fiber.NewError(fiber.StatusNotFound, "Tidak ditemukan di MovieDetails maupun Otakudesu")
+					mu.Unlock()
+					return
 				}
 
-				var aniTitles []string
+				var odTitles, aniTitles []string
+				for _, o := range odResults {
+					odTitles = append(odTitles, o.Title)
+				}
 				for _, a := range anilistResults {
 					aniTitles = append(aniTitles, a.Title)
 				}
 
-				var odTitles []string
-				for _, o := range odResults {
-					odTitles = append(odTitles, o.Title)
-				}
-
-				aIdx, bIdx := utils.JaroWinklerPairIndices(aniTitles, odTitles, 5)
+				aniIdxPerOD := utils.MatchSourceIndices(odTitles, aniTitles, 0.60)
 
 				var picked []response.MovieDetailOnlyResponse
-				if len(aIdx) > 0 {
-					for i := range aIdx {
-						ani := anilistResults[aIdx[i]]
-						if len(movieData) > 0 {
-							ani.MovieID = movieData[0].MovieID
-							ani.PathURL = "/movie/details/" + movieData[0].MovieID
-						} else if len(bIdx) > i && bIdx[i] < len(odResults) {
-							od := odResults[bIdx[i]]
-							ani.MovieID = path.Base(strings.TrimSuffix(od.URL, "/"))
-							ani.PathURL = od.URL
-							ani.ThumbnailURL = od.ThumbnailURL
-							ani.Status = od.Status
-							ani.Rating = od.Rating
-							ani.Genres = []string{}
-							for _, g := range od.Genres {
-								ani.Genres = append(ani.Genres, g.Title)
-							}
+				for oi, od := range odResults {
+					var out response.MovieDetailOnlyResponse
+
+					out.Title = od.Title
+					out.PathURL = od.URL
+					out.MovieType = "anime"
+					out.MovieID = path.Base(strings.TrimSuffix(od.URL, "/"))
+					out.ThumbnailURL = od.ThumbnailURL
+					out.Status = od.Status
+					out.Rating = od.Rating
+
+					for _, g := range od.Genres {
+						out.Genres = append(out.Genres, g.Title)
+					}
+
+					ai := aniIdxPerOD[oi]
+					if ai >= 0 && ai < len(anilistResults) {
+						ani := anilistResults[ai]
+						if out.ThumbnailURL == "" && ani.ThumbnailURL != "" {
+							out.ThumbnailURL = ani.ThumbnailURL
 						}
-						picked = append(picked, ani)
+						if out.Synopsis == "" && ani.Synopsis != "" {
+							out.Synopsis = ani.Synopsis
+						}
+						if len(out.Genres) == 0 && len(ani.Genres) > 0 {
+							out.Genres = ani.Genres
+						}
+						if out.Rating == "" && ani.Rating != "" {
+							out.Rating = ani.Rating
+						}
+						if out.Status == "" && ani.Status != "" {
+							out.Status = ani.Status
+						}
+						if out.TotalEps == "" && ani.TotalEps != "" {
+							out.TotalEps = ani.TotalEps
+						}
+						if out.Studio == "" && ani.Studio != "" {
+							out.Studio = ani.Studio
+						}
+						if out.ReleaseDate == "" && ani.ReleaseDate != "" {
+							out.ReleaseDate = utils.ConvertDateStripToDay(ani.ReleaseDate)
+						}
 					}
-				} else {
-					// fallback ke anilistResults[0]
-					main := anilistResults[0]
-					if len(movieData) > 0 {
-						main.MovieID = movieData[0].MovieID
-						main.PathURL = "/movie/details/" + movieData[0].MovieID
-					}
-					picked = append(picked, main)
+
+					picked = append(picked, out)
 				}
 
 				if len(picked) == 0 || picked[0].PathURL == "" {
 					mu.Lock()
-					firstErr = fiber.NewError(fiber.StatusNotFound, "Tidak ditemukan di MovieDetails maupun OD")
+					firstErr = fiber.NewError(fiber.StatusNotFound, "Tidak ditemukan di MovieDetails maupun Otakudesu")
 					mu.Unlock()
 					return
 				}
@@ -175,6 +254,7 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 				TotalRes = len(results)
 				mu.Unlock()
 			}()
+
 		case "movie", "tv":
 			wg.Add(1)
 			go func() {

@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"log"
 	"strings"
 	"time"
@@ -76,4 +77,16 @@ func ConvertDateStrToDay(dateStr string) string {
 	default:
 		return "-"
 	}
+}
+
+func ConvertDateStripToDay(dateStr string) string {
+	layout := "2006-01-02"
+	t, _ := time.Parse(layout, dateStr)
+
+	months := [...]string{"Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"}
+	day := t.Day()
+	month := months[t.Month()-1]
+	year := t.Year()
+
+	return fmt.Sprintf("%02d %s, %d", day, month, year)
 }
