@@ -209,23 +209,27 @@ func (a *AuthController) Logout(c *fiber.Ctx) error {
 // @Success      200  {object}  example.RefreshTokenResponse
 // @Failure      401  {object}  example.Unauthorized  "Unauthorized"
 func (a *AuthController) RefreshTokens(c *fiber.Ctx) error {
-	req := new(auth_request_dto.RefreshToken)
+	rtToken := c.Cookies("refresh_token")
 
-	if err := c.BodyParser(req); err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, "Invalid request body")
-	}
+	if rtToken == "" {
+		req := new(auth_request_dto.RefreshToken)
 
-	if req.RefreshToken == "" {
-		rtToken := c.Cookies("refresh_token")
+		if err := c.BodyParser(req); err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, "Invalid request body")
+		}
 
-		if rtToken == "" {
+		if req.RefreshToken == "" {
 			return fiber.NewError(fiber.StatusUnauthorized, "Refresh token not found")
 		}
 
-		req.RefreshToken = rtToken
+		rtToken = req.RefreshToken
 	}
 
-	tokens, err := a.AuthService.RefreshAuth(c, req)
+	req := auth_request_dto.RefreshToken{
+		RefreshToken: rtToken,
+	}
+
+	tokens, err := a.AuthService.RefreshAuth(c, &req)
 	if err != nil {
 		return err
 	}

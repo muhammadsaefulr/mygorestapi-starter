@@ -255,7 +255,7 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 				mu.Unlock()
 			}()
 
-		case "movie", "tv":
+		case "movie", "kdrama":
 			wg.Add(1)
 			go func() {
 				defer wg.Done()
@@ -264,50 +264,36 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 				movieData, _, err := s.MovieSvc.GetAll(c, convert_types.MapToMovieDtQuery(&tmp))
 				if err != nil {
 					s.Log.Errorf("MovieSvc.GetAll error (%s): %v", tmp.Type, err)
-				}
-
-				tmdbResults, _, _, err := s.TmdbSvc.GetAll(c, convert_types.MapToTmdbQuery(&tmp))
-				if err != nil || len(tmdbResults) == 0 {
-					s.Log.Errorf("TMDb fetch error: %v", err)
+					mu.Lock()
+					firstErr = fiber.NewError(fiber.StatusInternalServerError, "Gagal mengambil data Movie Details")
+					mu.Unlock()
 					return
 				}
 
-				var tmdbTitles []string
-				for _, t := range tmdbResults {
-					tmdbTitles = append(tmdbTitles, t.Title)
-				}
-
-				var dbTitles []string
-				for _, m := range movieData {
-					dbTitles = append(dbTitles, m.Title)
+				if len(movieData) == 0 {
+					mu.Lock()
+					firstErr = fiber.NewError(fiber.StatusNotFound, "MovieDetails tidak ditemukan")
+					mu.Unlock()
+					return
 				}
 
 				var picked []response.MovieDetailOnlyResponse
-				if len(dbTitles) > 0 {
-					aIdx, bIdx := utils.JaroWinklerPairIndices(tmdbTitles, dbTitles, 5)
-
-					for i := range aIdx {
-						main := tmdbResults[aIdx[i]]
-						main.MovieID = movieData[bIdx[i]].MovieID
-						main.PathURL = "/movie/details/" + movieData[bIdx[i]].MovieID
-						picked = append(picked, main)
-					}
-				}
-
-				if len(picked) == 0 {
-					main := tmdbResults[0]
-					if len(movieData) > 0 {
-						main.MovieID = movieData[0].MovieID
-						main.PathURL = "/movie/details/" + movieData[0].MovieID
-					}
-					picked = append(picked, main)
-				}
-
-				if len(picked) == 0 || picked[0].PathURL == "" {
-					mu.Lock()
-					firstErr = fiber.NewError(fiber.StatusNotFound, "Tidak ditemukan di MovieDetails")
-					mu.Unlock()
-					return
+				for _, m := range movieData {
+					picked = append(picked, response.MovieDetailOnlyResponse{
+						MovieID:      m.MovieID,
+						Title:        m.Title,
+						PathURL:      "/movie/details/" + m.MovieID,
+						ThumbnailURL: m.ThumbnailURL,
+						Rating:       m.Rating,
+						ReleaseDate:  utils.ConvertDateStripToDay(m.ReleaseDate),
+						Genres:       m.Genres,
+						MovieType:    m.MovieType,
+						Synopsis:     m.Synopsis,
+						Status:       m.Status,
+						Producer:     m.Producer,
+						Studio:       m.Studio,
+						TotalEps:     m.TotalEps,
+					})
 				}
 
 				mu.Lock()
@@ -647,9 +633,9 @@ func (s *DiscoveryService) GetDiscoverGenres(c *fiber.Ctx, params *request.Query
 				return
 			}
 			var filtered []response.GenreDetail
-			for _, d := range data {
-				filtered = append(filtered, d)
-			}
+
+			filtered = append(filtered, data...)
+
 			mu.Lock()
 			results = append(results, filtered...)
 			mu.Unlock()
@@ -671,9 +657,8 @@ func (s *DiscoveryService) GetDiscoverGenres(c *fiber.Ctx, params *request.Query
 			}
 
 			var filtered []response.GenreDetail
-			for _, d := range data {
-				filtered = append(filtered, d)
-			}
+
+			filtered = append(filtered, data...)
 
 			mu.Lock()
 			results = append(results, filtered...)
@@ -696,9 +681,8 @@ func (s *DiscoveryService) GetDiscoverGenres(c *fiber.Ctx, params *request.Query
 				return
 			}
 			var filtered []response.GenreDetail
-			for _, d := range data {
-				filtered = append(filtered, d)
-			}
+
+			filtered = append(filtered, data...)
 
 			mu.Lock()
 			results = append(results, filtered...)

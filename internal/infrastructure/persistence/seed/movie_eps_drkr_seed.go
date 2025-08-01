@@ -13,6 +13,16 @@ func SeedDrakorEpisodes(db *gorm.DB) error {
 		"strong-woman-do-bong-soon",
 		"business-proposal",
 		"descendants-of-the-sun",
+		"the-trauma-code-heroes-on-call",
+		"alchemy-of-souls",
+		"moving",
+		"twinkling-watermelon",
+		"when-life-gives-you-tangerines",
+		"weak-hero-class-1",
+		"reply-1988",
+		"flower-of-evil",
+		"hospital-playlist-season-2",
+		"move-to-heaven",
 	}
 
 	resolutions := []string{"360p", "480p", "720p", "1080p"}
