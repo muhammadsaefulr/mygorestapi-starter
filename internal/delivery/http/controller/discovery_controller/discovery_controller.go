@@ -31,6 +31,7 @@ func NewDiscoveryController(service service.DiscoveryServiceInterface) *Discover
 // @Param        category query string  false  "Discovery Category"  Enums(popular, trending, ongoing, genre, search)  default(popular)
 // @Param        search query string false "Search term (Only used when category=search)"
 // @Router       /discovery [get]
+// @Success      200  {object}  response.SuccessWithPaginate[responses.MovieDetailOnlyResponse]
 func (c *DiscoveryController) GetDiscover(ctx *fiber.Ctx) error {
 	params := &request.QueryDiscovery{
 		Page:     ctx.QueryInt("page", 1),
@@ -77,6 +78,7 @@ func (c *DiscoveryController) GetDiscover(ctx *fiber.Ctx) error {
 // @Produce      json
 // @Param        type query     string  false "Movie Type"  Enums(anime, kdrama, movie)  default(anime)
 // @Router       /discovery/genres [get]
+// @Success      200  {object}  response.SuccessWithCommonData[responses.GenreDetail]
 func (c *DiscoveryController) GetDiscoverGenres(ctx *fiber.Ctx) error {
 	params := &request.QueryDiscovery{
 		Type: ctx.Query("type"),

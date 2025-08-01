@@ -26,6 +26,7 @@ func NewCommentController(commentService service.CommentService) *CommentControl
 // @Security     BearerAuth
 // @Produce      json
 // @Param        request  body  request.CreateComment  true  "Request body"
+// @Success      201  {object}  response.Common
 // @Router       /comments [post]
 func (co *CommentController) CreateComment(c *fiber.Ctx) error {
 	var req request.CreateComment
@@ -53,6 +54,7 @@ func (co *CommentController) CreateComment(c *fiber.Ctx) error {
 // @Description  Get a comment by ID
 // @Produce      json
 // @Param        id  path  uint  true  "Comment ID"
+// @Success      200  {object}  response.SuccessWithDetail[dto_response.CommentResponse]
 // @Router       /comments/{id} [get]
 func (co *CommentController) GetCommentByID(c *fiber.Ctx) error {
 	idStr := c.Params("id")
@@ -80,6 +82,7 @@ func (co *CommentController) GetCommentByID(c *fiber.Ctx) error {
 // @Produce      json
 // @Param        movieEpsId  path  string  true  "Movie Eps ID"  Example(drstn-s4-episode-8-sub-indo)
 // @Router       /comments/movie/{movieEpsId} [get]
+// @Success      200  {object}  response.SuccessWithDetail[[]dto_response.CommentResponse]
 func (co *CommentController) GetCommentsMovieId(c *fiber.Ctx) error {
 	movieId := c.Params("movieId")
 	comments, err := co.CommentService.GetCommentsMovieId(c, movieId)
@@ -102,6 +105,7 @@ func (co *CommentController) GetCommentsMovieId(c *fiber.Ctx) error {
 // @Produce      json
 // @Param        id  path  uint  true  "Comment ID"
 // @Param        request  body  request.UpdateComment  true  "Request body"
+// @Success      200  {object}  response.SuccessWithDetail[dto_response.CommentResponse]
 // @Router       /comments/{id} [put]
 func (co *CommentController) UpdateComment(c *fiber.Ctx) error {
 	idStr := c.Params("id")

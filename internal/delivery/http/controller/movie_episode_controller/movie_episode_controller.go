@@ -55,6 +55,7 @@ func NewMovieEpisodeController(service service.MovieEpisodeServiceInterface) *Mo
 // @Produce      json
 // @Param        movie_eps_id  path  string  true  "MovieEps ID (string)"
 // @Router       /movie/episodes/{movie_eps_id} [get]
+// @Success      200  {object}  response.SuccessWithDetail[model.MovieEpisode]
 func (h *MovieEpisodeController) GetMovieEpisodeByID(c *fiber.Ctx) error {
 	idStr := c.Params("id")
 
@@ -77,6 +78,7 @@ func (h *MovieEpisodeController) GetMovieEpisodeByID(c *fiber.Ctx) error {
 // @Param        movie_id  path  string  true  "Movie ID"
 // @Param        movie_eps_id  path  string  true  "Movie Eps ID"
 // @Router       /movie/episodes/{movie_id}/{movie_eps_id} [get]
+// @Success      200  {object}  response.SuccessWithDetail[responses.MovieEpisodeResponses]
 func (h *MovieEpisodeController) GetMovieEpisodeByMovieID(c *fiber.Ctx) error {
 	idStr := c.Params("movie_id")
 	movEpsId := c.Params("movie_eps_id")

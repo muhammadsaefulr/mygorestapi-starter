@@ -551,6 +551,27 @@ definitions:
     required:
     - content
     type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_comment_response.CommentResponse:
+    properties:
+      comment_reply:
+        items:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_comment_response.CommentResponse'
+        type: array
+      content:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      likes:
+        type: integer
+      movie_id:
+        type: string
+      user_detail:
+        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_user_response.GetUsersResponse'
+      user_id:
+        type: string
+    type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_history_request.CreateHistory:
     properties:
       movie_eps_id:
@@ -665,6 +686,13 @@ definitions:
     - thumbnail_url
     - title
     type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response.GenreDetail:
+    properties:
+      genre_name:
+        type: string
+      genre_url:
+        type: string
+    type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response.MovieDetailOnlyResponse:
     properties:
       created_at:
@@ -735,6 +763,47 @@ definitions:
       title:
         type: string
       url:
+        type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_response.MovieEpisodeResponses:
+    properties:
+      current_ep:
+        type: string
+      detail_url:
+        type: string
+      episodes:
+        items:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_response.SourcesData'
+        type: array
+      next_ep_url:
+        type: string
+      release_date:
+        type: string
+      sources:
+        items:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_response.Sources'
+        type: array
+      thumbnail_url:
+        type: string
+      title:
+        type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_response.Sources:
+    properties:
+      data_list:
+        items:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_response.SourcesData'
+        type: array
+      movie_eps_id:
+        type: string
+      res:
+        type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_response.SourcesData:
+    properties:
+      title:
+        type: string
+      video_url:
         type: string
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_report_error_request.CreateReportError:
@@ -1093,12 +1162,69 @@ definitions:
         example: 7e26e5c0-0cb7-4d3f-a777-2a5adbb099fa
         type: string
     type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.Common:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+  ? github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithCommonData-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response_GenreDetail
+  : properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response.GenreDetail'
+        type: array
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+  ? github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-array_github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_comment_response_CommentResponse
+  : properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_comment_response.CommentResponse'
+        type: array
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+  ? github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_comment_response_CommentResponse
+  : properties:
+      code:
+        type: integer
+      data:
+        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_comment_response.CommentResponse'
+      message:
+        type: string
+      status:
+        type: string
+    type: object
   ? github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response_MovieDetailOnlyResponse
   : properties:
       code:
         type: integer
       data:
         $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response.MovieDetailOnlyResponse'
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+  ? github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_response_MovieEpisodeResponses
+  : properties:
+      code:
+        type: integer
+      data:
+        $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_response.MovieEpisodeResponses'
       message:
         type: string
       status:
@@ -2055,7 +2181,11 @@ paths:
           $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_comment_request.CreateComment'
       produces:
       - application/json
-      responses: {}
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.Common'
       security:
       - BearerAuth: []
       summary: Create a comment
@@ -2088,7 +2218,11 @@ paths:
         type: integer
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_comment_response_CommentResponse'
       summary: Get a comment by ID
       tags:
       - Comments
@@ -2108,7 +2242,11 @@ paths:
           $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_comment_request.UpdateComment'
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_comment_response_CommentResponse'
       security:
       - BearerAuth: []
       summary: Update a comment
@@ -2160,7 +2298,11 @@ paths:
         type: string
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-array_github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_comment_response_CommentResponse'
       summary: Get comments by movie ID
       tags:
       - Comments
@@ -2208,7 +2350,11 @@ paths:
         type: string
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response_MovieDetailOnlyResponse'
       summary: Get popular discover
       tags:
       - discovery
@@ -2257,7 +2403,11 @@ paths:
         type: string
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithCommonData-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_details_response_GenreDetail'
       summary: Get genres
       tags:
       - discovery
@@ -2614,7 +2764,11 @@ paths:
         type: string
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model_MovieEpisode'
       summary: Get a movie episodes by ID
       tags:
       - movie
@@ -2633,7 +2787,11 @@ paths:
         type: string
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_response_MovieEpisodeResponses'
       summary: Get all movie episodes by movie ID
       tags:
       - movie
