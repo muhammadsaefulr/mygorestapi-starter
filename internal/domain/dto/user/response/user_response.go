@@ -13,13 +13,13 @@ type CreateUserResponse struct {
 }
 
 type GetUsersResponse struct {
-	ID               uuid.UUID               `json:"id"`
-	Name             string                  `json:"name"`
-	Email            string                  `json:"email"`
-	Role             string                  `json:"role"`
-	Roles            *model.UserRole         `json:"roles,omitempty"`
-	UserPoint        *model.UserPoints       `json:"user_point,omitempty"`
-	UserSubscription *model.UserSubscription `json:"user_subscription,omitempty"`
-	UserBadge        []model.UserBadgeInfo   `json:"user_badge,omitempty"`
-	IsEmailVerified  bool                    `json:"is_email_verified"`
+	ID               uuid.UUID              `json:"id"`
+	Name             string                 `json:"name"`
+	Email            string                 `json:"email"`
+	Role             string                 `json:"role"`
+	Roles            *model.UserRole        `json:"roles,omitempty"`
+	UserPoint        *model.UserPoints      `json:"user_point,omitempty"`
+	UserSubscription model.UserSubscription `json:"user_subscription,omitempty"`
+	UserBadge        []model.UserBadgeInfo  `json:"user_badge,omitempty"`
+	IsEmailVerified  bool                   `json:"is_email_verified"`
 }
