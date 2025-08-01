@@ -19,17 +19,31 @@ func NewBannerAppRepositoryImpl(db *gorm.DB) BannerAppRepo {
 }
 
 func (r *BannerAppRepositoryImpl) GetAll(ctx context.Context, param *request.QueryBannerApp) ([]model.BannerApp, int64, error) {
-	var data []model.BannerApp
-	var total int64
+	var (
+		data  []model.BannerApp
+		total int64
+	)
 
-	query := r.DB.WithContext(ctx).Model(&model.BannerApp{})
+	if param.Page <= 0 {
+		param.Page = 1
+	}
+	if param.Limit <= 0 {
+		param.Limit = 10
+	}
 	offset := (param.Page - 1) * param.Limit
 
-	if err := query.Count(&total).Error; err != nil {
+	baseQuery := r.DB.WithContext(ctx).Model(&model.BannerApp{})
+
+	if param.Type != "" {
+		baseQuery = baseQuery.Where("type = ?", param.Type)
+	}
+
+	countQuery := baseQuery.Session(&gorm.Session{})
+	if err := countQuery.Count(&total).Error; err != nil {
 		return nil, 0, err
 	}
 
-	if err := query.Limit(param.Limit).Offset(offset).Find(&data).Error; err != nil {
+	if err := baseQuery.Limit(param.Limit).Offset(offset).Find(&data).Error; err != nil {
 		return nil, 0, err
 	}
 

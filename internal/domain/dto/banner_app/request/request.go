@@ -16,6 +16,7 @@ type UpdateBannerApp struct {
 
 type QueryBannerApp struct {
 	Page  int    `query:"page"`
+	Type  string `query:"type"`
 	Limit int    `query:"limit"`
 	Sort  string `query:"sort"`
 }

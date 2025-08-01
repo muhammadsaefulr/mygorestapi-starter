@@ -27,11 +27,13 @@ func NewBannerAppController(service service.BannerAppService) *BannerAppControll
 // @Param        page   query     int     false  "Page number"  default(1)
 // @Param        limit  query     int     false  "Items per page"  default(10)
 // @Param        search query     string  false  "Search term"
+// @Param 		 type   query     string  false "Type of banner (e.g., 'anime', 'movie', kdrama)"
 // @Router       /app/banner [get]
 func (h *BannerAppController) GetAllBannerApp(c *fiber.Ctx) error {
 	query := &request.QueryBannerApp{
 		Page:  c.QueryInt("page", 1),
 		Limit: c.QueryInt("limit", 10),
+		Type:  c.Query("type"),
 	}
 
 	data, total, err := h.Service.GetAll(c, query)
