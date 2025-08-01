@@ -100,6 +100,10 @@ func Connect(dbHost, dbName string) *gorm.DB {
 		log.Fatal("gagal seed movie episodes:", err)
 	}
 
+	if err := seed.SeedBannerApp(db); err != nil {
+		log.Fatal("gagal seed banner app:", err)
+	}
+
 	// Config connection pooling
 	sqlDB.SetMaxIdleConns(10)
 	sqlDB.SetMaxOpenConns(100)

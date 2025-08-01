@@ -7,7 +7,7 @@ import (
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/banner_app/request"
 	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/banner_app"
+	repository "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/banner_app"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/convert_types"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 	"github.com/sirupsen/logrus"
@@ -56,6 +56,10 @@ func (s *BannerAppService) Create(c *fiber.Ctx, req *request.CreateBannerApp) (*
 	if err := s.Validate.Struct(req); err != nil {
 		return nil, err
 	}
+
+	UserInfo := c.Locals("user").(*model.User)
+	req.UpdatedBy = UserInfo.Name
+
 	data := convert_types.CreateBannerAppToModel(req)
 	if err := s.Repo.Create(c.Context(), data); err != nil {
 		s.Log.Errorf("Create error: %+v", err)
@@ -68,8 +72,13 @@ func (s *BannerAppService) Update(c *fiber.Ctx, id uint, req *request.UpdateBann
 	if err := s.Validate.Struct(req); err != nil {
 		return nil, err
 	}
+
 	data := convert_types.UpdateBannerAppToModel(req)
 	data.ID = id
+
+	UserInfo := c.Locals("user").(*model.User)
+	req.UpdatedBy = UserInfo.Name
+
 	if err := s.Repo.Update(c.Context(), data); err != nil {
 		s.Log.Errorf("Update error: %+v", err)
 		return nil, fiber.NewError(fiber.StatusInternalServerError, "Update banner_app failed")
