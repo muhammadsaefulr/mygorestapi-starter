@@ -1761,6 +1761,10 @@ paths:
         in: query
         name: search
         type: string
+      - description: Type of banner (e.g., 'anime', 'movie', kdrama)
+        in: query
+        name: type
+        type: string
       produces:
       - application/json
       responses: {}

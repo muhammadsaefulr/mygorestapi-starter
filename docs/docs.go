@@ -136,6 +136,12 @@ const docTemplate = `{
                         "description": "Search term",
                         "name": "search",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Type of banner (e.g., 'anime', 'movie', kdrama)",
+                        "name": "type",
+                        "in": "query"
                     }
                 ],
                 "responses": {}
