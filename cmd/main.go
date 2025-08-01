@@ -74,8 +74,14 @@ func setupFiberApp() *fiber.App {
 	app.Use(middleware.LoggerConfig())
 	app.Use(helmet.New())
 	app.Use(compress.New())
+
+	origin := config.ClientFeHost
+	if origin == "" {
+		origin = "http://localhost:3000"
+	}
+
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     config.ClientFeHost,
+		AllowOrigins:     origin,
 		AllowCredentials: true,
 		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
 	}))
