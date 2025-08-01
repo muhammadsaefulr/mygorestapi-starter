@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 
@@ -100,24 +101,11 @@ func (a *AuthController) Login(c *fiber.Ctx) error {
 		return err
 	}
 
-	c.Cookie(&fiber.Cookie{
-		Name:     "access_token",
-		Value:    tokens.Access.Token,
-		HTTPOnly: false,
-		SameSite: "None",
-		Secure:   config.IsProd,
-		Path:     "/",
-		MaxAge:   60 * 60 * 24,
-	})
+	accessToken := fmt.Sprintf("access_token=%s; Path=/; Max-Age=%d; SameSite=None; Secure; Partitioned", tokens.Access.Token, 60*25)
+	refreshToken := fmt.Sprintf("refresh_token=%s; Path=/; Max-Age=%d; SameSite=None; Secure; HttpOnly; Partitioned", tokens.Refresh.Token, 60*60*24*30)
 
-	c.Cookie(&fiber.Cookie{
-		Name:     "refresh_token",
-		Value:    tokens.Refresh.Token,
-		HTTPOnly: true,
-		SameSite: "None",
-		Path:     "/",
-		MaxAge:   60 * 60 * 24 * 7,
-	})
+	c.Response().Header.Add("Set-Cookie", accessToken)
+	c.Response().Header.Add("Set-Cookie", refreshToken)
 
 	return c.Status(fiber.StatusOK).
 		JSON(response.SuccessWithTokens{
@@ -230,25 +218,11 @@ func (a *AuthController) RefreshTokens(c *fiber.Ctx) error {
 		return err
 	}
 
-	c.Cookie(&fiber.Cookie{
-		Name:     "access_token",
-		Value:    tokens.Access.Token,
-		HTTPOnly: false,
-		Secure:   config.IsProd,
-		SameSite: "None",
-		Path:     "/",
-		MaxAge:   60 * 15,
-	})
+	accessToken := fmt.Sprintf("access_token=%s; Path=/; Max-Age=%d; SameSite=None; Secure; Partitioned", tokens.Access.Token, 60*25)
+	refreshToken := fmt.Sprintf("refresh_token=%s; Path=/; Max-Age=%d; SameSite=None; Secure; HttpOnly; Partitioned", tokens.Refresh.Token, 60*60*24*30)
 
-	c.Cookie(&fiber.Cookie{
-		Name:     "refresh_token",
-		Value:    tokens.Refresh.Token,
-		HTTPOnly: true,
-		Secure:   config.IsProd,
-		SameSite: "None",
-		Path:     "/",
-		MaxAge:   60 * 15,
-	})
+	c.Response().Header.Add("Set-Cookie", accessToken)
+	c.Response().Header.Add("Set-Cookie", refreshToken)
 
 	return c.Status(fiber.StatusOK).
 		JSON(auth_response_dto.RefreshToken{
