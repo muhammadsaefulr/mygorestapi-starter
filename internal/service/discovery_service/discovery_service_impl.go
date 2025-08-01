@@ -403,7 +403,7 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 			mu.Unlock()
 		}()
 
-	case "movie", "tv":
+	case "movie":
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
@@ -426,6 +426,7 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 				movieData, _, err := s.MovieSvc.GetAll(c, convert_types.MapToMovieDtQuery(&tmp))
 				if err == nil && len(movieData) > 0 {
 					d.MovieID = movieData[0].MovieID
+					d.PathURL = "/movie/details/" + movieData[0].MovieID
 					filtered = append(filtered, d)
 				}
 			}
@@ -461,7 +462,7 @@ func (s *DiscoveryService) GetDiscover(c *fiber.Ctx, params *request.QueryDiscov
 				movieData, _, err := s.MovieSvc.GetAll(c, convert_types.MapToMovieDtQuery(&tmp))
 				if err == nil && len(movieData) > 0 {
 					d.MovieID = movieData[0].MovieID
-					d.PathURL = movieData[0].PathURL
+					d.PathURL = "/movie/details/" + movieData[0].MovieID
 					filtered = append(filtered, d)
 				}
 			}
