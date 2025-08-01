@@ -104,7 +104,7 @@ func (a *AuthController) Login(c *fiber.Ctx) error {
 		Name:     "access_token",
 		Value:    tokens.Access.Token,
 		HTTPOnly: false,
-		SameSite: "Lax",
+		SameSite: "None",
 		Secure:   config.IsProd,
 		Path:     "/",
 		MaxAge:   60 * 60 * 24,
@@ -114,7 +114,7 @@ func (a *AuthController) Login(c *fiber.Ctx) error {
 		Name:     "refresh_token",
 		Value:    tokens.Refresh.Token,
 		HTTPOnly: true,
-		SameSite: "Lax",
+		SameSite: "None",
 		Path:     "/",
 		MaxAge:   60 * 60 * 24 * 7,
 	})
@@ -235,7 +235,7 @@ func (a *AuthController) RefreshTokens(c *fiber.Ctx) error {
 		Value:    tokens.Access.Token,
 		HTTPOnly: false,
 		Secure:   config.IsProd,
-		SameSite: "Lax",
+		SameSite: "None",
 		Path:     "/",
 		MaxAge:   60 * 15,
 	})
@@ -245,7 +245,7 @@ func (a *AuthController) RefreshTokens(c *fiber.Ctx) error {
 		Value:    tokens.Refresh.Token,
 		HTTPOnly: true,
 		Secure:   config.IsProd,
-		SameSite: "Lax",
+		SameSite: "None",
 		Path:     "/",
 		MaxAge:   60 * 15,
 	})
