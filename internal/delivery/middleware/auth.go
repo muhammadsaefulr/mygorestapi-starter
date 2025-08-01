@@ -20,8 +20,15 @@ func InitAuthMiddleware(us service.UserService) {
 
 func Auth(requiredRights ...string) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		authHeader := c.Get("Authorization")
-		token := strings.TrimSpace(strings.TrimPrefix(authHeader, "Bearer "))
+		token := c.Cookies("access_token")
+		if token == "" {
+			authHeader := c.Get("Authorization")
+			token = strings.TrimSpace(strings.TrimPrefix(authHeader, "Bearer "))
+		}
+
+		if token == "" {
+			return fiber.NewError(fiber.StatusUnauthorized, "Please authenticate")
+		}
 
 		if token == "" {
 			return fiber.NewError(fiber.StatusUnauthorized, "Please authenticate")
