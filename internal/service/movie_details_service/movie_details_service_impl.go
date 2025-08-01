@@ -4,6 +4,7 @@ import (
 	"log"
 	"path"
 	"strings"
+	"sync"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -99,7 +100,6 @@ func (s *MovieDetailsService) GetByIDPreEps(c *fiber.Ctx, id string) (*response.
 		log.Printf("Rekomendasi: %+v", resp.Rekomend)
 
 		var results []response.MovieDetailOnlyResponse
-		var err error
 
 		switch resp.MovieDetail.MovieType {
 		case "anime":
@@ -126,29 +126,46 @@ func (s *MovieDetailsService) GetByIDPreEps(c *fiber.Ctx, id string) (*response.
 			}
 
 			if err == nil && detail != nil && detail.Rekomend != nil {
-				var finalRekom []response.MovieDetailOnlyResponse
-
+				finalRekom := make([]response.MovieDetailOnlyResponse, 0)
+				semaphore := make(chan struct{}, 2)
+				wg := sync.WaitGroup{}
+				mu := sync.Mutex{}
 				for _, r := range *detail.Rekomend {
-					found := false
+					r := r
+					wg.Add(1)
+					semaphore <- struct{}{}
 
-					movieData, _, err := s.GetAll(c, &request.QueryMovieDetails{Search: r.Title})
-					if err == nil && len(movieData) > 0 {
-						r.MovieID = movieData[0].MovieID
-						r.PathURL = "/movie/details/" + r.MovieID
-						found = true
-					} else if data.MovieType == "anime" {
-						odData, err := s.OdService.GetAnimeByTitle(r.Title)
-						if err == nil && len(odData) > 0 {
-							r.MovieID = path.Base(strings.TrimSuffix(odData[0].URL, "/"))
-							r.PathURL = "/otakudesu/detail/" + r.MovieID
+					go func() {
+						defer func() {
+							<-semaphore
+							wg.Done()
+						}()
+
+						found := false
+
+						movieData, _, err := s.GetAll(c, &request.QueryMovieDetails{Search: r.Title})
+						if err == nil && len(movieData) > 0 {
+							r.MovieID = movieData[0].MovieID
+							r.PathURL = "/movie/details/" + r.MovieID
 							found = true
+						} else if data.MovieType == "anime" {
+							odData, err := s.OdService.GetAnimeByTitle(r.Title)
+							if err == nil && len(odData) > 0 {
+								r.MovieID = path.Base(strings.TrimSuffix(odData[0].URL, "/"))
+								r.PathURL = "/otakudesu/detail/" + r.MovieID
+								found = true
+							}
 						}
-					}
 
-					if found {
-						finalRekom = append(finalRekom, r)
-					}
+						if found {
+							mu.Lock()
+							finalRekom = append(finalRekom, r)
+							mu.Unlock()
+						}
+					}()
 				}
+
+				wg.Wait()
 
 				if len(finalRekom) > 0 {
 					resp.Rekomend = &finalRekom
