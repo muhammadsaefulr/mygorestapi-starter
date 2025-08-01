@@ -105,7 +105,7 @@ func (a *AuthController) Login(c *fiber.Ctx) error {
 		Value:    tokens.Access.Token,
 		HTTPOnly: false,
 		SameSite: "Lax",
-		Secure:   false,
+		Secure:   config.IsProd,
 		Path:     "/",
 		MaxAge:   60 * 60 * 24,
 	})
