@@ -7,6 +7,7 @@ import (
 
 var (
 	IsProd               bool
+	ClientFeHost         string
 	AppHost              string
 	AppPort              int
 	DBHost               string
@@ -40,6 +41,7 @@ func init() {
 	IsProd = viper.GetString("APP_ENV") == "prod"
 	AppHost = viper.GetString("APP_HOST")
 	AppPort = viper.GetInt("APP_PORT")
+	ClientFeHost = viper.GetString("CLIENT_FE_HOST")
 
 	// database configuration
 	DBHost = viper.GetString("DB_HOST")

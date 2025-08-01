@@ -100,6 +100,25 @@ func (a *AuthController) Login(c *fiber.Ctx) error {
 		return err
 	}
 
+	c.Cookie(&fiber.Cookie{
+		Name:     "access_token",
+		Value:    tokens.Access.Token,
+		HTTPOnly: false,
+		SameSite: "Lax",
+		Secure:   false,
+		Path:     "/",
+		MaxAge:   60 * 60 * 24,
+	})
+
+	c.Cookie(&fiber.Cookie{
+		Name:     "refresh_token",
+		Value:    tokens.Refresh.Token,
+		HTTPOnly: true,
+		SameSite: "Lax",
+		Path:     "/",
+		MaxAge:   60 * 60 * 24 * 7,
+	})
+
 	return c.Status(fiber.StatusOK).
 		JSON(response.SuccessWithTokens{
 			Code:    fiber.StatusOK,
@@ -154,13 +173,24 @@ func (a *AuthController) FirebaseGoogleSignIn(c *fiber.Ctx) error {
 func (a *AuthController) Logout(c *fiber.Ctx) error {
 	req := new(auth_request_dto.Logout)
 
-	if err := c.BodyParser(req); err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, "Invalid request body")
+	_ = c.BodyParser(req)
+
+	if req.RefreshToken == "" {
+		rtToken := c.Cookies("refresh_token")
+
+		if rtToken == "" {
+			return fiber.NewError(fiber.StatusUnauthorized, "Refresh token not found")
+		}
+
+		req.RefreshToken = rtToken
 	}
 
 	if err := a.AuthService.Logout(c, req); err != nil {
 		return err
 	}
+
+	c.ClearCookie("access_token")
+	c.ClearCookie("refresh_token")
 
 	return c.Status(fiber.StatusOK).
 		JSON(response.Common{
@@ -185,10 +215,40 @@ func (a *AuthController) RefreshTokens(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid request body")
 	}
 
+	if req.RefreshToken == "" {
+		rtToken := c.Cookies("refresh_token")
+
+		if rtToken == "" {
+			return fiber.NewError(fiber.StatusUnauthorized, "Refresh token not found")
+		}
+
+		req.RefreshToken = rtToken
+	}
+
 	tokens, err := a.AuthService.RefreshAuth(c, req)
 	if err != nil {
 		return err
 	}
+
+	c.Cookie(&fiber.Cookie{
+		Name:     "access_token",
+		Value:    tokens.Access.Token,
+		HTTPOnly: false,
+		Secure:   config.IsProd,
+		SameSite: "Lax",
+		Path:     "/",
+		MaxAge:   60 * 15,
+	})
+
+	c.Cookie(&fiber.Cookie{
+		Name:     "refresh_token",
+		Value:    tokens.Refresh.Token,
+		HTTPOnly: true,
+		Secure:   config.IsProd,
+		SameSite: "Lax",
+		Path:     "/",
+		MaxAge:   60 * 15,
+	})
 
 	return c.Status(fiber.StatusOK).
 		JSON(auth_response_dto.RefreshToken{
