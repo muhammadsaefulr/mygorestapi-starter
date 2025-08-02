@@ -58,7 +58,7 @@ func (s *authService) Register(c *fiber.Ctx, req *auth_request_dto.Register) (*u
 
 	result := s.DB.WithContext(c.Context()).Create(user)
 	if errors.Is(result.Error, gorm.ErrDuplicatedKey) {
-		return nil, fiber.NewError(fiber.StatusConflict, "Email already taken")
+		return nil, fiber.NewError(fiber.StatusConflict, "Email Or Username already taken")
 	}
 
 	if result.Error != nil {

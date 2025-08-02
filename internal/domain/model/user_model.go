@@ -12,8 +12,8 @@ type User struct {
 	Name             string           `gorm:"not null" json:"name"`
 	Email            string           `gorm:"uniqueIndex;not null" json:"email"`
 	Password         string           `gorm:"not null" json:"-"`
-	FirebaseUID      string           `gorm:"uniqueIndex" json:"firebase_uid"`
-	Role             string           `gorm:"uniqueIndex" json:"role"`
+	FirebaseUID      *string          `gorm:"uniqueIndex" json:"firebase_uid"`
+	Role             string           `gorm:"" json:"role"`
 	RoleId           uint             `gorm:"default:1;not null" json:"role_id"`
 	VerifiedEmail    bool             `gorm:"default:false;not null" json:"verified_email"`
 	CreatedAt        time.Time        `gorm:"autoCreateTime:milli" json:"-"`
@@ -23,7 +23,7 @@ type User struct {
 	UserRole         *UserRole        `gorm:"foreignKey:role_id;references:id" json:"user_role,omitempty"`
 	UserSubscription UserSubscription `gorm:"foreignKey:user_id;references:id" json:"user_subscription,omitempty"`
 	UserPoint        *UserPoints      `gorm:"foreignKey:user_id;references:id" json:"user_point,omitempty"`
-	UserBadge        []UserBadgeInfo  `gorm:"foreignKey:user_id;references:id" json:"user_badge,omitempty"`
+	UserBadge        *[]UserBadgeInfo `gorm:"foreignKey:user_id;references:id" json:"user_badge,omitempty"`
 }
 
 func (user *User) BeforeCreate(_ *gorm.DB) error {

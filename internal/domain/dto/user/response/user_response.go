@@ -20,6 +20,6 @@ type GetUsersResponse struct {
 	Roles            *model.UserRole        `json:"roles,omitempty"`
 	UserPoint        *model.UserPoints      `json:"user_point,omitempty"`
 	UserSubscription model.UserSubscription `json:"user_subscription,omitempty"`
-	UserBadge        []model.UserBadgeInfo  `json:"user_badge,omitempty"`
+	UserBadge        *[]model.UserBadgeInfo `json:"user_badge,omitempty"`
 	IsEmailVerified  bool                   `json:"is_email_verified"`
 }

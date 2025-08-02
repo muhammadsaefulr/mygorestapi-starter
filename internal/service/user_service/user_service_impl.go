@@ -102,7 +102,7 @@ func (s *userService) LoginWithFirebaseToken(c *fiber.Ctx, idToken string) (*use
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		newUser := &user_model.User{
 			Name:        name,
-			FirebaseUID: firebaseUID,
+			FirebaseUID: &firebaseUID,
 			Email:       email,
 		}
 
