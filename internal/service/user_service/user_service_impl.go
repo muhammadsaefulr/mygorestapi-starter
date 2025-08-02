@@ -199,7 +199,18 @@ func (s *userService) GetUserByEmail(c *fiber.Ctx, email string) (*user_model.Us
 }
 
 func (s *userService) GetUserSession(c *fiber.Ctx) (*user_model.User, error) {
-	return s.GetUserByID(c, c.Locals("user").(*user_model.User).ID.String())
+	results, err := s.GetUserByID(c, c.Locals("user").(*user_model.User).ID.String())
+
+	if err != nil {
+		return nil, fiber.NewError(fiber.StatusInternalServerError, "Get user session failed")
+	}
+
+	if results.UserBadge == nil {
+		empty := make([]user_model.UserBadgeInfo, 0)
+		results.UserBadge = &empty
+	}
+
+	return results, nil
 }
 
 func (s *userService) GetUserByID(c *fiber.Ctx, id string) (*user_model.User, error) {
