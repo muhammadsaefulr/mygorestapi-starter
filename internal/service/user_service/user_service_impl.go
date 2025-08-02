@@ -205,11 +205,13 @@ func (s *userService) GetUserSession(c *fiber.Ctx) (*user_model.User, error) {
 		return nil, fiber.NewError(fiber.StatusInternalServerError, "Get user session failed")
 	}
 
-	if results.UserBadge == nil {
-		empty := make([]user_model.UserBadgeInfo, 0)
-		results.UserBadge = &empty
+	if results.UserBadge == nil || len(*results.UserBadge) == 0 {
+		results.UserBadge = &[]user_model.UserBadgeInfo{
+			{
+				BadgeID: 0,
+			},
+		}
 	}
-
 	return results, nil
 }
 
