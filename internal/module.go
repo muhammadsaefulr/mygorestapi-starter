@@ -116,9 +116,6 @@ func InitModule(app *fiber.App, db *gorm.DB, redis *redis.Client, firebase *auth
 	commentRepo := commentRepo.NewCommentRepository(db)
 	commentSvc := commetService.NewCommentService(commentRepo)
 
-	historyRepo := historyRepo.NewHistoryRepositoryImpl(db)
-	historySvc := HistoryService.NewHistoryService(historyRepo, validate, animeSvc)
-
 	requestMovieRepo := requestMovieRepo.NewRequestMovieRepositoryImpl(db)
 	requestMovieSvc := requestMovieService.NewRequestMovieService(requestMovieRepo, validate)
 
@@ -141,7 +138,10 @@ func InitModule(app *fiber.App, db *gorm.DB, redis *redis.Client, firebase *auth
 	movieUploaderRepo := movieUploaderRepo.NewMovieEpisodeRepositoryImpl(db)
 	movieUploaderSvc := movieUploaderSvc.NewMovieEpisodeService(movieUploaderRepo, validate, uploader, movieDetailSvc, fcmService)
 
-	// Dynamic Orchestrator Source
+	historyRepo := historyRepo.NewHistoryRepositoryImpl(db)
+	historySvc := HistoryService.NewHistoryService(historyRepo, validate, animeSvc, movieDetailSvc)
+
+	// Dynamic Aggregator Source
 
 	discoverySvc := discoverySvc.NewDiscoveryService(validate, redis, anilistSvc, tmdbSvc, mdlSvc, animeSvc, movieDetailSvc)
 

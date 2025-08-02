@@ -2,7 +2,10 @@ package service
 
 import (
 	"fmt"
+	"path"
+	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -15,6 +18,7 @@ import (
 
 	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	repository "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/history"
+	mv_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/movie_details_service"
 	od_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/otakudesu_scrape"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/convert_types"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
@@ -22,18 +26,20 @@ import (
 )
 
 type HistoryService struct {
-	Log      *logrus.Logger
-	Validate *validator.Validate
-	Repo     repository.HistoryRepo
-	Anim     od_service.AnimeService
+	Log       *logrus.Logger
+	Validate  *validator.Validate
+	Repo      repository.HistoryRepo
+	Anim      od_service.AnimeService
+	MvDetails mv_service.MovieDetailsServiceInterface
 }
 
-func NewHistoryService(repo repository.HistoryRepo, validate *validator.Validate, od_service od_service.AnimeService) HistoryService {
+func NewHistoryService(repo repository.HistoryRepo, validate *validator.Validate, od_service od_service.AnimeService, mv_service mv_service.MovieDetailsServiceInterface) HistoryService {
 	return HistoryService{
-		Log:      utils.Log,
-		Validate: validate,
-		Repo:     repo,
-		Anim:     od_service,
+		Log:       utils.Log,
+		Validate:  validate,
+		Repo:      repo,
+		Anim:      od_service,
+		MvDetails: mv_service,
 	}
 }
 
@@ -49,49 +55,91 @@ func (s *HistoryService) GetAllByUserId(c *fiber.Ctx, params *request.QueryHisto
 		params.Limit = 10
 	}
 
-	authHeader := c.Get("Authorization")
-	token := strings.TrimSpace(strings.TrimPrefix(authHeader, "Bearer "))
+	user := c.Locals("user").(*model.User)
 
-	IdUsr, err := utils.VerifyToken(token, config.JWTSecret, config.TokenTypeAccess)
-	if err != nil {
-		return nil, 0, fiber.NewError(fiber.StatusUnauthorized, fmt.Sprintf("Error verifying token: %s", err.Error()))
-	}
-
-	histories, total, err := s.Repo.GetAllByUserId(c.Context(), IdUsr, params)
+	histories, total, err := s.Repo.GetAllByUserId(c.Context(), string(user.ID.String()), params)
 	if err != nil {
 		return nil, 0, err
 	}
 
-	var result []response.HistoryResponse
-	for _, h := range histories {
-		animeDetail, _, _, err := s.Anim.GetAnimeDetails(h.MovieId)
-		if err != nil {
-			s.Log.WithError(err).Warnf("Gagal ambil detail anime untuk MovieId %s", h.MovieId)
-			continue // skip yang gagal
-		}
+	var (
+		result     = make([]response.HistoryResponse, 0, len(histories))
+		resultLock sync.Mutex
+		semaphore  = make(chan struct{}, 4)
+		wg         sync.WaitGroup
+	)
 
-		res := convert_types.HistoryToResponse(&h, &responses.MovieDetailOnlyResponse{
-			MovieID:      h.MovieId,
-			MovieType:    "anime",
-			ThumbnailURL: animeDetail.ThumbnailURL,
-			Title:        animeDetail.Title,
-			Rating:       animeDetail.Rating,
-			Producer:     animeDetail.Producer,
-			Status:       animeDetail.Status,
-			TotalEps:     animeDetail.TotalEps,
-			Studio:       animeDetail.Studio,
-			ReleaseDate:  animeDetail.ReleaseDate,
-			Synopsis:     animeDetail.Synopsis,
-			Genres: func() []string {
-				titles := make([]string, len(animeDetail.Genres))
-				for i, g := range animeDetail.Genres {
-					titles[i] = g.Title
+	for _, h := range histories {
+		history := h
+
+		semaphore <- struct{}{}
+		wg.Add(1)
+
+		go func() {
+			defer wg.Done()
+			defer func() { <-semaphore }()
+
+			var detail *responses.MovieDetailOnlyResponse
+
+			if strings.Contains(history.MovieId, ("/detail")) {
+				history.MovieId = path.Base(history.MovieId)
+			}
+
+			movieData, err := s.MvDetails.GetById(c, history.MovieId)
+			if err == nil && movieData != nil {
+
+				detail = &responses.MovieDetailOnlyResponse{
+					MovieID:      movieData.MovieID,
+					MovieType:    movieData.MovieType,
+					ThumbnailURL: movieData.ThumbnailURL,
+					Title:        movieData.Title,
+					Rating:       movieData.Rating,
+					Producer:     movieData.Producer,
+					Status:       movieData.Status,
+					TotalEps:     strconv.Itoa(len(movieData.Episodes)),
+					Studio:       movieData.Studio,
+					ReleaseDate:  movieData.ReleaseDate,
+					Synopsis:     movieData.Synopsis,
+					Genres:       movieData.Genres,
 				}
-				return titles
-			}(),
-		})
-		result = append(result, res)
+			} else {
+				animeDetail, _, _, err := s.Anim.GetAnimeDetails(history.MovieId)
+				if err != nil {
+					s.Log.WithError(err).Warnf("Gagal ambil detail anime untuk MovieId %s", history.MovieId)
+					return
+				}
+
+				detail = &responses.MovieDetailOnlyResponse{
+					MovieID:      history.MovieId,
+					MovieType:    "anime",
+					ThumbnailURL: animeDetail.ThumbnailURL,
+					Title:        animeDetail.Title,
+					Rating:       animeDetail.Rating,
+					Producer:     animeDetail.Producer,
+					Status:       animeDetail.Status,
+					TotalEps:     animeDetail.TotalEps,
+					Studio:       animeDetail.Studio,
+					ReleaseDate:  animeDetail.ReleaseDate,
+					Synopsis:     animeDetail.Synopsis,
+					Genres: func() []string {
+						titles := make([]string, len(animeDetail.Genres))
+						for i, g := range animeDetail.Genres {
+							titles[i] = g.Title
+						}
+						return titles
+					}(),
+				}
+			}
+
+			res := convert_types.HistoryToResponse(&history, detail)
+
+			resultLock.Lock()
+			result = append(result, res)
+			resultLock.Unlock()
+		}()
 	}
+
+	wg.Wait()
 
 	return result, total, nil
 }
