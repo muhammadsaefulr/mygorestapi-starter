@@ -7,6 +7,7 @@ import (
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/comment/request"
 	dto_response "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/comment/response"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/comment_service"
 )
 
@@ -37,6 +38,10 @@ func (co *CommentController) CreateComment(c *fiber.Ctx) error {
 			Message: "Invalid request body",
 		})
 	}
+
+	user := c.Locals("user").(*model.User)
+
+	req.UserId = user.ID.String()
 
 	if err := co.CommentService.CreateComment(c, &req); err != nil {
 		return err

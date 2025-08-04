@@ -4,19 +4,16 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
-	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/comment/request"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/comment/response"
 	responseUser "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/response"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	repository "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/comment"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/convert_types"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 	"gorm.io/gorm"
 )
 
@@ -31,18 +28,6 @@ func NewCommentService(commentRepository repository.CommentRepository) CommentSe
 }
 
 func (c *commentService) CreateComment(ctx *fiber.Ctx, req *request.CreateComment) error {
-	authHeader := ctx.Get("Authorization")
-	token := strings.TrimSpace(strings.TrimPrefix(authHeader, "Bearer "))
-
-	IdUsr, errVerToken := utils.VerifyToken(token, config.JWTSecret, config.TokenTypeAccess)
-	if errVerToken != nil {
-		return fiber.NewError(fiber.StatusUnauthorized, fmt.Sprintf("Error verifying token: %s", errVerToken.Error()))
-	}
-
-	req.UserId = IdUsr
-
-	// log.Printf("Comment: %+v", req)
-
 	if err := c.commentRepository.CreateComment(ctx.Context(), convert_types.CreateCommentToModel(req)); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, "Failed to create comment")
 	}
@@ -203,8 +188,9 @@ func (s *commentService) LikeComment(ctx *fiber.Ctx, commentID uint) error {
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, "Failed to check like status")
 	}
+
 	if liked {
-		return nil
+		return fiber.NewError(fiber.StatusBadRequest, "you have liked this comment")
 	}
 
 	newLike := model.CommentLike{
