@@ -8,8 +8,10 @@ import (
 	auth_request_dto "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/auth/request"
 	auth_response_dto "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/auth/response"
 	request "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/request"
+	userpts_request "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user_points/request"
 	user_model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	system_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/system_service"
+	user_point_svc "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_points_service"
 	user_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_service"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 
@@ -25,16 +27,18 @@ type authService struct {
 	Validate     *validator.Validate
 	UserService  user_service.UserService
 	TokenService system_service.TokenService
+	UsPointSvc   user_point_svc.UserPointsServiceInterface
 }
 
 func NewAuthService(
-	db *gorm.DB, validate *validator.Validate, userService user_service.UserService, tokenService system_service.TokenService,
+	db *gorm.DB, validate *validator.Validate, userService user_service.UserService, tokenService system_service.TokenService, user_point_svc user_point_svc.UserPointsServiceInterface,
 ) AuthService {
 	return &authService{
 		Log:          utils.Log,
 		DB:           db,
 		Validate:     validate,
 		UserService:  userService,
+		UsPointSvc:   user_point_svc,
 		TokenService: tokenService,
 	}
 }
@@ -44,28 +48,33 @@ func (s *authService) Register(c *fiber.Ctx, req *auth_request_dto.Register) (*u
 		return nil, err
 	}
 
-	hashedPassword, err := utils.HashPassword(req.Password)
-	if err != nil {
-		s.Log.Errorf("Failed hash password: %+v", err)
-		return nil, err
-	}
-
-	user := &user_model.User{
+	user := &request.CreateUser{
 		Name:     req.Name,
 		Email:    req.Email,
-		Password: hashedPassword,
+		RoleId:   1,
+		Role:     "user",
+		Password: req.Password,
 	}
 
-	result := s.DB.WithContext(c.Context()).Create(user)
-	if errors.Is(result.Error, gorm.ErrDuplicatedKey) {
-		return nil, fiber.NewError(fiber.StatusConflict, "Email Or Username already taken")
+	result, err := s.UserService.CreateUser(c, user)
+
+	if err != nil {
+		s.Log.Errorf("Failed create user: %+v", err)
+
+		if errors.Is(err, gorm.ErrDuplicatedKey) {
+			return nil, fiber.NewError(fiber.StatusConflict, "Email Or Username already taken")
+		}
+
+		return nil, fiber.NewError(fiber.StatusInternalServerError, "Create user failed")
 	}
 
-	if result.Error != nil {
-		s.Log.Errorf("Failed create user: %+v", result.Error)
-	}
+	s.UsPointSvc.Update(c, &userpts_request.UserPoints{
+		UserId:     result.ID.String(),
+		TypeUpdate: "add",
+		Value:      0,
+	})
 
-	return user, result.Error
+	return result, nil
 }
 
 func (s *authService) Login(c *fiber.Ctx, req *auth_request_dto.Login) (*user_model.User, error) {

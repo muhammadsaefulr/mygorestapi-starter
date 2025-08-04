@@ -212,6 +212,14 @@ func (s *userService) GetUserSession(c *fiber.Ctx) (*user_model.User, error) {
 			},
 		}
 	}
+
+	if results.UserPoint.UserID == uuid.Nil {
+		results.UserPoint = &user_model.UserPoints{
+			ID:     uuid.New(),
+			UserID: results.ID,
+			Value:  0,
+		}
+	}
 	return results, nil
 }
 

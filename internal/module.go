@@ -104,6 +104,9 @@ func InitModule(app *fiber.App, db *gorm.DB, redis *redis.Client, firebase *auth
 	userRoleRepo := userRoleRepo.NewUserRoleRepositoryImpl(db)
 	userRoleSvc := userRoleService.NewUserRoleService(userRoleRepo, validate)
 
+	userPointsRepo := userPointsRepo.NewUserPointsRepositoryImpl(db)
+	userPointsSvc := userPointsService.NewUserPointsService(userPointsRepo, validate)
+
 	rolePermissionRepo := rolePermissionRepo.NewRolePermissionsRepositoryImpl(db)
 	rolePermissionSvc := rolePermissionService.NewRolePermissionsService(rolePermissionRepo, validate)
 
@@ -120,7 +123,7 @@ func InitModule(app *fiber.App, db *gorm.DB, redis *redis.Client, firebase *auth
 	requestMovieSvc := requestMovieService.NewRequestMovieService(requestMovieRepo, validate)
 
 	tokenSvc := systemService.NewTokenService(db, validate, userSvc)
-	authSvc := authService.NewAuthService(db, validate, userSvc, tokenSvc)
+	authSvc := authService.NewAuthService(db, validate, userSvc, tokenSvc, userPointsSvc)
 	emailSvc := systemService.NewEmailService()
 	healthSvc := systemService.NewHealthCheckService(db)
 
@@ -151,9 +154,6 @@ func InitModule(app *fiber.App, db *gorm.DB, redis *redis.Client, firebase *auth
 	reportErrSvc := reportErrService.NewReportErrorService(reportErrRepo, validate)
 
 	// other services
-
-	userPointsRepo := userPointsRepo.NewUserPointsRepositoryImpl(db)
-	userPointsSvc := userPointsService.NewUserPointsService(userPointsRepo, validate)
 
 	bannerAppRepo := bannerAppRepo.NewBannerAppRepositoryImpl(db)
 	bannerAppSvc := bannerAppService.NewBannerAppService(bannerAppRepo, validate)

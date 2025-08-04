@@ -8,7 +8,7 @@ import (
 )
 
 type UserPointsServiceInterface interface {
-	GetByUserID(c *fiber.Ctx, id uint) (*model.UserPoints, error)
-	Create(c *fiber.Ctx, req *request.UserPoints) (*model.UserPoints, error)
-	Delete(c *fiber.Ctx, id uint) error
+	GetByUserID(c *fiber.Ctx, id string) (*model.UserPoints, error)
+	Update(c *fiber.Ctx, req *request.UserPoints) (*model.UserPoints, error)
+	Delete(c *fiber.Ctx, id string) error
 }

@@ -10,10 +10,10 @@ import (
 )
 
 type UserPointsController struct {
-	Service service.UserPointsService
+	Service service.UserPointsServiceInterface
 }
 
-func NewUserPointsController(service service.UserPointsService) *UserPointsController {
+func NewUserPointsController(service service.UserPointsServiceInterface) *UserPointsController {
 	return &UserPointsController{Service: service}
 }
 
@@ -53,7 +53,10 @@ func (h *UserPointsController) PostUserPoints(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid request body")
 	}
 
-	result, err := h.Service.Post(c, req)
+	user := c.Locals("user").(*model.User)
+	req.UserId = user.ID.String()
+
+	result, err := h.Service.Update(c, req)
 	if err != nil {
 		return err
 	}

@@ -7,7 +7,7 @@ import (
 	service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_points_service"
 )
 
-func UserPointsRoutes(v1 fiber.Router, c service.UserPointsService) {
+func UserPointsRoutes(v1 fiber.Router, c service.UserPointsServiceInterface) {
 	user_pointsController := controller.NewUserPointsController(c)
 
 	group := v1.Group("/users/points")

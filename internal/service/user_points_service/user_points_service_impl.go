@@ -21,8 +21,8 @@ type UserPointsService struct {
 	Repo     repository.UserPointsRepo
 }
 
-func NewUserPointsService(repo repository.UserPointsRepo, validate *validator.Validate) UserPointsService {
-	return UserPointsService{
+func NewUserPointsService(repo repository.UserPointsRepo, validate *validator.Validate) UserPointsServiceInterface {
+	return &UserPointsService{
 		Log:      utils.Log,
 		Validate: validate,
 		Repo:     repo,
@@ -41,13 +41,10 @@ func (s *UserPointsService) GetByUserID(c *fiber.Ctx, id string) (*model.UserPoi
 	return data, nil
 }
 
-func (s *UserPointsService) Post(c *fiber.Ctx, req *request.UserPoints) (*model.UserPoints, error) {
+func (s *UserPointsService) Update(c *fiber.Ctx, req *request.UserPoints) (*model.UserPoints, error) {
 	if err := s.Validate.Struct(req); err != nil {
 		return nil, err
 	}
-
-	user := c.Locals("user").(*model.User)
-	req.UserId = user.ID.String()
 
 	existing, err := s.Repo.GetByUserID(c.Context(), req.UserId)
 	if err != nil {
