@@ -35,7 +35,7 @@ func (r *BannerAppRepositoryImpl) GetAll(ctx context.Context, param *request.Que
 	baseQuery := r.DB.WithContext(ctx).Model(&model.BannerApp{})
 
 	if param.Type != "" {
-		baseQuery = baseQuery.Where("type = ?", param.Type)
+		baseQuery = baseQuery.Where("banner_type = ?", param.Type)
 	}
 
 	countQuery := baseQuery.Session(&gorm.Session{})

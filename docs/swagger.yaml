@@ -514,6 +514,9 @@ definitions:
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_banner_app_request.CreateBannerApp:
     properties:
+      banner_type:
+        description: e.g., "movie", "drakor", "anime"
+        type: string
       detail_url:
         type: string
       image_url:
@@ -523,6 +526,8 @@ definitions:
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_banner_app_request.UpdateBannerApp:
     properties:
+      banner_type:
+        type: string
       detail_url:
         type: string
       image_url:
@@ -1284,6 +1289,27 @@ definitions:
       total_results:
         type: integer
     type: object
+  ? github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_response_MovieEpisodeResponses
+  : properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_response.MovieEpisodeResponses'
+        type: array
+      limit:
+        type: integer
+      message:
+        type: string
+      page:
+        type: integer
+      status:
+        type: string
+      total_pages:
+        type: integer
+      total_results:
+        type: integer
+    type: object
   ? github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_response_RequestMovieResponse
   : properties:
       code:
@@ -1312,6 +1338,27 @@ definitions:
       data:
         items:
           $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieDetails'
+        type: array
+      limit:
+        type: integer
+      message:
+        type: string
+      page:
+        type: integer
+      status:
+        type: string
+      total_pages:
+        type: integer
+      total_results:
+        type: integer
+    type: object
+  ? github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model_MovieEpisode
+  : properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieEpisode'
         type: array
       limit:
         type: integer
@@ -1492,20 +1539,20 @@ definitions:
         type: string
       id:
         type: integer
-      movieEpsID:
+      movie_eps_id:
         type: string
-      movieId:
+      movie_id:
         type: string
       resolution:
         type: string
-      sourceBy:
+      source_by:
         type: string
       title:
         description: title untuk penentu source nya misal pixeldrain atau uploads
         type: string
       updated_at:
         type: string
-      videoURL:
+      video_url:
         type: string
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.RolePermissions:
@@ -2799,6 +2846,24 @@ paths:
       summary: Get all movie episodes by movie ID
       tags:
       - movie
+  /movie/episodes/lists/{movie_id}:
+    get:
+      parameters:
+      - description: Movie ID
+        in: path
+        name: movie_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model_MovieEpisode'
+      summary: Get all movie episodes by movie ID
+      tags:
+      - movie
   /movie/episodes/upload:
     post:
       consumes:
@@ -3022,13 +3087,13 @@ paths:
         in: query
         name: limit
         type: integer
-      - description: Sort by field
-        in: query
-        name: sort
-        type: string
       - description: Search term
         in: query
         name: search
+        type: string
+      - description: Type Status
+        in: query
+        name: type
         type: string
       produces:
       - application/json

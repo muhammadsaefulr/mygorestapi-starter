@@ -38,7 +38,20 @@ func (s *ReportErrorService) GetAll(c *fiber.Ctx, params *request.QueryReportErr
 	if params.Limit < 1 {
 		params.Limit = 10
 	}
-	return s.Repo.GetAll(c.Context(), params)
+
+	results, total, err := s.Repo.GetAll(c.Context(), params)
+
+	if err != nil {
+
+		if err == gorm.ErrRecordNotFound {
+			return nil, 0, fiber.NewError(fiber.StatusNotFound, "Error Report not found")
+		}
+
+		s.Log.Errorf("GetAll error: %+v", err)
+		return nil, 0, fiber.NewError(fiber.StatusInternalServerError, "Get Error Report failed")
+	}
+
+	return results, total, err
 }
 
 func (s *ReportErrorService) GetByID(c *fiber.Ctx, id string) (*model.ReportError, error) {

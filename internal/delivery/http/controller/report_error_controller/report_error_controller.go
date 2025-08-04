@@ -25,14 +25,14 @@ func NewReportErrorController(service service.ReportErrorServiceInterface) *Repo
 // @Produce      json
 // @Param        page   query     int     false  "Page number"  default(1)
 // @Param        limit  query     int     false  "Items per page"  default(10)
-// @Param        sort   query     string  false  "Sort by field"
 // @Param        search query     string  false  "Search term"
+// @param        type query       string false "Type Status"
 // @Router       /report-episode [get]
 func (h *ReportErrorController) GetAllReportError(c *fiber.Ctx) error {
 	query := &request.QueryReportError{
 		Page:   c.QueryInt("page", 1),
-		Sort:   c.Query("sort", "asc"),
 		Search: c.Query("search", ""),
+		Type:   c.Query("type", ""),
 		Limit:  c.QueryInt("limit", 10),
 	}
 

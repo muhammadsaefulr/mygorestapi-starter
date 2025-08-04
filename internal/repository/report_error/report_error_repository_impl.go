@@ -22,7 +22,7 @@ func (r *ReportErrorRepositoryImpl) GetAll(ctx context.Context, param *request.Q
 	var data []model.ReportError
 	var total int64
 
-	query := r.DB.WithContext(ctx).Model(&model.ReportError{})
+	query := r.DB.WithContext(ctx).Model(&model.ReportError{}).Preload("User")
 	offset := (param.Page - 1) * param.Limit
 
 	if err := query.Count(&total).Error; err != nil {
@@ -33,12 +33,24 @@ func (r *ReportErrorRepositoryImpl) GetAll(ctx context.Context, param *request.Q
 		return nil, 0, err
 	}
 
+	if param.Search != "" {
+		if err := query.Where("problem_desc = ?", param.Search).First(&data).Error; err != nil {
+			return nil, 0, err
+		}
+	}
+
+	if param.Type != "" {
+		if err := query.Where("status_report = ?", param.Type).First(&data).Error; err != nil {
+			return nil, 0, err
+		}
+	}
+
 	return data, total, nil
 }
 
 func (r *ReportErrorRepositoryImpl) GetByID(ctx context.Context, id string) (*model.ReportError, error) {
 	var data model.ReportError
-	if err := r.DB.WithContext(ctx).First(&data, "id = ?", id).Error; err != nil {
+	if err := r.DB.WithContext(ctx).First(&data, "report_id = ?", id).Error; err != nil {
 		return nil, err
 	}
 	return &data, nil
@@ -49,9 +61,9 @@ func (r *ReportErrorRepositoryImpl) Create(ctx context.Context, data *model.Repo
 }
 
 func (r *ReportErrorRepositoryImpl) Update(ctx context.Context, data *model.ReportError) error {
-	return r.DB.WithContext(ctx).Where("id = ?", data.ReportId).Updates(data).Error
+	return r.DB.WithContext(ctx).Where("report_id = ?", data.ReportId).Updates(data).Error
 }
 
 func (r *ReportErrorRepositoryImpl) Delete(ctx context.Context, id string) error {
-	return r.DB.WithContext(ctx).Where("id = ?", id).Delete(&model.ReportError{}).Error
+	return r.DB.WithContext(ctx).Where("report_id = ?", id).Delete(&model.ReportError{}).Error
 }

@@ -3,6 +3,8 @@ package controller
 import (
 	// "math"
 
+	"math"
+
 	"github.com/gofiber/fiber/v2"
 
 	request "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/movie_episode/request"
@@ -76,14 +78,49 @@ func (h *MovieEpisodeController) GetMovieEpisodeByID(c *fiber.Ctx) error {
 // @Summary      Get all movie episodes by movie ID
 // @Produce      json
 // @Param        movie_id  path  string  true  "Movie ID"
+// @Router       /movie/episodes/lists/{movie_id} [get]
+// @Success      200  {object}  response.SuccessWithPaginate[responses.MovieEpisodeResponses]
+// @Success      200  {object}  response.SuccessWithPaginate[model.MovieEpisode]
+func (h *MovieEpisodeController) GetMovieEpisodeByMovieID(c *fiber.Ctx) error {
+	idStr := c.Params("movie_id")
+	param := &request.QueryMovieEpisode{
+		Page:   c.QueryInt("page", 1),
+		Limit:  c.QueryInt("limit", 10),
+		Search: c.Query("search"),
+	}
+
+	result, totalCount, err := h.Service.GetMovieEpsByMovieID(c, idStr, param)
+	if err != nil {
+		return err
+	}
+
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithPaginate[model.MovieEpisode]{
+		Code:         fiber.StatusOK,
+		Status:       "success",
+		Message:      "Data retrieved successfully",
+		Results:      result,
+		TotalPages:   int64(math.Ceil(float64(totalCount) / float64(param.Limit))),
+		TotalResults: int64(len(result)),
+	})
+}
+
+// @Tags         movie
+// @Summary      Get all movie episodes by movie ID
+// @Produce      json
+// @Param        movie_id  path  string  true  "Movie ID"
 // @Param        movie_eps_id  path  string  true  "Movie Eps ID"
 // @Router       /movie/episodes/{movie_id}/{movie_eps_id} [get]
 // @Success      200  {object}  response.SuccessWithDetail[responses.MovieEpisodeResponses]
-func (h *MovieEpisodeController) GetMovieEpisodeByMovieID(c *fiber.Ctx) error {
+func (h *MovieEpisodeController) GetMovieEpsDetailByMovieID(c *fiber.Ctx) error {
 	idStr := c.Params("movie_id")
 	movEpsId := c.Params("movie_eps_id")
+	param := &request.QueryMovieEpisode{
+		Page:   c.QueryInt("page", 1),
+		Limit:  c.QueryInt("limit", 10),
+		Search: c.Query("search"),
+	}
 
-	result, err := h.Service.GetByMovieID(c, movEpsId, idStr)
+	result, err := h.Service.GetByMovieID(c, movEpsId, idStr, param)
 	if err != nil {
 		return err
 	}

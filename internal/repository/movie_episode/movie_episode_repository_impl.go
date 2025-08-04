@@ -38,18 +38,42 @@ func (r *MovieEpisodeRepositoryImpl) GetAll(ctx context.Context, param *request.
 
 func (r *MovieEpisodeRepositoryImpl) GetByID(ctx context.Context, movie_eps_id string) (*model.MovieEpisode, error) {
 	var data model.MovieEpisode
+
 	if err := r.DB.WithContext(ctx).First(&data, "movie_eps_id = ?", movie_eps_id).Error; err != nil {
 		return nil, err
 	}
 	return &data, nil
 }
 
-func (r *MovieEpisodeRepositoryImpl) GetByMovieID(ctx context.Context, movie_id string) ([]model.MovieEpisode, error) {
+func (r *MovieEpisodeRepositoryImpl) GetByMovieID(ctx context.Context, movie_id string, param *request.QueryMovieEpisode) ([]model.MovieEpisode, int64, error) {
 	var data []model.MovieEpisode
-	if err := r.DB.WithContext(ctx).Where("movie_id = ?", movie_id).Find(&data).Error; err != nil {
-		return nil, err
+	var totalRows int64
+
+	if param.Limit == 0 {
+		param.Limit = 10
 	}
-	return data, nil
+	if param.Page == 0 {
+		param.Page = 1
+	}
+
+	offset := (param.Page - 1) * param.Limit
+
+	if err := r.DB.WithContext(ctx).
+		Model(&model.MovieEpisode{}).
+		Where("movie_id = ?", movie_id).
+		Count(&totalRows).Error; err != nil {
+		return nil, 0, err
+	}
+
+	if err := r.DB.WithContext(ctx).
+		Where("movie_id = ?", movie_id).
+		Limit(param.Limit).
+		Offset(offset).
+		Find(&data).Error; err != nil {
+		return nil, 0, err
+	}
+
+	return data, totalRows, nil
 }
 
 func (r *MovieEpisodeRepositoryImpl) Create(ctx context.Context, data *model.MovieEpisode) error {

@@ -11,7 +11,8 @@ import (
 type MovieEpisodeServiceInterface interface {
 	GetAll(c *fiber.Ctx, params *request.QueryMovieEpisode) ([]model.MovieEpisode, int64, error)
 	GetByID(c *fiber.Ctx, movie_eps_id string) (*model.MovieEpisode, error)
-	GetByMovieID(c *fiber.Ctx, movie_eps_id string, movie_id string) (*response.MovieEpisodeResponses, error)
+	GetMovieEpsByMovieID(c *fiber.Ctx, movie_id string, param *request.QueryMovieEpisode) ([]model.MovieEpisode, int64, error)
+	GetByMovieID(c *fiber.Ctx, movie_eps_id string, movie_id string, param *request.QueryMovieEpisode) (*response.MovieEpisodeResponses, error)
 	Create(c *fiber.Ctx, req *request.CreateMovieEpisodes) (*model.MovieEpisode, error)
 	Update(c *fiber.Ctx, movie_eps_id string, req *request.UpdateMovieEpisodes) (*model.MovieEpisode, error)
 	CreateUpload(c *fiber.Ctx, req *request.CreateMovieEpisodesUpload) (*model.MovieEpisode, error)

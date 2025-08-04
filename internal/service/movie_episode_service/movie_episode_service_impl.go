@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"path/filepath"
@@ -67,8 +68,18 @@ func (s *MovieEpisodeService) GetByID(c *fiber.Ctx, movie_eps_id string) (*model
 	return data, nil
 }
 
-func (s *MovieEpisodeService) GetByMovieID(c *fiber.Ctx, movie_eps_id string, movie_id string) (*response.MovieEpisodeResponses, error) {
-	data, err := s.Repo.GetByMovieID(c.Context(), movie_id)
+func (s *MovieEpisodeService) GetMovieEpsByMovieID(c *fiber.Ctx, movie_id string, param *request.QueryMovieEpisode) ([]model.MovieEpisode, int64, error) {
+	results, totalCount, err := s.Repo.GetByMovieID(c.Context(), movie_id, param)
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, 0, fiber.NewError(fiber.StatusNotFound, "Movie Episode not found")
+	}
+
+	return results, totalCount, err
+}
+
+func (s *MovieEpisodeService) GetByMovieID(c *fiber.Ctx, movie_eps_id string, movie_id string, param *request.QueryMovieEpisode) (*response.MovieEpisodeResponses, error) {
+	data, _, err := s.Repo.GetByMovieID(c.Context(), movie_id, param)
 
 	log.Printf("params: %+v", movie_eps_id)
 	log.Printf("params: %+v", movie_id)

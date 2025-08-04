@@ -38,7 +38,8 @@ type UpdateMovieEpisodesUpload struct {
 }
 
 type QueryMovieEpisode struct {
-	Page  int    `query:"page"`
-	Limit int    `query:"limit"`
-	Sort  string `query:"sort"`
+	Page   int    `query:"page"`
+	Limit  int    `query:"limit"`
+	Sort   string `query:"sort"`
+	Search string `query:"search"`
 }

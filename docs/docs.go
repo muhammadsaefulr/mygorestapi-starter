@@ -1609,6 +1609,34 @@ const docTemplate = `{
                 }
             }
         },
+        "/movie/episodes/lists/{movie_id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "movie"
+                ],
+                "summary": "Get all movie episodes by movie ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Movie ID",
+                        "name": "movie_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model_MovieEpisode"
+                        }
+                    }
+                }
+            }
+        },
         "/movie/episodes/upload": {
             "post": {
                 "security": [
@@ -2081,14 +2109,14 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "Sort by field",
-                        "name": "sort",
+                        "description": "Search term",
+                        "name": "search",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "Search term",
-                        "name": "search",
+                        "description": "Type Status",
+                        "name": "type",
                         "in": "query"
                     }
                 ],
@@ -4568,6 +4596,10 @@ const docTemplate = `{
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_banner_app_request.CreateBannerApp": {
             "type": "object",
             "properties": {
+                "banner_type": {
+                    "description": "e.g., \"movie\", \"drakor\", \"anime\"",
+                    "type": "string"
+                },
                 "detail_url": {
                     "type": "string"
                 },
@@ -4582,6 +4614,9 @@ const docTemplate = `{
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_banner_app_request.UpdateBannerApp": {
             "type": "object",
             "properties": {
+                "banner_type": {
+                    "type": "string"
+                },
                 "detail_url": {
                     "type": "string"
                 },
@@ -5680,6 +5715,38 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_response_MovieEpisodeResponses": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_response.MovieEpisodeResponses"
+                    }
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "total_pages": {
+                    "type": "integer"
+                },
+                "total_results": {
+                    "type": "integer"
+                }
+            }
+        },
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_response_RequestMovieResponse": {
             "type": "object",
             "properties": {
@@ -5722,6 +5789,38 @@ const docTemplate = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieDetails"
+                    }
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "total_pages": {
+                    "type": "integer"
+                },
+                "total_results": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model_MovieEpisode": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.MovieEpisode"
                     }
                 },
                 "limit": {
@@ -5996,16 +6095,16 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
-                "movieEpsID": {
+                "movie_eps_id": {
                     "type": "string"
                 },
-                "movieId": {
+                "movie_id": {
                     "type": "string"
                 },
                 "resolution": {
                     "type": "string"
                 },
-                "sourceBy": {
+                "source_by": {
                     "type": "string"
                 },
                 "title": {
@@ -6015,7 +6114,7 @@ const docTemplate = `{
                 "updated_at": {
                     "type": "string"
                 },
-                "videoURL": {
+                "video_url": {
                     "type": "string"
                 }
             }

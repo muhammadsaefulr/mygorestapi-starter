@@ -17,6 +17,6 @@ type UpdateReportError struct {
 type QueryReportError struct {
 	Page   int    `query:"page"`
 	Limit  int    `query:"limit"`
-	Sort   string `query:"sort"`
+	Type   string `query:"type"`
 	Search string `query:"search"`
 }
