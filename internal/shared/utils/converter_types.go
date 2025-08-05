@@ -3,6 +3,7 @@ package utils
 import (
 	"fmt"
 	"log"
+	"net/url"
 	"strings"
 	"time"
 )
@@ -89,4 +90,24 @@ func ConvertDateStripToDay(dateStr string) string {
 	year := t.Year()
 
 	return fmt.Sprintf("%02d %s, %d", day, month, year)
+}
+
+func ParseCookieDomain(clientHost string) string {
+	u, err := url.Parse(clientHost)
+	if err != nil {
+		return ""
+	}
+
+	host := u.Hostname()
+
+	if host == "localhost" || host == "127.0.0.1" {
+		return ""
+	}
+
+	parts := strings.Split(host, ".")
+	if len(parts) > 2 {
+		return "." + strings.Join(parts[len(parts)-2:], ".")
+	}
+
+	return "." + host
 }

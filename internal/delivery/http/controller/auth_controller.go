@@ -11,6 +11,7 @@ import (
 	auth_response_dto "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/auth/response"
 	user_dto_request "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/request"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
+	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	auth_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/auth_service"
@@ -105,6 +106,7 @@ func (a *AuthController) Login(c *fiber.Ctx) error {
 		Value:    tokens.Refresh.Token,
 		HTTPOnly: true,
 		SameSite: "None",
+		Domain:   utils.ParseCookieDomain(config.ClientFeHost),
 		Path:     "/",
 		MaxAge:   60 * 60 * 24 * 7,
 	})
@@ -115,6 +117,7 @@ func (a *AuthController) Login(c *fiber.Ctx) error {
 		HTTPOnly: true,
 		SameSite: "None",
 		Secure:   config.IsProd,
+		Domain:   utils.ParseCookieDomain(config.ClientFeHost),
 		Path:     "/",
 		MaxAge:   60 * 15,
 	})
@@ -189,8 +192,27 @@ func (a *AuthController) Logout(c *fiber.Ctx) error {
 		return err
 	}
 
-	c.ClearCookie("access_token")
-	c.ClearCookie("refresh_token")
+	c.Cookie(&fiber.Cookie{
+		Name:     "access_token",
+		Value:    "",
+		Path:     "/",
+		MaxAge:   -1,
+		Domain:   utils.ParseCookieDomain(config.ClientFeHost),
+		HTTPOnly: true,
+		SameSite: "None",
+		Secure:   config.IsProd,
+	})
+
+	c.Cookie(&fiber.Cookie{
+		Name:     "refresh_token",
+		Value:    "",
+		Path:     "/",
+		Domain:   utils.ParseCookieDomain(config.ClientFeHost),
+		MaxAge:   -1,
+		HTTPOnly: true,
+		SameSite: "None",
+		Secure:   config.IsProd,
+	})
 
 	return c.Status(fiber.StatusOK).
 		JSON(response.Common{

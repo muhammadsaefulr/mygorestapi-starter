@@ -21,17 +21,14 @@ func InitAuthMiddleware(us service.UserService) {
 func Auth(requiredRights ...string) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		token := c.Cookies("access_token")
+
 		if token == "" {
 			authHeader := c.Get("Authorization")
 			token = strings.TrimSpace(strings.TrimPrefix(authHeader, "Bearer "))
 		}
 
 		if token == "" {
-			return fiber.NewError(fiber.StatusUnauthorized, "Please authenticate")
-		}
-
-		if token == "" {
-			return fiber.NewError(fiber.StatusUnauthorized, "Please authenticate")
+			return fiber.NewError(fiber.StatusUnauthorized, "Please authenticate, Invalid Token")
 		}
 
 		userID, err := utils.VerifyToken(token, config.JWTSecret, config.TokenTypeAccess)
