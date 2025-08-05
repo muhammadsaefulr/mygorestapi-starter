@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"io"
+	"log"
 	"net/http"
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/config"
@@ -110,6 +111,8 @@ func (a *AuthController) Login(c *fiber.Ctx) error {
 		Path:     "/",
 		MaxAge:   60 * 60 * 24 * 7,
 	})
+
+	log.Println("parsed cookie domain: ", utils.ParseCookieDomain(config.ClientFeHost))
 
 	c.Cookie(&fiber.Cookie{
 		Name:     "access_token",
