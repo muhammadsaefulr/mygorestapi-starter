@@ -134,8 +134,8 @@ func (s *UserSubscriptionService) UpdateByUserId(c *fiber.Ctx, id string, req *r
 		return nil, err
 	}
 
-	updatedBy := uuid.MustParse(c.Locals("user").(string))
-	data.UpdatedBy = updatedBy
+	updatedBy := c.Locals("user").(*model.User)
+	data.UpdatedBy = updatedBy.ID
 
 	if err := s.Repo.UpdateByUserId(c.Context(), data); err != nil {
 		s.Log.Errorf("Update error: %+v", err)

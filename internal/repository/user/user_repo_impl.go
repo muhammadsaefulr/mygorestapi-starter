@@ -31,11 +31,15 @@ func (n *newUserRepositryImpl) GetAllUser(ctx context.Context, param *request.Qu
 		query = query.Where("name LIKE ? OR email LIKE ? OR role LIKE ?", searchLike, searchLike, searchLike)
 	}
 
+	if param.Role != "" {
+		query = query.Where("role_id = ?", param.Role)
+	}
+
 	if err := query.Count(&total).Error; err != nil {
 		return nil, 0, err
 	}
 
-	if err := query.Limit(param.Page).Offset(offset).Find(&users).Error; err != nil {
+	if err := query.Preload("UserRole").Limit(param.Limit).Offset(offset).Find(&users).Error; err != nil {
 		return nil, 0, err
 	}
 

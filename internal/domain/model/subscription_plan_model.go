@@ -7,10 +7,10 @@ import (
 )
 
 type SubscriptionPlan struct {
-	ID       uint           `gorm:"primaryKey"`
-	PlanName string         `gorm:"not null;unique"`
-	Duration int            `gorm:"not null"`
-	Price    int            `gorm:"not null"`
+	ID       uint           `gorm:"primaryKey" json:"id"`
+	PlanName string         `gorm:"not null;unique" json:"plan_name"`
+	Duration int            `gorm:"not null" json:"duration"`
+	Price    int            `gorm:"not null" json:"price"`
 	Benefits pq.StringArray `gorm:"type:text[]" json:"benefit"`
 
 	CreatedAt time.Time `gorm:"autoCreateTime"`

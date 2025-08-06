@@ -16,13 +16,13 @@ type UpdateRequestVip struct {
 	ID        uint   `json:"-"`
 	Name      string `json:"atas_nama_tf"`
 	Email     string `json:"email"`
-	BuktiTf   string `json:"bukti_tf"`
 	StatusAcc string `json:"status_acc"`
 	UpdatedBy string `json:"-"`
 }
 
 type QueryRequestVip struct {
-	Page  int    `query:"page"`
-	Limit int    `query:"limit"`
-	Sort  string `query:"sort"`
+	Page      int    `query:"page"`
+	Limit     int    `query:"limit"`
+	StatusAcc string `query:"status"`
+	Sort      string `query:"sort"`
 }

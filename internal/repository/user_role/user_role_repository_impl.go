@@ -38,7 +38,7 @@ func (r *UserRoleRepositoryImpl) GetAll(ctx context.Context, param *request.Quer
 
 func (r *UserRoleRepositoryImpl) GetByID(ctx context.Context, id uint) (*model.UserRole, error) {
 	var data model.UserRole
-	if err := r.DB.WithContext(ctx).First(&data, "id = ?", id).Error; err != nil {
+	if err := r.DB.WithContext(ctx).Preload("Permissions").First(&data, "id = ?", id).Error; err != nil {
 		return nil, err
 	}
 	return &data, nil

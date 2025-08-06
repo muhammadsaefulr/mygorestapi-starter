@@ -3430,6 +3430,12 @@ const docTemplate = `{
                         "description": "Search by name or email or role",
                         "name": "search",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search by role",
+                        "name": "role",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -6180,7 +6186,7 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
-                "planName": {
+                "plan_name": {
                     "type": "string"
                 },
                 "price": {
@@ -6287,13 +6293,13 @@ const docTemplate = `{
         "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserPoints": {
             "type": "object",
             "properties": {
-                "createdAt": {
+                "created_at": {
                     "type": "string"
                 },
                 "id": {
                     "type": "string"
                 },
-                "updatedAt": {
+                "updated_at": {
                     "type": "string"
                 },
                 "user_id": {

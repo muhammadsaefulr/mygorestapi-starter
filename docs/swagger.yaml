@@ -1595,7 +1595,7 @@ definitions:
         type: integer
       id:
         type: integer
-      planName:
+      plan_name:
         type: string
       price:
         type: integer
@@ -1665,11 +1665,11 @@ definitions:
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_model.UserPoints:
     properties:
-      createdAt:
+      created_at:
         type: string
       id:
         type: string
-      updatedAt:
+      updated_at:
         type: string
       user_id:
         type: string
@@ -3931,6 +3931,10 @@ paths:
       - description: Search by name or email or role
         in: query
         name: search
+        type: string
+      - description: Search by role
+        in: query
+        name: role
         type: string
       produces:
       - application/json

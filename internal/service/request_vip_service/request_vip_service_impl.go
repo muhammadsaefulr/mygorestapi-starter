@@ -7,9 +7,11 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 	"gorm.io/gorm"
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/request_vip/request"
+	response "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/request_vip/response"
 	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	repository "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/request_vip"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/convert_types"
@@ -33,7 +35,7 @@ func NewRequestVipService(repo repository.RequestVipRepo, validate *validator.Va
 	}
 }
 
-func (s *RequestVipService) GetAll(c *fiber.Ctx, params *request.QueryRequestVip) ([]model.RequestVip, int64, error) {
+func (s *RequestVipService) GetAll(c *fiber.Ctx, params *request.QueryRequestVip) ([]response.RequestVipResponse, int64, error) {
 	if err := s.Validate.Struct(params); err != nil {
 		return nil, 0, err
 	}
@@ -43,7 +45,11 @@ func (s *RequestVipService) GetAll(c *fiber.Ctx, params *request.QueryRequestVip
 	if params.Limit < 1 {
 		params.Limit = 10
 	}
-	return s.Repo.GetAll(c.Context(), params)
+
+	data, total, err := s.Repo.GetAll(c.Context(), params)
+	results := convert_types.VipModelToResponse(data)
+
+	return results, total, err
 }
 
 func (s *RequestVipService) GetByID(c *fiber.Ctx, id uint) (*model.RequestVip, error) {
@@ -51,6 +57,9 @@ func (s *RequestVipService) GetByID(c *fiber.Ctx, id uint) (*model.RequestVip, e
 	if err == gorm.ErrRecordNotFound {
 		return nil, fiber.NewError(fiber.StatusNotFound, "RequestVip not found")
 	}
+
+	data.BuktiTf = fmt.Sprintf("%s/minio/bukti-tf/%s", config.AppUrl, data.BuktiTf)
+
 	if err != nil {
 		s.Log.Errorf("GetByID error: %+v", err)
 		return nil, fiber.NewError(fiber.StatusInternalServerError, "Get request_vip by ID failed")

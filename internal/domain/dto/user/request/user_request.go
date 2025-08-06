@@ -31,5 +31,6 @@ type UpdatePassOrVerify struct {
 type QueryUser struct {
 	Page   int    `validate:"omitempty,number,max=50"`
 	Limit  int    `validate:"omitempty,number,max=50"`
+	Role   string `validate:"omitempty"`
 	Search string `validate:"omitempty,max=50"`
 }

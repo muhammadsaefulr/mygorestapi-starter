@@ -36,6 +36,7 @@ func NewUserController(userService user_service.UserService, tokenService system
 // @Param        page     query     int     false   "Page number"  default(1)
 // @Param        limit    query     int     false   "Maximum number of users"    default(10)
 // @Param        search   query     string  false  "Search by name or email or role"
+// @Param        role     query     string  false  "Search by role" (default "1")
 // @Router       /users [get]
 // @Success      200  {object}  example.GetAllUserResponse
 // @Failure      401  {object}  example.Unauthorized  "Unauthorized"
@@ -44,6 +45,7 @@ func (u *UserController) GetUsers(c *fiber.Ctx) error {
 	query := &request.QueryUser{
 		Page:   c.QueryInt("page", 1),
 		Limit:  c.QueryInt("limit", 10),
+		Role:   c.Query("role", ""),
 		Search: c.Query("search", ""),
 	}
 

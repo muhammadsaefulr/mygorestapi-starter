@@ -29,7 +29,7 @@ type SuccessWithUser struct {
 	Code    int        `json:"code"`
 	Status  string     `json:"status"`
 	Message string     `json:"message"`
-	User    model.User `json:"user"`
+	User    model.User `json:"data"`
 }
 
 type SuccessWithTokens struct {

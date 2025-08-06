@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	request "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/request_vip/request"
+	response_dto_request_vip "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/request_vip/response"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
 	service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/request_vip_service"
@@ -30,10 +31,12 @@ func NewRequestVipController(service service.RequestVipService) *RequestVipContr
 // @Param        limit  query     int     false  "Items per page"  default(10)
 // @Param        search query     string  false  "Search term"
 // @Router       /request-vip [get]
+// @Success      200     {object}  response_dto_request_vip.ResponseGetAllRequestVip
 func (h *RequestVipController) GetAllRequestVip(c *fiber.Ctx) error {
 	query := &request.QueryRequestVip{
-		Page:  c.QueryInt("page", 1),
-		Limit: c.QueryInt("limit", 10),
+		Page:      c.QueryInt("page", 1),
+		Limit:     c.QueryInt("limit", 10),
+		StatusAcc: c.Query("status", ""),
 	}
 
 	data, total, err := h.Service.GetAll(c, query)
@@ -41,7 +44,7 @@ func (h *RequestVipController) GetAllRequestVip(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.Status(fiber.StatusOK).JSON(response.SuccessWithPaginate[model.RequestVip]{
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithPaginate[response_dto_request_vip.RequestVipResponse]{
 		Code:         fiber.StatusOK,
 		Status:       "success",
 		Message:      "Successfully retrieved data",
@@ -105,6 +108,7 @@ func (h *RequestVipController) CreateRequestVip(c *fiber.Ctx) error {
 	req.PaymentMethod = c.FormValue("payment_method")
 	req.Name = c.FormValue("atas_nama_tf")
 	req.Email = c.FormValue("email")
+	req.StatusAcc = "pending"
 
 	_, err = h.Service.Create(c, req)
 	if err != nil {
@@ -138,6 +142,10 @@ func (h *RequestVipController) UpdateRequestVip(c *fiber.Ctx) error {
 	if err := c.BodyParser(req); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid request body")
 	}
+
+	session := c.Locals("user").(*model.User)
+
+	req.UpdatedBy = session.ID.String()
 
 	result, err := h.Service.Update(c, id, req)
 	if err != nil {

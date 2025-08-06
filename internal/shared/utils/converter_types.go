@@ -100,10 +100,6 @@ func ParseCookieDomain(clientHost string) string {
 
 	host := u.Hostname()
 
-	if host == "localhost" || host == "127.0.0.1" {
-		return ""
-	}
-
 	parts := strings.Split(host, ".")
 	if len(parts) > 2 {
 		return "." + strings.Join(parts[len(parts)-2:], ".")

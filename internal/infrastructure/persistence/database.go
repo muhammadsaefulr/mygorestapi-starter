@@ -4,12 +4,11 @@ import (
 	"fmt"
 	"time"
 
-	"log"
-
 	"github.com/muhammadsaefulr/NimeStreamAPI/config"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/infrastructure/persistence/seed"
+	// "log"
+	// "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
+	// "github.com/muhammadsaefulr/NimeStreamAPI/internal/infrastructure/persistence/seed"
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
 
@@ -40,69 +39,69 @@ func Connect(dbHost, dbName string) *gorm.DB {
 	}
 
 	//auto migrations
-	db.AutoMigrate(
-		&model.User{},
-		&model.Token{},
-		&model.Watchlist{},
-		&model.TrackEpisodeView{},
-		&model.Comment{},
-		&model.CommentLike{},
-		&model.History{},
-		&model.RequestMovie{},
-		&model.MovieDetails{},
-		&model.MovieEpisode{},
-		&model.ReportError{},
-		&model.RolePermissions{},
-		&model.UserRole{},
-		&model.UserSubscription{},
-		&model.UserPoints{},
-		&model.UserBadge{},
-		&model.UserBadgeInfo{},
-		&model.BannerApp{},
-		&model.RequestVip{},
-	)
+	// db.AutoMigrate(
+	// 	&model.User{},
+	// 	&model.Token{},
+	// 	&model.Watchlist{},
+	// 	&model.TrackEpisodeView{},
+	// 	&model.Comment{},
+	// 	&model.CommentLike{},
+	// 	&model.History{},
+	// 	&model.RequestMovie{},
+	// 	&model.MovieDetails{},
+	// 	&model.MovieEpisode{},
+	// 	&model.ReportError{},
+	// 	&model.RolePermissions{},
+	// 	&model.UserRole{},
+	// 	&model.UserSubscription{},
+	// 	&model.UserPoints{},
+	// 	&model.UserBadge{},
+	// 	&model.UserBadgeInfo{},
+	// 	&model.BannerApp{},
+	// 	&model.RequestVip{},
+	// )
 
 	// implements seed
 
-	if err := seed.SeedRolesAndPermissions(db); err != nil {
-		log.Fatal("gagal seed role permission:", err)
-	}
+	// if err := seed.SeedRolesAndPermissions(db); err != nil {
+	// 	log.Fatal("gagal seed role permission:", err)
+	// }
 
-	if err := seed.SeedUserRoles(db); err != nil {
-		log.Fatal("gagal seed user role:", err)
-	}
+	// if err := seed.SeedUserRoles(db); err != nil {
+	// 	log.Fatal("gagal seed user role:", err)
+	// }
 
-	if err := seed.SeedUsers(db); err != nil {
-		log.Fatal("gagal seed user:", err)
-	}
+	// if err := seed.SeedUsers(db); err != nil {
+	// 	log.Fatal("gagal seed user:", err)
+	// }
 
-	if err := seed.SeedSubscriptionPlans(db); err != nil {
-		log.Fatal("gagal seed subscription plan:", err)
-	}
+	// if err := seed.SeedSubscriptionPlans(db); err != nil {
+	// 	log.Fatal("gagal seed subscription plan:", err)
+	// }
 
-	if err := seed.SeedUserBadges(db); err != nil {
-		log.Fatal("gagal seed user badge:", err)
-	}
+	// if err := seed.SeedUserBadges(db); err != nil {
+	// 	log.Fatal("gagal seed user badge:", err)
+	// }
 
-	if err := seed.SeedDrakor(db); err != nil {
-		log.Fatal("gagal seed drakor:", err)
-	}
+	// if err := seed.SeedDrakor(db); err != nil {
+	// 	log.Fatal("gagal seed drakor:", err)
+	// }
 
-	if err := seed.SeedDrakorEpisodes(db); err != nil {
-		log.Fatal("gagal seed drakor episodes:", err)
-	}
+	// if err := seed.SeedDrakorEpisodes(db); err != nil {
+	// 	log.Fatal("gagal seed drakor episodes:", err)
+	// }
 
-	if err := seed.SeedMovie(db); err != nil {
-		log.Fatal("gagal seed movie:", err)
-	}
+	// if err := seed.SeedMovie(db); err != nil {
+	// 	log.Fatal("gagal seed movie:", err)
+	// }
 
-	if err := seed.SeedMovieEpisodes(db); err != nil {
-		log.Fatal("gagal seed movie episodes:", err)
-	}
+	// if err := seed.SeedMovieEpisodes(db); err != nil {
+	// 	log.Fatal("gagal seed movie episodes:", err)
+	// }
 
-	if err := seed.SeedBannerApp(db); err != nil {
-		log.Fatal("gagal seed banner app:", err)
-	}
+	// if err := seed.SeedBannerApp(db); err != nil {
+	// 	log.Fatal("gagal seed banner app:", err)
+	// }
 
 	// Config connection pooling
 	sqlDB.SetMaxIdleConns(10)

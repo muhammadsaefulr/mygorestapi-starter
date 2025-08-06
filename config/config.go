@@ -10,6 +10,7 @@ var (
 	ClientFeHost         string
 	AppHost              string
 	AppPort              int
+	AppUrl               string
 	DBHost               string
 	DBUser               string
 	DBPassword           string
@@ -41,6 +42,7 @@ func init() {
 	IsProd = viper.GetString("APP_ENV") == "prod"
 	AppHost = viper.GetString("APP_HOST")
 	AppPort = viper.GetInt("APP_PORT")
+	AppUrl = viper.GetString("APP_URL")
 	ClientFeHost = viper.GetString("CLIENT_FE_HOST")
 
 	// database configuration
