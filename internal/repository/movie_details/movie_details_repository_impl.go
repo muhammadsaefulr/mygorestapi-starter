@@ -18,6 +18,15 @@ func NewMovieDetailsRepositoryImpl(db *gorm.DB) MovieDetailsRepo {
 	}
 }
 
+func (r *MovieDetailsRepositoryImpl) GetCountAll(ctx context.Context) (int64, error) {
+	var total int64
+	err := r.DB.WithContext(ctx).Model(&model.MovieDetails{}).Count(&total).Error
+	if err != nil {
+		return 0, err
+	}
+	return total, nil
+}
+
 func (r *MovieDetailsRepositoryImpl) GetAll(ctx context.Context, param *request.QueryMovieDetails) ([]model.MovieDetails, int64, error) {
 	var data []model.MovieDetails
 	var total int64

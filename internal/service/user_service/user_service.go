@@ -15,6 +15,7 @@ type UserService interface {
 	GetUserSession(c *fiber.Ctx) (*user_model.User, error)
 	UpdatePassOrVerify(c *fiber.Ctx, req *request.UpdatePassOrVerify, id string) error
 	UpdateUser(c *fiber.Ctx, id string, req *request.UpdateUser) (*user_model.User, error)
+	GetCountAllUser(c *fiber.Ctx) (int64, error)
 	GetAllUser(c *fiber.Ctx, params *request.QueryUser) ([]user_model.User, int64, error)
 	DeleteUser(c *fiber.Ctx, id string) error
 }

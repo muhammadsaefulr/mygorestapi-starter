@@ -53,6 +53,24 @@ func NewMovieEpisodeController(service service.MovieEpisodeServiceInterface) *Mo
 // }
 
 // @Tags         movie
+// @Summary      Get total movie episodes
+// @Produce      json
+// @Router       /movie/episodes/count [get]
+func (h *MovieEpisodeController) GetCountAllMovieEpisode(c *fiber.Ctx) error {
+	total, err := h.Service.GetCountAll(c)
+	if err != nil {
+		return err
+	}
+
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithDetail[int64]{
+		Code:    fiber.StatusOK,
+		Status:  "success",
+		Message: "Get total movie episodes successfully",
+		Data:    total,
+	})
+}
+
+// @Tags         movie
 // @Summary      Get a movie episodes by ID
 // @Produce      json
 // @Param        movie_eps_id  path  string  true  "MovieEps ID (string)"

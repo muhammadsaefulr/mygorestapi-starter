@@ -20,6 +20,24 @@ func NewReportErrorController(service service.ReportErrorServiceInterface) *Repo
 }
 
 // @Tags         report_error
+// @Summary      Get total report_error
+// @Produce      json
+// @Router       /report-episode/count [get]
+func (h *ReportErrorController) GetCountAllReportError(c *fiber.Ctx) error {
+	total, err := h.Service.GetCountAll(c)
+	if err != nil {
+		return err
+	}
+
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithDetail[int64]{
+		Code:    fiber.StatusOK,
+		Status:  "success",
+		Message: "Get total report_error successfully",
+		Data:    total,
+	})
+}
+
+// @Tags         report_error
 // @Summary      Get all report_error
 // @Security     BearerAuth
 // @Produce      json

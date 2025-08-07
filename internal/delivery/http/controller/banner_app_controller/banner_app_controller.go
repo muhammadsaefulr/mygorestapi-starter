@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"math"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -48,8 +47,8 @@ func (h *BannerAppController) GetAllBannerApp(c *fiber.Ctx) error {
 		Results:      data,
 		Page:         query.Page,
 		Limit:        query.Limit,
-		TotalPages:   int64(math.Ceil(float64(total) / float64(query.Limit))),
-		TotalResults: total,
+		TotalPages:   total,
+		TotalResults: int64(len(data)),
 	})
 }
 

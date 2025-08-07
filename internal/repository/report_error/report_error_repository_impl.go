@@ -18,6 +18,15 @@ func NewReportErrorRepositoryImpl(db *gorm.DB) ReportErrorRepo {
 	}
 }
 
+func (r *ReportErrorRepositoryImpl) GetCountAll(ctx context.Context) (int64, error) {
+	var total int64
+	err := r.DB.WithContext(ctx).Model(&model.ReportError{}).Count(&total).Error
+	if err != nil {
+		return 0, err
+	}
+	return total, nil
+}
+
 func (r *ReportErrorRepositoryImpl) GetAll(ctx context.Context, param *request.QueryReportError) ([]model.ReportError, int64, error) {
 	var data []model.ReportError
 	var total int64

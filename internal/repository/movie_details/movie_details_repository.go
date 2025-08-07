@@ -8,6 +8,7 @@ import (
 )
 
 type MovieDetailsRepo interface {
+	GetCountAll(ctx context.Context) (int64, error)
 	GetAll(ctx context.Context, param *request.QueryMovieDetails) ([]model.MovieDetails, int64, error)
 	GetByID(ctx context.Context, id string) (*model.MovieDetails, error)
 	GetByIDPreEps(ctx context.Context, id string) (*model.MovieDetails, error)

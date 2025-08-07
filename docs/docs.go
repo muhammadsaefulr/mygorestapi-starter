@@ -1476,6 +1476,18 @@ const docTemplate = `{
                 }
             }
         },
+        "/movie/details/count": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "movie"
+                ],
+                "summary": "Get total movie details",
+                "responses": {}
+            }
+        },
         "/movie/details/{id}": {
             "get": {
                 "produces": [
@@ -1607,6 +1619,18 @@ const docTemplate = `{
                         }
                     }
                 }
+            }
+        },
+        "/movie/episodes/count": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "movie"
+                ],
+                "summary": "Get total movie episodes",
+                "responses": {}
             }
         },
         "/movie/episodes/lists/{movie_id}": {
@@ -2152,6 +2176,18 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/report-episode/count": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "report_error"
+                ],
+                "summary": "Get total report_error",
+                "responses": {}
+            }
+        },
         "/report-episode/{id}": {
             "get": {
                 "security": [
@@ -2442,7 +2478,14 @@ const docTemplate = `{
                         "in": "query"
                     }
                 ],
-                "responses": {}
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_vip_response_RequestVipResponse"
+                        }
+                    }
+                }
             },
             "post": {
                 "security": [
@@ -3510,6 +3553,18 @@ const docTemplate = `{
                         }
                     }
                 }
+            }
+        },
+        "/users/count": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get total users",
+                "responses": {}
             }
         },
         "/users/points": {
@@ -5193,13 +5248,45 @@ const docTemplate = `{
                 "atas_nama_tf": {
                     "type": "string"
                 },
+                "email": {
+                    "type": "string"
+                },
+                "status_acc": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_vip_response.RequestVipResponse": {
+            "type": "object",
+            "properties": {
+                "atas_nama_tf": {
+                    "type": "string"
+                },
                 "bukti_tf": {
+                    "type": "string"
+                },
+                "created_at": {
                     "type": "string"
                 },
                 "email": {
                     "type": "string"
                 },
+                "id": {
+                    "type": "integer"
+                },
+                "payment_method": {
+                    "type": "string"
+                },
                 "status_acc": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "updated_by": {
+                    "type": "string"
+                },
+                "user_id": {
                     "type": "string"
                 }
             }
@@ -5763,6 +5850,38 @@ const docTemplate = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_response.RequestMovieResponse"
+                    }
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "total_pages": {
+                    "type": "integer"
+                },
+                "total_results": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_vip_response_RequestVipResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_vip_response.RequestVipResponse"
                     }
                 },
                 "limit": {

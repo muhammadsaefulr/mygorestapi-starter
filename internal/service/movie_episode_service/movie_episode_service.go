@@ -9,6 +9,7 @@ import (
 )
 
 type MovieEpisodeServiceInterface interface {
+	GetCountAll(c *fiber.Ctx) (int64, error)
 	GetAll(c *fiber.Ctx, params *request.QueryMovieEpisode) ([]model.MovieEpisode, int64, error)
 	GetByID(c *fiber.Ctx, movie_eps_id string) (*model.MovieEpisode, error)
 	GetMovieEpsByMovieID(c *fiber.Ctx, movie_id string, param *request.QueryMovieEpisode) ([]model.MovieEpisode, int64, error)

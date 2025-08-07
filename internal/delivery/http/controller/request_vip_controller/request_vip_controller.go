@@ -31,7 +31,7 @@ func NewRequestVipController(service service.RequestVipService) *RequestVipContr
 // @Param        limit  query     int     false  "Items per page"  default(10)
 // @Param        search query     string  false  "Search term"
 // @Router       /request-vip [get]
-// @Success      200     {object}  response_dto_request_vip.ResponseGetAllRequestVip
+// @Success      200     {object}  response.SuccessWithPaginate[response_dto_request_vip.RequestVipResponse]
 func (h *RequestVipController) GetAllRequestVip(c *fiber.Ctx) error {
 	query := &request.QueryRequestVip{
 		Page:      c.QueryInt("page", 1),

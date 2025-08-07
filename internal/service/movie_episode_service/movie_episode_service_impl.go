@@ -41,6 +41,10 @@ func NewMovieEpisodeService(repo repository.MovieEpisodeRepo, validate *validato
 	}
 }
 
+func (s *MovieEpisodeService) GetCountAll(c *fiber.Ctx) (int64, error) {
+	return s.Repo.GetCountAll(c.Context())
+}
+
 func (s *MovieEpisodeService) GetAll(c *fiber.Ctx, params *request.QueryMovieEpisode) ([]model.MovieEpisode, int64, error) {
 	if err := s.Validate.Struct(params); err != nil {
 		return nil, 0, err

@@ -8,6 +8,7 @@ import (
 )
 
 type ReportErrorServiceInterface interface {
+	GetCountAll(c *fiber.Ctx) (int64, error)
 	GetAll(c *fiber.Ctx, params *request.QueryReportError) ([]model.ReportError, int64, error)
 	GetByID(c *fiber.Ctx, id string) (*model.ReportError, error)
 	Create(c *fiber.Ctx, req *request.CreateReportError) (*model.ReportError, error)

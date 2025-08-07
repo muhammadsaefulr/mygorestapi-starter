@@ -70,3 +70,11 @@ func (s *S3Uploader) GetObject(key string) (io.ReadCloser, error) {
 	}
 	return out.Body, nil
 }
+
+func (s *S3Uploader) Ping() error {
+	_, err := s.Client.ListBuckets(context.Background(), &s3.ListBucketsInput{})
+	if err != nil {
+		return fmt.Errorf("S3 ping failed: %w", err)
+	}
+	return nil
+}

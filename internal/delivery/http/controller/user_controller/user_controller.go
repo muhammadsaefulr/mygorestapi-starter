@@ -29,6 +29,24 @@ func NewUserController(userService user_service.UserService, tokenService system
 }
 
 // @Tags         Users
+// @Summary      Get total users
+// @Produce      json
+// @Router       /users/count [get]
+func (u *UserController) GetCountAllUser(c *fiber.Ctx) error {
+	total, err := u.UserService.GetCountAllUser(c)
+	if err != nil {
+		return err
+	}
+
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithDetail[int64]{
+		Code:    fiber.StatusOK,
+		Status:  "success",
+		Message: "Get total users successfully",
+		Data:    total,
+	})
+}
+
+// @Tags         Users
 // @Summary      Get all users
 // @Description  Only admins can retrieve all users.
 // @Security BearerAuth

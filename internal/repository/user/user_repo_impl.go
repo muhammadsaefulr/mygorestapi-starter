@@ -18,6 +18,16 @@ func NewUserRepositryImpl(db *gorm.DB) UserRepo {
 	}
 }
 
+// GetCountAllUser implements UserRepo.
+func (n *newUserRepositryImpl) GetCountAllUser(ctx context.Context) (int64, error) {
+	var total int64
+	err := n.DB.WithContext(ctx).Model(&model.User{}).Count(&total).Error
+	if err != nil {
+		return 0, err
+	}
+	return total, nil
+}
+
 // GetAllUser implements UserRepo.
 func (n *newUserRepositryImpl) GetAllUser(ctx context.Context, param *request.QueryUser) ([]model.User, int64, error) {
 	var users []model.User

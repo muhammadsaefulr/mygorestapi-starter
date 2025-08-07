@@ -18,6 +18,15 @@ func NewMovieEpisodeRepositoryImpl(db *gorm.DB) MovieEpisodeRepo {
 	}
 }
 
+func (r *MovieEpisodeRepositoryImpl) GetCountAll(ctx context.Context) (int64, error) {
+	var total int64
+	err := r.DB.WithContext(ctx).Model(&model.MovieEpisode{}).Count(&total).Error
+	if err != nil {
+		return 0, err
+	}
+	return total, nil
+}
+
 func (r *MovieEpisodeRepositoryImpl) GetAll(ctx context.Context, param *request.QueryMovieEpisode) ([]model.MovieEpisode, int64, error) {
 	var data []model.MovieEpisode
 	var total int64

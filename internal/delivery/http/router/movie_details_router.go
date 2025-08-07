@@ -12,6 +12,7 @@ func MovieDetailsRoutes(v1 fiber.Router, c service.MovieDetailsServiceInterface)
 
 	group := v1.Group("/movie/details")
 
+	group.Get("/count", movie_detailsController.GetCountAllMovieDetails)
 	group.Get("/", movie_detailsController.GetAllMovieDetails)
 	group.Post("/", m.Auth("createMovieDetails"), movie_detailsController.CreateMovieDetails)
 	group.Get("/:id", movie_detailsController.GetMovieDetailsByID)

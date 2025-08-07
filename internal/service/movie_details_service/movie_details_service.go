@@ -9,6 +9,7 @@ import (
 )
 
 type MovieDetailsServiceInterface interface {
+	GetCountAll(c *fiber.Ctx) (int64, error)
 	GetAll(c *fiber.Ctx, params *request.QueryMovieDetails) ([]response.MovieDetailOnlyResponse, int64, error)
 	GetByIDPreEps(c *fiber.Ctx, id string) (*response.MovieDetailsResponse, error)
 	GetById(c *fiber.Ctx, id string) (*model.MovieDetails, error)

@@ -25,11 +25,15 @@ func (r *RequestVipRepositoryImpl) GetAll(ctx context.Context, param *request.Qu
 	query := r.DB.WithContext(ctx).Model(&model.RequestVip{})
 	offset := (param.Page - 1) * param.Limit
 
+	if param.StatusAcc != "" {
+		query = query.Where("status_acc = ?", param.StatusAcc)
+	}
+
 	if err := query.Count(&total).Error; err != nil {
 		return nil, 0, err
 	}
 
-	if err := query.Limit(param.Limit).Offset(offset).Find(&data).Error; err != nil {
+	if err := query.Order("created_at DESC").Limit(param.Limit).Offset(offset).Find(&data).Error; err != nil {
 		return nil, 0, err
 	}
 

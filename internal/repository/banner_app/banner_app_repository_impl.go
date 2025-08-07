@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"math"
 
 	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/banner_app/request"
 	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
@@ -47,7 +48,9 @@ func (r *BannerAppRepositoryImpl) GetAll(ctx context.Context, param *request.Que
 		return nil, 0, err
 	}
 
-	return data, total, nil
+	totalPages := int64(math.Ceil(float64(total) / float64(param.Limit)))
+
+	return data, totalPages, nil
 }
 
 func (r *BannerAppRepositoryImpl) GetByID(ctx context.Context, id uint) (*model.BannerApp, error) {

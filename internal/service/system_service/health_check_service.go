@@ -13,17 +13,20 @@ import (
 type HealthCheckService interface {
 	GormCheck() error
 	MemoryHeapCheck() error
+	S3Check() error
 }
 
 type healthCheckService struct {
 	Log *logrus.Logger
 	DB  *gorm.DB
+	S3  *utils.S3Uploader
 }
 
-func NewHealthCheckService(db *gorm.DB) HealthCheckService {
+func NewHealthCheckService(db *gorm.DB, S3 *utils.S3Uploader) HealthCheckService {
 	return &healthCheckService{
 		Log: utils.Log,
 		DB:  db,
+		S3:  S3,
 	}
 }
 
@@ -58,5 +61,14 @@ func (s *healthCheckService) MemoryHeapCheck() error {
 		return errors.New("heap memory usage too high")
 	}
 
+	return nil
+}
+
+func (s *healthCheckService) S3Check() error {
+	err := s.S3.Ping()
+	if err != nil {
+		s.Log.Errorf("S3 ping failed: %v", err)
+		return err
+	}
 	return nil
 }

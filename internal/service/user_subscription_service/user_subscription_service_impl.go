@@ -98,15 +98,15 @@ func (s *UserSubscriptionService) Create(c *fiber.Ctx, req *request.CreateUserSu
 		HandledBy: sessionNow.ID.String(),
 	}
 
-	if err := s.BadgeSvc.CreateUserBadgeInfo(c, badgeSubmt); err != nil {
-		// s.Log.Errorf("Create User Badge Info error: %+v", err)
-		return nil, fiber.NewError(fiber.StatusInternalServerError, "Create User Badge Info failed")
-	}
-
 	if err := s.Repo.Create(c.Context(), data); err != nil {
 		// s.Log.Errorf("Create error: %+v", err)
 		return nil, fiber.NewError(fiber.StatusInternalServerError, "Create User Subscription failed")
 	}
+
+	if err := s.BadgeSvc.CreateUserBadgeInfo(c, badgeSubmt); err != nil {
+		s.Log.Errorf("Create User Badge Info error: %+v", err)
+	}
+
 	return data, nil
 }
 

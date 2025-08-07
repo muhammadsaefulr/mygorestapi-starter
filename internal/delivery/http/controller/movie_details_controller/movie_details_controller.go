@@ -21,6 +21,24 @@ func NewMovieDetailsController(service service.MovieDetailsServiceInterface) *Mo
 }
 
 // @Tags         movie
+// @Summary      Get total movie details
+// @Produce      json
+// @Router       /movie/details/count [get]
+func (h *MovieDetailsController) GetCountAllMovieDetails(c *fiber.Ctx) error {
+	total, err := h.Service.GetCountAll(c)
+	if err != nil {
+		return err
+	}
+
+	return c.Status(fiber.StatusOK).JSON(response.SuccessWithDetail[int64]{
+		Code:    fiber.StatusOK,
+		Status:  "success",
+		Message: "Get total movie details successfully",
+		Data:    total,
+	})
+}
+
+// @Tags         movie
 // @Summary      Get all movie_details
 // @Produce      json
 // @Param        page   query     int     false  "Page number"  default(1)

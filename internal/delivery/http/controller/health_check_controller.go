@@ -33,41 +33,45 @@ func (h *HealthCheckController) addServiceStatus(
 		Message: message,
 	})
 }
-
-// @Tags Health
-// @Summary Health Check
-// @Description Check the status of services and database connections
-// @Accept json
-// @Produce json
-// @Success 200 {object} example.HealthCheckResponse
-// @Failure 500 {object} example.HealthCheckResponseError
-// @Router /health-check [get]
 func (h *HealthCheckController) Check(c *fiber.Ctx) error {
-	isHealthy := true
+	isHealthy := true   // All service
+	coreHealthy := true // Postgre + Memory
 	var serviceList []response.HealthCheck
 
-	// Check the database connection
+	// PostgreSQL check (core)
 	if err := h.HealthCheckService.GormCheck(); err != nil {
 		isHealthy = false
+		coreHealthy = false
 		errMsg := err.Error()
 		h.addServiceStatus(&serviceList, "Postgre", false, &errMsg)
 	} else {
 		h.addServiceStatus(&serviceList, "Postgre", true, nil)
 	}
 
+	// Memory check (core)
 	if err := h.HealthCheckService.MemoryHeapCheck(); err != nil {
 		isHealthy = false
+		coreHealthy = false
 		errMsg := err.Error()
 		h.addServiceStatus(&serviceList, "Memory", false, &errMsg)
 	} else {
 		h.addServiceStatus(&serviceList, "Memory", true, nil)
 	}
 
-	// Return the response based on health check result
+	// S3 / MinIO check (non-core)
+	if err := h.HealthCheckService.S3Check(); err != nil {
+		isHealthy = false
+		errMsg := err.Error()
+		h.addServiceStatus(&serviceList, "S3 Object Storage", false, &errMsg)
+	} else {
+		h.addServiceStatus(&serviceList, "S3 Object Storage", true, nil)
+	}
+
 	statusCode := fiber.StatusOK
 	status := "success"
 
-	if !isHealthy {
+	// Return 500 if core service are down
+	if !coreHealthy {
 		statusCode = fiber.StatusInternalServerError
 		status = "error"
 	}

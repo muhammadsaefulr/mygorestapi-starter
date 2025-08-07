@@ -28,6 +28,10 @@ func NewReportErrorService(repo repository.ReportErrorRepo, validate *validator.
 	}
 }
 
+func (s *ReportErrorService) GetCountAll(c *fiber.Ctx) (int64, error) {
+	return s.Repo.GetCountAll(c.Context())
+}
+
 func (s *ReportErrorService) GetAll(c *fiber.Ctx, params *request.QueryReportError) ([]model.ReportError, int64, error) {
 	if err := s.Validate.Struct(params); err != nil {
 		return nil, 0, err

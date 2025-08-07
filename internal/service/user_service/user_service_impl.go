@@ -32,6 +32,10 @@ func NewUserService(userRepo repository.UserRepo, validate *validator.Validate, 
 	}
 }
 
+func (s *userService) GetCountAllUser(c *fiber.Ctx) (int64, error) {
+	return s.UserRepo.GetCountAllUser(c.Context())
+}
+
 func (s *userService) GetAllUser(c *fiber.Ctx, params *request.QueryUser) ([]user_model.User, int64, error) {
 	if err := s.Validate.Struct(params); err != nil {
 		return nil, 0, err

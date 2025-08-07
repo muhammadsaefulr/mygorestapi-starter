@@ -8,6 +8,7 @@ import (
 )
 
 type ReportErrorRepo interface {
+	GetCountAll(ctx context.Context) (int64, error)
 	GetAll(ctx context.Context, param *request.QueryReportError) ([]model.ReportError, int64, error)
 	GetByID(ctx context.Context, id string) (*model.ReportError, error)
 	Create(ctx context.Context, data *model.ReportError) error

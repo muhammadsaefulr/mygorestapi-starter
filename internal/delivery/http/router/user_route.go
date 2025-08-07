@@ -15,6 +15,7 @@ func UserRoutes(v1 fiber.Router, u user_service.UserService, t system_service.To
 
 	user := v1.Group("/users")
 
+	user.Get("/count", userController.GetCountAllUser)
 	user.Get("/", m.Auth("getUsers"), userController.GetUsers)
 	user.Get("/session", m.Auth("getUserSession"), userController.GetUserSession)
 	user.Post("/", m.Auth("manageUsers"), userController.CreateUser)

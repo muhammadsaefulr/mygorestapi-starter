@@ -94,6 +94,7 @@ func InitModule(app *fiber.App, db *gorm.DB, redis *redis.Client, firebase *auth
 		utils.Log.Errorf("Failed to create S3 uploader: %v", err)
 		return
 	}
+
 	// Init services
 	fcmService := fcmService.NewNotificationService(firebaseMessaging)
 	userRepo := userRepo.NewUserRepositryImpl(db)
@@ -125,7 +126,7 @@ func InitModule(app *fiber.App, db *gorm.DB, redis *redis.Client, firebase *auth
 	tokenSvc := systemService.NewTokenService(db, validate, userSvc)
 	authSvc := authService.NewAuthService(db, validate, userSvc, tokenSvc, userPointsSvc)
 	emailSvc := systemService.NewEmailService()
-	healthSvc := systemService.NewHealthCheckService(db)
+	healthSvc := systemService.NewHealthCheckService(db, uploader)
 
 	// Other Sources Services
 

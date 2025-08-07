@@ -8,7 +8,7 @@ import (
 
 type UserBadge struct {
 	ID        uint   `gorm:"primaryKey"`
-	BadgeName string `gorm:"not null"`
+	BadgeName string `gorm:"not null;unique"`
 	IconURL   string
 	Color     string
 	CreatedAt time.Time `gorm:"autoCreateTime"`

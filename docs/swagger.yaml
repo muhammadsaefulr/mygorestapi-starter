@@ -931,11 +931,32 @@ definitions:
     properties:
       atas_nama_tf:
         type: string
-      bukti_tf:
-        type: string
       email:
         type: string
       status_acc:
+        type: string
+    type: object
+  github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_vip_response.RequestVipResponse:
+    properties:
+      atas_nama_tf:
+        type: string
+      bukti_tf:
+        type: string
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      payment_method:
+        type: string
+      status_acc:
+        type: string
+      updated_at:
+        type: string
+      updated_by:
+        type: string
+      user_id:
         type: string
     type: object
   github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_role_permissions_request.CreateRolePermissions:
@@ -1317,6 +1338,27 @@ definitions:
       data:
         items:
           $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_movie_response.RequestMovieResponse'
+        type: array
+      limit:
+        type: integer
+      message:
+        type: string
+      page:
+        type: integer
+      status:
+        type: string
+      total_pages:
+        type: integer
+      total_results:
+        type: integer
+    type: object
+  ? github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_vip_response_RequestVipResponse
+  : properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_vip_response.RequestVipResponse'
         type: array
       limit:
         type: integer
@@ -2743,6 +2785,14 @@ paths:
       summary: Update a movie_details
       tags:
       - movie
+  /movie/details/count:
+    get:
+      produces:
+      - application/json
+      responses: {}
+      summary: Get total movie details
+      tags:
+      - movie
   /movie/episodes:
     post:
       consumes:
@@ -2844,6 +2894,14 @@ paths:
           schema:
             $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithDetail-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_movie_episode_response_MovieEpisodeResponses'
       summary: Get all movie episodes by movie ID
+      tags:
+      - movie
+  /movie/episodes/count:
+    get:
+      produces:
+      - application/json
+      responses: {}
+      summary: Get total movie episodes
       tags:
       - movie
   /movie/episodes/lists/{movie_id}:
@@ -3175,6 +3233,14 @@ paths:
       summary: Update a report_error
       tags:
       - report_error
+  /report-episode/count:
+    get:
+      produces:
+      - application/json
+      responses: {}
+      summary: Get total report_error
+      tags:
+      - report_error
   /request-movie:
     get:
       parameters:
@@ -3299,7 +3365,11 @@ paths:
         type: string
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_util_response.SuccessWithPaginate-github_com_muhammadsaefulr_NimeStreamAPI_internal_domain_dto_request_vip_response_RequestVipResponse'
       security:
       - BearerAuth: []
       summary: Get all request_vip
@@ -4097,6 +4167,14 @@ paths:
       security:
       - BearerAuth: []
       summary: Update a user
+      tags:
+      - Users
+  /users/count:
+    get:
+      produces:
+      - application/json
+      responses: {}
+      summary: Get total users
       tags:
       - Users
   /users/points:

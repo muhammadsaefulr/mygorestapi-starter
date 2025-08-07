@@ -8,6 +8,7 @@ import (
 )
 
 type MovieEpisodeRepo interface {
+	GetCountAll(ctx context.Context) (int64, error)
 	GetAll(ctx context.Context, param *request.QueryMovieEpisode) ([]model.MovieEpisode, int64, error)
 	GetByID(ctx context.Context, movie_eps_id string) (*model.MovieEpisode, error)
 	GetByMovieID(ctx context.Context, movie_id string, patam *request.QueryMovieEpisode) ([]model.MovieEpisode, int64, error)

@@ -12,6 +12,7 @@ func ReportErrorRoutes(v1 fiber.Router, c service.ReportErrorServiceInterface) {
 
 	group := v1.Group("/report-episode")
 
+	group.Get("/count", report_errorController.GetCountAllReportError)
 	group.Get("/", m.Auth("getAllReportError"), report_errorController.GetAllReportError)
 	group.Post("/", m.Auth("postReportError"), report_errorController.CreateReportError)
 	group.Get("/:id", m.Auth("getReportErrorByID"), report_errorController.GetReportErrorByID)
