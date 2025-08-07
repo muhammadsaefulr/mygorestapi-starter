@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"golang.org/x/net/publicsuffix"
 	"log"
 	"net/url"
 	"strings"
@@ -100,10 +101,10 @@ func ParseCookieDomain(clientHost string) string {
 
 	host := u.Hostname()
 
-	parts := strings.Split(host, ".")
-	if len(parts) > 2 {
-		return "." + strings.Join(parts[len(parts)-2:], ".")
+	eTLDPlusOne, err := publicsuffix.EffectiveTLDPlusOne(host)
+	if err != nil {
+		return ""
 	}
 
-	return "." + host
+	return "." + eTLDPlusOne
 }
