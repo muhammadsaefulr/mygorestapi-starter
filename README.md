@@ -184,35 +184,27 @@ GOOGLE_CLIENT_SECRET=thisisasamplesecret
 REDIRECT_URL=http://localhost:3000/v1/auth/google-callback
 ```
 
-## Project Structure
-
-```
-Sure, here's the updated project structure for your `README.md` with the requested changes, using "service" and "platform" and written in English.
-
------
-
 ### Project Structure
 
 This project uses a well-organized, modular architecture to enforce a clear separation of concerns. This structure makes the service easy to develop, maintain, and scale.
 
 ```
-.
-├── cmd                       # Main entry points for the service, including the main executable.
-├── config                    # Configuration files for environment variables and platform settings.
-├── internal                  # Core application logic, isolated from external packages.
-│   ├── delivery              # The "Delivery" layer, handling external requests (e.g., HTTP).
-│   │   ├── http              # HTTP implementation, including controllers and routers.
-│   │   └── middleware        # HTTP middleware (e.g., for authentication and logging).
-│   ├── domain                # The "Domain" layer, containing core business models.
-│   │   ├── dto               # Data Transfer Objects (DTOs) for request and response payloads.
-│   │   └── model             # The primary data structures (models) used throughout the platform.
-│   ├── infrastructure        # The "Infrastructure" layer, managing data persistence.
-│   │   └── persistence       # Database connections, migrations, and seeding scripts.
-│   ├── repository            # The "Repository" layer, an interface for database interactions.
-│   ├── service               # The "Service" layer, where the main business logic resides.
-│   └── shared                # Utility modules used across different layers of the platform.
-├── docs                      # API documentation, such as Swagger files.
-└── test                      # All test files, organized by unit, integration, and fixtures.
+├── cmd/                     # Main service entry points
+├── config/                  # Environment variables and configuration settings
+├── docs/                    # API documentation (e.g., Swagger files)
+├── internal/                # Core service logic
+│   ├── delivery/            # The delivery layer, handling external requests
+│   │   ├── http/            # HTTP controllers and routers
+│   │   └── middleware/      # HTTP middleware (e.g., authentication)
+│   ├── domain/              # The domain layer, containing core business models
+│   │   ├── dto/             # Data Transfer Objects (DTOs) for payloads
+│   │   └── model/           # Primary data structures for the platform
+│   ├── infrastructure/      # The infrastructure layer, managing data persistence
+│   │   └── persistence/     # Database connections, migrations, and seeding scripts
+│   ├── repository/          # The repository layer, an interface for database interactions
+│   ├── service/             # The service layer, where business logic resides
+│   └── shared/              # Utility modules used across different layers
+├── test/                    # All test files (unit, integration, and fixtures)
 ```
 
 ## API Documentation
