@@ -187,19 +187,32 @@ REDIRECT_URL=http://localhost:3000/v1/auth/google-callback
 ## Project Structure
 
 ```
-src\
- |--config\         # Environment variables and configuration related things
- |--controller\     # Route controllers (controller layer)
- |--database\       # Database connection & migrations
- |--docs\           # Swagger files
- |--middleware\     # Custom fiber middlewares
- |--model\          # Postgres models (data layer)
- |--response\       # Response models
- |--router\         # Routes
- |--service\        # Business logic (service layer)
- |--utils\          # Utility classes and functions
- |--validation\     # Request data validation schemas
- |--main.go         # Fiber app
+Sure, here's the updated project structure for your `README.md` with the requested changes, using "service" and "platform" and written in English.
+
+-----
+
+### Project Structure
+
+This project uses a well-organized, modular architecture to enforce a clear separation of concerns. This structure makes the service easy to develop, maintain, and scale.
+
+```
+.
+├── cmd                       # Main entry points for the service, including the main executable.
+├── config                    # Configuration files for environment variables and platform settings.
+├── internal                  # Core application logic, isolated from external packages.
+│   ├── delivery              # The "Delivery" layer, handling external requests (e.g., HTTP).
+│   │   ├── http              # HTTP implementation, including controllers and routers.
+│   │   └── middleware        # HTTP middleware (e.g., for authentication and logging).
+│   ├── domain                # The "Domain" layer, containing core business models.
+│   │   ├── dto               # Data Transfer Objects (DTOs) for request and response payloads.
+│   │   └── model             # The primary data structures (models) used throughout the platform.
+│   ├── infrastructure        # The "Infrastructure" layer, managing data persistence.
+│   │   └── persistence       # Database connections, migrations, and seeding scripts.
+│   ├── repository            # The "Repository" layer, an interface for database interactions.
+│   ├── service               # The "Service" layer, where the main business logic resides.
+│   └── shared                # Utility modules used across different layers of the platform.
+├── docs                      # API documentation, such as Swagger files.
+└── test                      # All test files, organized by unit, integration, and fixtures.
 ```
 
 ## API Documentation
@@ -371,3 +384,5 @@ Linting is done using [golangci-lint](https://golangci-lint.run)
 See 👉 [How to install golangci-lint](https://golangci-lint.run/welcome/install)
 
 To modify the golangci-lint configuration, update the `.golangci.yml` file.
+
+Credits Base Template By https://github.com/indrayyana/go-fiber-boilerplate
