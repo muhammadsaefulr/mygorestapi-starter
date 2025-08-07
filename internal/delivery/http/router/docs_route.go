@@ -2,7 +2,7 @@ package router
 
 import (
 	// initialize the Swagger documentation
-	_ "github.com/muhammadsaefulr/NimeStreamAPI/docs"
+	_ "github.com/muhammadsaefulr/mygorestapi-starter/docs"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/swagger"

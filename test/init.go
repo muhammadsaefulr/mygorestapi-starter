@@ -1,10 +1,10 @@
 package test
 
 import (
-	"github.com/muhammadsaefulr/NimeStreamAPI/config"
-	module "github.com/muhammadsaefulr/NimeStreamAPI/internal"
-	database "github.com/muhammadsaefulr/NimeStreamAPI/internal/infrastructure/persistence"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
+	"github.com/muhammadsaefulr/mygorestapi-starter/config"
+	module "github.com/muhammadsaefulr/mygorestapi-starter/internal"
+	database "github.com/muhammadsaefulr/mygorestapi-starter/internal/infrastructure/persistence"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/shared/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"

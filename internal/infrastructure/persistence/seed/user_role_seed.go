@@ -1,7 +1,7 @@
 package seed
 
 import (
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/model"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )

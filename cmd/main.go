@@ -9,14 +9,14 @@ import (
 
 	"firebase.google.com/go/v4/auth"
 	"firebase.google.com/go/v4/messaging"
-	"github.com/muhammadsaefulr/NimeStreamAPI/config"
-	"github.com/muhammadsaefulr/NimeStreamAPI/docs"
-	module "github.com/muhammadsaefulr/NimeStreamAPI/internal"
+	"github.com/muhammadsaefulr/mygorestapi-starter/config"
+	"github.com/muhammadsaefulr/mygorestapi-starter/docs"
+	module "github.com/muhammadsaefulr/mygorestapi-starter/internal"
 	"github.com/redis/go-redis/v9"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/delivery/middleware"
-	database "github.com/muhammadsaefulr/NimeStreamAPI/internal/infrastructure/persistence"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/delivery/middleware"
+	database "github.com/muhammadsaefulr/mygorestapi-starter/internal/infrastructure/persistence"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/shared/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
@@ -45,7 +45,6 @@ func main() {
 
 	defer closeDatabase(db)
 	setupModule(app, db, redis, firebase, firebaseMessaging)
-	utils.StartVIPCronJob(db)
 
 	address := fmt.Sprintf("%s:%d", config.AppHost, config.AppPort)
 

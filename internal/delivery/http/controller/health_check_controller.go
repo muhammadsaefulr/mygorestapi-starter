@@ -3,8 +3,8 @@ package controller
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
-	service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/system_service"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/util/response"
+	service "github.com/muhammadsaefulr/mygorestapi-starter/internal/service/system_service"
 )
 
 type HealthCheckController struct {

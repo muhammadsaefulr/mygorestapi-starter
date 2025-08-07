@@ -5,7 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/util/response"
 )
 
 func LimiterConfig() fiber.Handler {

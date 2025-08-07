@@ -1,9 +1,9 @@
 package convert_types
 
 import (
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/request"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/response"
-	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/user/request"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/user/response"
+	model "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/model"
 )
 
 func CreateUserToUserModel(user *request.CreateUser) *model.User {
@@ -45,14 +45,11 @@ func UserResponseToUserModel(user *model.User) *model.User {
 
 func UserModelToUserResponse(user *model.User) *response.GetUsersResponse {
 	return &response.GetUsersResponse{
-		ID:               user.ID,
-		Name:             user.Name,
-		Email:            user.Email,
-		Role:             user.Role,
-		Roles:            user.UserRole,
-		UserBadge:        user.UserBadge,
-		UserSubscription: user.UserSubscription,
-		UserPoint:        user.UserPoint,
-		IsEmailVerified:  user.VerifiedEmail,
+		ID:              user.ID,
+		Name:            user.Name,
+		Email:           user.Email,
+		Role:            user.Role,
+		Roles:           user.UserRole,
+		IsEmailVerified: user.VerifiedEmail,
 	}
 }

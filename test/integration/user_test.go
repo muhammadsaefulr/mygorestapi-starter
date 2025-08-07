@@ -8,13 +8,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/test"
+	"github.com/muhammadsaefulr/mygorestapi-starter/test"
 
-	request_dto_user "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/request"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
-	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
-	"github.com/muhammadsaefulr/NimeStreamAPI/test/fixture"
-	"github.com/muhammadsaefulr/NimeStreamAPI/test/helper"
+	request_dto_user "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/user/request"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/util/response"
+	model "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/model"
+	"github.com/muhammadsaefulr/mygorestapi-starter/test/fixture"
+	"github.com/muhammadsaefulr/mygorestapi-starter/test/helper"
 
 	"github.com/stretchr/testify/assert"
 )

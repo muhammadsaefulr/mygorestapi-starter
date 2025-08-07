@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/request"
-	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/user/request"
+	model "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/model"
 	"gorm.io/gorm"
 )
 
@@ -100,7 +100,7 @@ func (n *newUserRepositryImpl) GetUserByID(ctx context.Context, id string) (*mod
 	user := new(model.User)
 
 	result := n.DB.WithContext(ctx).Where("id = ?", id).Preload("UserRole").
-		Preload("UserRole.Permissions").Preload("UserSubscription").Preload("UserPoint").Preload("UserBadge").Preload("UserBadge.Badge").First(user)
+		Preload("UserRole.Permissions").Preload("UserSubscription").First(user)
 	if result.Error != nil {
 		return nil, result.Error
 	}

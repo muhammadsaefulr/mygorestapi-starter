@@ -3,8 +3,8 @@ package utils
 import (
 	"errors"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/validation"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/util/response"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/shared/validation"
 
 	"github.com/gofiber/fiber/v2"
 )

@@ -272,8 +272,8 @@ The validation schemas are defined in the `validation` directory and are used wi
 
 ```go
 import (
-	"github.com/muhammadsaefulr/NimeStreamAPI/model"
-	"github.com/muhammadsaefulr/NimeStreamAPI/validation"
+	"github.com/muhammadsaefulr/mygorestapi-starter/model"
+	"github.com/muhammadsaefulr/mygorestapi-starter/validation"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -291,9 +291,9 @@ To require authentication for certain routes, you can use the `Auth` middleware.
 
 ```go
 import (
-	"github.com/muhammadsaefulr/NimeStreamAPI/controllers"
-	m "github.com/muhammadsaefulr/NimeStreamAPI/middleware"
-	"github.com/muhammadsaefulr/NimeStreamAPI/services"
+	"github.com/muhammadsaefulr/mygorestapi-starter/controllers"
+	m "github.com/muhammadsaefulr/mygorestapi-starter/middleware"
+	"github.com/muhammadsaefulr/mygorestapi-starter/services"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -324,9 +324,9 @@ The `Auth` middleware can also be used to require certain rights/permissions to 
 
 ```go
 import (
-	"github.com/muhammadsaefulr/NimeStreamAPI/controllers"
-	m "github.com/muhammadsaefulr/NimeStreamAPI/middleware"
-	"github.com/muhammadsaefulr/NimeStreamAPI/services"
+	"github.com/muhammadsaefulr/mygorestapi-starter/controllers"
+	m "github.com/muhammadsaefulr/mygorestapi-starter/middleware"
+	"github.com/muhammadsaefulr/mygorestapi-starter/services"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -350,7 +350,7 @@ Import the logger from `utils/logrus.go`. It is using the [Logrus](https://githu
 Logging should be done according to the following severity levels (ascending order from most important to least important):
 
 ```go
-import "github.com/muhammadsaefulr/NimeStreamAPI/utils"
+import "github.com/muhammadsaefulr/mygorestapi-starter/utils"
 
 utils.Log.Panic('message') // Calls panic() after logging
 utils.Log.Fatal('message'); // Calls os.Exit(1) after logging

@@ -2,9 +2,9 @@ package router
 
 import (
 	"github.com/gofiber/fiber/v2"
-	controller "github.com/muhammadsaefulr/NimeStreamAPI/internal/delivery/http/controller/role_permissions_controller"
-	m "github.com/muhammadsaefulr/NimeStreamAPI/internal/delivery/middleware"
-	service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/role_permissions_service"
+	controller "github.com/muhammadsaefulr/mygorestapi-starter/internal/delivery/http/controller/role_permissions_controller"
+	m "github.com/muhammadsaefulr/mygorestapi-starter/internal/delivery/middleware"
+	service "github.com/muhammadsaefulr/mygorestapi-starter/internal/service/role_permissions_service"
 )
 
 func RolePermissionsRoutes(v1 fiber.Router, c service.RolePermissionsService) {

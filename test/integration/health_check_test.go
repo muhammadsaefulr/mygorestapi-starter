@@ -7,8 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
-	"github.com/muhammadsaefulr/NimeStreamAPI/test"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/util/response"
+	"github.com/muhammadsaefulr/mygorestapi-starter/test"
 
 	"github.com/stretchr/testify/assert"
 )

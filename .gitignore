@@ -4,8 +4,6 @@
 
 FirebaseServiceAccountKey.json
 
-scrape_test/
-
 config/config.go
 .air.toml
 

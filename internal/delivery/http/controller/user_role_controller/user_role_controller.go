@@ -6,10 +6,10 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	request "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user_role/request"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
-	service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_role_service"
+	request "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/user_role/request"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/util/response"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/model"
+	service "github.com/muhammadsaefulr/mygorestapi-starter/internal/service/user_role_service"
 )
 
 type UserRoleController struct {

@@ -3,10 +3,10 @@ package fixture
 import (
 	"time"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/config"
+	"github.com/muhammadsaefulr/mygorestapi-starter/config"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
-	"github.com/muhammadsaefulr/NimeStreamAPI/test/helper"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/model"
+	"github.com/muhammadsaefulr/mygorestapi-starter/test/helper"
 )
 
 var ExpiresAccessToken = time.Now().UTC().Add(time.Minute * time.Duration(config.JWTAccessExp))

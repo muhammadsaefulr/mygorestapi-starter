@@ -1,8 +1,8 @@
 package convert_types
 
 import (
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/role_permissions/request"
-	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/role_permissions/request"
+	model "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/model"
 )
 
 func CreateRolePermissionsToModel(req *request.CreateRolePermissions) *model.RolePermissions {

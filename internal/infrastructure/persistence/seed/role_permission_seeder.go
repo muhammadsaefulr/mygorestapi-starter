@@ -4,25 +4,15 @@ import (
 	"log"
 	"time"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/model"
 	"gorm.io/gorm"
 )
 
 var allRoles = map[string][]string{
-	"user": {"getUserSession", "postReportError", "getBannerApp", "getUserBadge"},
+	"user": {"getUserSession"},
 	"admin": {
-		"getUsers", "manageUsers", "getUserSession", "manageAnime",
+		"getUsers", "manageUsers", "getUserSession",
 		"getUserRole", "getRolePermissions",
-		"createMovieDetails", "updateMovieDetails", "deleteMovieDetails",
-		"addMovieEps", "updateMovieEps", "deleteMovieEps",
-		"postSubsPlan", "updateSubsPlan", "deleteSubsPlan",
-		"userSubscriptionGet", "userSubscriptionPost", "userSubscriptionPut", "userSubscriptionDelete",
-		"getAllReportError", "postReportError", "getReportErrorByID",
-		"updateReportError", "deleteReportError",
-		"createBannerApp", "updateBannerApp", "deleteBannerApp", "getBannerApp",
-		"addUserBadge", "updateUserBadge", "deleteUserBadge", "getUserBadge",
-		"addBadge", "updateBadge", "deleteBadge", "getBadge",
-		"getRequestVIP", "updateRequestVIP", "deleteRequestVIP",
 	},
 	"owner": {
 		"allActions",

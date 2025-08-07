@@ -2,10 +2,10 @@ package service
 
 import (
 	"github.com/gofiber/fiber/v2"
-	auth_request_dto "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/auth/request"
-	auth_response_dto "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/auth/response"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/request"
-	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
+	auth_request_dto "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/auth/request"
+	auth_response_dto "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/auth/response"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/user/request"
+	model "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/model"
 )
 
 type AuthService interface {

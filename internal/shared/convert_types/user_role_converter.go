@@ -1,8 +1,8 @@
 package convert_types
 
 import (
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user_role/request"
-	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/user_role/request"
+	model "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/model"
 )
 
 func CreateUserRoleToModel(req *request.CreateUserRole) *model.UserRole {

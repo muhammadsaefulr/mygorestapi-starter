@@ -25,7 +25,7 @@ func main() {
 	data := ModuleData{
 		Name:       moduleName,
 		PascalName: ToPascalCase(moduleName),
-		ModulePath: "github.com/muhammadsaefulr/NimeStreamAPI",
+		ModulePath: "github.com/muhammadsaefulr/mygorestapi-starter",
 	}
 
 	files := []struct {

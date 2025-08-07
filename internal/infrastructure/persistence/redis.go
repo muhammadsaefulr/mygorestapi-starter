@@ -3,8 +3,8 @@ package database
 import (
 	"context"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/config"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
+	"github.com/muhammadsaefulr/mygorestapi-starter/config"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/shared/utils"
 	"github.com/redis/go-redis/v9"
 )
 

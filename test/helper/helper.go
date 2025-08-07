@@ -4,10 +4,10 @@ import (
 	"errors"
 	"time"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/config"
+	"github.com/muhammadsaefulr/mygorestapi-starter/config"
 
-	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
+	model "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/model"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/shared/utils"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"

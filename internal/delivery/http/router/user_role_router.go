@@ -2,9 +2,9 @@ package router
 
 import (
 	"github.com/gofiber/fiber/v2"
-	controller "github.com/muhammadsaefulr/NimeStreamAPI/internal/delivery/http/controller/user_role_controller"
-	m "github.com/muhammadsaefulr/NimeStreamAPI/internal/delivery/middleware"
-	service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_role_service"
+	controller "github.com/muhammadsaefulr/mygorestapi-starter/internal/delivery/http/controller/user_role_controller"
+	m "github.com/muhammadsaefulr/mygorestapi-starter/internal/delivery/middleware"
+	service "github.com/muhammadsaefulr/mygorestapi-starter/internal/service/user_role_service"
 )
 
 func UserRoleRoutes(v1 fiber.Router, c service.UserRoleService) {

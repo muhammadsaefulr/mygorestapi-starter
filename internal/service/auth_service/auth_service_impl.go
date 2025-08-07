@@ -3,17 +3,15 @@ package service
 import (
 	"errors"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/config"
+	"github.com/muhammadsaefulr/mygorestapi-starter/config"
 
-	auth_request_dto "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/auth/request"
-	auth_response_dto "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/auth/response"
-	request "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/request"
-	userpts_request "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user_points/request"
-	user_model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
-	system_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/system_service"
-	user_point_svc "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_points_service"
-	user_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_service"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
+	auth_request_dto "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/auth/request"
+	auth_response_dto "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/auth/response"
+	request "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/user/request"
+	user_model "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/model"
+	system_service "github.com/muhammadsaefulr/mygorestapi-starter/internal/service/system_service"
+	user_service "github.com/muhammadsaefulr/mygorestapi-starter/internal/service/user_service"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/shared/utils"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -27,18 +25,16 @@ type authService struct {
 	Validate     *validator.Validate
 	UserService  user_service.UserService
 	TokenService system_service.TokenService
-	UsPointSvc   user_point_svc.UserPointsServiceInterface
 }
 
 func NewAuthService(
-	db *gorm.DB, validate *validator.Validate, userService user_service.UserService, tokenService system_service.TokenService, user_point_svc user_point_svc.UserPointsServiceInterface,
+	db *gorm.DB, validate *validator.Validate, userService user_service.UserService, tokenService system_service.TokenService,
 ) AuthService {
 	return &authService{
 		Log:          utils.Log,
 		DB:           db,
 		Validate:     validate,
 		UserService:  userService,
-		UsPointSvc:   user_point_svc,
 		TokenService: tokenService,
 	}
 }
@@ -67,12 +63,6 @@ func (s *authService) Register(c *fiber.Ctx, req *auth_request_dto.Register) (*u
 
 		return nil, fiber.NewError(fiber.StatusInternalServerError, "Create user failed")
 	}
-
-	s.UsPointSvc.Update(c, &userpts_request.UserPoints{
-		UserId:     result.ID.String(),
-		TypeUpdate: "add",
-		Value:      0,
-	})
 
 	return result, nil
 }

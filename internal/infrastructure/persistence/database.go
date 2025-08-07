@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/config"
+	"github.com/muhammadsaefulr/mygorestapi-starter/config"
 
 	// "log"
-	// "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
-	// "github.com/muhammadsaefulr/NimeStreamAPI/internal/infrastructure/persistence/seed"
+	// "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/model"
+	// "github.com/muhammadsaefulr/mygorestapi-starter/internal/infrastructure/persistence/seed"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/shared/utils"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"runtime"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/shared/utils"
 
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"

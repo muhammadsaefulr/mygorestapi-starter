@@ -1,7 +1,7 @@
 package fixture
 
 import (
-	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
+	model "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/model"
 
 	"github.com/google/uuid"
 )

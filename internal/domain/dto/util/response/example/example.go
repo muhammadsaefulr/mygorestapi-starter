@@ -1,7 +1,5 @@
 package example
 
-import model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
-
 type RegisterResponse struct {
 	Code    int    `json:"code" example:"201"`
 	Status  string `json:"status" example:"success"`
@@ -98,32 +96,4 @@ type DeleteUserResponse struct {
 	Code    int    `json:"code" example:"200"`
 	Status  string `json:"status" example:"success"`
 	Message string `json:"message" example:"Delete user successfully"`
-}
-
-type GetOdAnimeHomeResponse struct {
-	Code    int               `json:"code" example:"200"`
-	Status  string            `json:"status" example:"success"`
-	Message string            `json:"message" example:"Berhasil mengambil data!"`
-	Result  []model.AnimeData `json:"data"`
-}
-
-type GetOdAnimeEpisodeResponse struct {
-	Code    int                     `json:"code" example:"200"`
-	Status  string                  `json:"status" example:"success"`
-	Message string                  `json:"message" example:"Berhasil mengambil data!"`
-	Result  model.EpisodePageResult `json:"data"`
-}
-
-type GetOdAnimeEpisodeVideoResponse struct {
-	Code    int
-	Status  string
-	Message string
-	Result  model.AnimeSourceData `json:"data"`
-}
-
-type GetOdAnimeByGenreResponse struct {
-	Code    int
-	Status  string
-	Message string
-	Result  model.GenreAnime `json:"data"`
 }

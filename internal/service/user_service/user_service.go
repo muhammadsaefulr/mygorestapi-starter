@@ -2,8 +2,8 @@ package service
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/request"
-	user_model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/user/request"
+	user_model "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/model"
 )
 
 type UserService interface {

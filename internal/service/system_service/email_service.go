@@ -3,9 +3,9 @@ package service
 import (
 	"fmt"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/config"
+	"github.com/muhammadsaefulr/mygorestapi-starter/config"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/shared/utils"
 
 	"github.com/sirupsen/logrus"
 	"gopkg.in/gomail.v2"
@@ -53,7 +53,7 @@ func (s *emailService) SendResetPasswordEmail(to, token string) error {
 	subject := "Reset password"
 
 	// TODO: replace this url with the link to the reset password page of your front-end app
-	resetPasswordURL := fmt.Sprintf("http://link-to-github.com/muhammadsaefulr/NimeStreamAPI/reset-password?token=%s", token)
+	resetPasswordURL := fmt.Sprintf("http://link-to-github.com/muhammadsaefulr/mygorestapi-starter/reset-password?token=%s", token)
 	body := fmt.Sprintf(`Dear user,
 
 To reset your password, click on this link: %s
@@ -66,7 +66,7 @@ func (s *emailService) SendVerificationEmail(to, token string) error {
 	subject := "Email Verification"
 
 	// TODO: replace this url with the link to the email verification page of your front-end app
-	verificationEmailURL := fmt.Sprintf("http://link-to-github.com/muhammadsaefulr/NimeStreamAPI/verify-email?token=%s", token)
+	verificationEmailURL := fmt.Sprintf("http://link-to-github.com/muhammadsaefulr/mygorestapi-starter/verify-email?token=%s", token)
 	body := fmt.Sprintf(`Dear user,
 
 To verify your email, click on this link: %s

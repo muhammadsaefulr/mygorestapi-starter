@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"testing"
 
-	request "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/request"
-	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/validation"
+	request "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/user/request"
+	model "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/model"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/shared/validation"
 
 	"github.com/stretchr/testify/assert"
 )

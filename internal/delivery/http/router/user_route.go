@@ -1,11 +1,11 @@
 package router
 
 import (
-	controller "github.com/muhammadsaefulr/NimeStreamAPI/internal/delivery/http/controller/user_controller"
-	m "github.com/muhammadsaefulr/NimeStreamAPI/internal/delivery/middleware"
+	controller "github.com/muhammadsaefulr/mygorestapi-starter/internal/delivery/http/controller/user_controller"
+	m "github.com/muhammadsaefulr/mygorestapi-starter/internal/delivery/middleware"
 
-	system_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/system_service"
-	user_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_service"
+	system_service "github.com/muhammadsaefulr/mygorestapi-starter/internal/service/system_service"
+	user_service "github.com/muhammadsaefulr/mygorestapi-starter/internal/service/user_service"
 
 	"github.com/gofiber/fiber/v2"
 )

@@ -1,8 +1,8 @@
 package response
 
 import (
-	response_dto_auth "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/auth/response"
-	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
+	response_dto_auth "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/auth/response"
+	model "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/model"
 )
 
 type Common struct {

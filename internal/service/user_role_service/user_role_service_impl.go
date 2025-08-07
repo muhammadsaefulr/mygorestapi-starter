@@ -5,11 +5,11 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user_role/request"
-	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
-	repository "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/user_role"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/convert_types"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/user_role/request"
+	model "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/model"
+	repository "github.com/muhammadsaefulr/mygorestapi-starter/internal/repository/user_role"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/shared/convert_types"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/shared/utils"
 	"github.com/sirupsen/logrus"
 )
 

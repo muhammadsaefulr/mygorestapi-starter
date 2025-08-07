@@ -10,17 +10,17 @@ import (
 	"testing"
 	"time"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/test"
+	"github.com/muhammadsaefulr/mygorestapi-starter/test"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/config"
+	"github.com/muhammadsaefulr/mygorestapi-starter/config"
 
-	auth_request_dto "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/auth/request"
-	response_auth_dto "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/auth/response"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
+	auth_request_dto "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/auth/request"
+	response_auth_dto "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/auth/response"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/util/response"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
-	"github.com/muhammadsaefulr/NimeStreamAPI/test/fixture"
-	"github.com/muhammadsaefulr/NimeStreamAPI/test/helper"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/shared/utils"
+	"github.com/muhammadsaefulr/mygorestapi-starter/test/fixture"
+	"github.com/muhammadsaefulr/mygorestapi-starter/test/helper"
 
 	"github.com/stretchr/testify/assert"
 )

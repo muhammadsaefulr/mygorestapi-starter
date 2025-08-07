@@ -7,11 +7,11 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/request"
-	user_model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
-	repository "github.com/muhammadsaefulr/NimeStreamAPI/internal/repository/user"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/convert_types"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/user/request"
+	user_model "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/model"
+	repository "github.com/muhammadsaefulr/mygorestapi-starter/internal/repository/user"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/shared/convert_types"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/shared/utils"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
@@ -207,14 +207,6 @@ func (s *userService) GetUserSession(c *fiber.Ctx) (*user_model.User, error) {
 
 	if err != nil {
 		return nil, fiber.NewError(fiber.StatusInternalServerError, "Get user session failed")
-	}
-
-	if results.UserBadge == nil || len(*results.UserBadge) == 0 {
-		results.UserBadge = &[]user_model.UserBadgeInfo{
-			{
-				BadgeID: 0,
-			},
-		}
 	}
 
 	return results, nil

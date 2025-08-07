@@ -3,14 +3,14 @@ package controller
 import (
 	"math"
 
-	request "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/request"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
-	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/convert_types"
+	request "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/user/request"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/util/response"
+	model "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/model"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/shared/convert_types"
 
-	responses "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/response"
-	system_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/system_service"
-	user_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_service"
+	responses "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/user/response"
+	system_service "github.com/muhammadsaefulr/mygorestapi-starter/internal/service/system_service"
+	user_service "github.com/muhammadsaefulr/mygorestapi-starter/internal/service/user_service"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"

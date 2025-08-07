@@ -1,17 +1,17 @@
 package service
 
 import (
-	"github.com/muhammadsaefulr/NimeStreamAPI/config"
+	"github.com/muhammadsaefulr/mygorestapi-starter/config"
 
-	auth_request_dto "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/auth/request"
-	model "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
+	auth_request_dto "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/auth/request"
+	model "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/model"
 
 	"time"
 
-	res "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/auth/response"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
+	res "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/auth/response"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/shared/utils"
 
-	user_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_service"
+	user_service "github.com/muhammadsaefulr/mygorestapi-starter/internal/service/user_service"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"

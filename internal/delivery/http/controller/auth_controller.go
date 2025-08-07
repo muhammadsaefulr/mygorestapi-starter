@@ -7,17 +7,17 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/config"
-	auth_request_dto "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/auth/request"
-	auth_response_dto "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/auth/response"
-	user_dto_request "github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/user/request"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/dto/util/response"
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/shared/utils"
+	"github.com/muhammadsaefulr/mygorestapi-starter/config"
+	auth_request_dto "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/auth/request"
+	auth_response_dto "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/auth/response"
+	user_dto_request "github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/user/request"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/dto/util/response"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/shared/utils"
 
-	"github.com/muhammadsaefulr/NimeStreamAPI/internal/domain/model"
-	auth_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/auth_service"
-	system_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/system_service"
-	user_service "github.com/muhammadsaefulr/NimeStreamAPI/internal/service/user_service"
+	"github.com/muhammadsaefulr/mygorestapi-starter/internal/domain/model"
+	auth_service "github.com/muhammadsaefulr/mygorestapi-starter/internal/service/auth_service"
+	system_service "github.com/muhammadsaefulr/mygorestapi-starter/internal/service/system_service"
+	user_service "github.com/muhammadsaefulr/mygorestapi-starter/internal/service/user_service"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -135,7 +135,7 @@ func (a *AuthController) Login(c *fiber.Ctx) error {
 		})
 }
 
-// @Tags         Auth Google
+// @Tags         Auth Google Firebase
 // @Summary      Login with google
 // @Description  This route initiates the Google OAuth2 login flow with Firebase. Please try this in your browser.
 // @Param        request  body  auth_request_dto.FirebaseLogin  true  "Request body"
@@ -484,7 +484,7 @@ func (a *AuthController) GoogleCallback(c *fiber.Ctx) error {
 		})
 
 	// TODO: replace this url with the link to the oauth google success page of your front-end app
-	// googleLoginURL := fmt.Sprintf("http://link-to-github.com/muhammadsaefulr/NimeStreamAPI/google/success?access_token=%s&refresh_token=%s",
+	// googleLoginURL := fmt.Sprintf("http://link-to-github.com/muhammadsaefulr/mygorestapi-starter/google/success?access_token=%s&refresh_token=%s",
 	// 	tokens.Access.Token, tokens.Refresh.Token)
 
 	// return c.Status(fiber.StatusSeeOther).Redirect(googleLoginURL)
