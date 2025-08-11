@@ -27,16 +27,18 @@ func New{{.PascalName}}Service(repo repository.{{.PascalName}}Repo, validate *va
 	}
 }
 
-func (s *{{.PascalName}}Service) GetAll(c *fiber.Ctx, params *request.Query{{.PascalName}}) ([]model.{{.PascalName}}, int64, error) {
+func (s *{{.PascalName}}Service) GetAll(c *fiber.Ctx, params *request.Query{{.PascalName}}) ([]model.{{.PascalName}}, int64, int64, error) {
 	if err := s.Validate.Struct(params); err != nil {
-		return nil, 0, err
+		return nil, 0, 0, err
 	}
+
 	if params.Page < 1 {
 		params.Page = 1
 	}
 	if params.Limit < 1 {
 		params.Limit = 10
 	}
+
 	return s.Repo.GetAll(c.Context(), params)
 }
 

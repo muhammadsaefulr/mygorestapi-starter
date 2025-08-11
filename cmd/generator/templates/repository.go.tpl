@@ -8,7 +8,7 @@ import (
 )
 
 type {{.PascalName}}Repo interface {
-	GetAll(ctx context.Context, param *request.Query{{.PascalName}}) ([]model.{{.PascalName}}, int64, error)
+	GetAll(ctx context.Context, param *request.Query{{.PascalName}}) ([]model.{{.PascalName}}, int64, int64, error)
 	GetByID(ctx context.Context, id uint) (*model.{{.PascalName}}, error)
 	Create(ctx context.Context, data *model.{{.PascalName}}) error
 	Update(ctx context.Context, data *model.{{.PascalName}}) error

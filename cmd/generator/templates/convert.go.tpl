@@ -7,16 +7,18 @@ import (
 
 func Create{{.PascalName}}ToModel(req *request.Create{{.PascalName}}) *model.{{.PascalName}} {
 	return &model.{{.PascalName}}{
-		// TODO: sesuaikan field sesuai model
-		// Example:
-		// Name: req.Name,
+		{{- range .Fields }}
+		{{ .PascalName }}: req.{{ .PascalName }},
+		{{- end }}
 	}
 }
 
+
 func Update{{.PascalName}}ToModel(req *request.Update{{.PascalName}}) *model.{{.PascalName}} {
 	return &model.{{.PascalName}}{
-		// TODO: sesuaikan field sesuai model
-		// Example:
-		// Name: req.Name,
+		ID: req.ID,
+		{{- range .Fields }}
+		{{ .PascalName }}: req.{{ .PascalName }},
+		{{- end }}
 	}
 }

@@ -3,9 +3,10 @@ package response
 import "time"
 
 type {{.PascalName}}Response struct {
-    // contoh field, sesuaikan dengan kebutuhan
-	ID            uint      `json:"id"`
-	Name		  string    `json:"name"`
-	CreatedAt     time.Time `json:"created_at"`
-	UpdatedAt     time.Time `json:"updated_at"`
+	ID        uint      `json:"id"`
+	{{- range .Fields }}
+	{{ .PascalName }} {{ .Type }} `json:"{{ .SnakeCaseName }}"`
+	{{- end }}
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }

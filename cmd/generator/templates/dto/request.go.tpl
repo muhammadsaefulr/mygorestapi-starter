@@ -1,16 +1,20 @@
 package request
 
 type Create{{.PascalName}} struct {
-	Name string `json:"name"`
+	{{- range .Fields }}
+	{{ .PascalName }} {{ .Type }} `json:"{{ .SnakeCaseName }}" validate:"{{ .Validation }}"`
+	{{- end }}
 }
 
 type Update{{.PascalName}} struct {
 	ID uint `json:"-"`
-	Name string `json:"name"`
+	{{- range .Fields }}
+	{{ .PascalName }} {{ .Type }} `json:"{{ .SnakeCaseName }}" validate:"{{ .Validation }}"`
+	{{- end }}
 }
 
 type Query{{.PascalName}} struct {
-	Page  int    `query:"page"`
-	Limit int    `query:"limit"`
-	Sort  string `query:"sort"`
+	Page   int   `query:"page"`
+	Limit  int   `query:"limit"`
+	Search string `query:"search"`
 }
